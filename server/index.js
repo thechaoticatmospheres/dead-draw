@@ -124,5 +124,5 @@ setInterval(() => {
 server.listen(
   port,
   process.env.HOST || (production ? "127.0.0.1" : "0.0.0.0"),
-  () => console.log(`DEAD DRAW ready at http://localhost:${port}`),
+  () => console.log(`DEAD DRAW ready at http://localhost:${server.address().port}`),
 );
