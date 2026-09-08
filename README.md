@@ -34,6 +34,7 @@ GitHub Pages uses **GitHub Actions**. Every push to `main` runs `npm ci`, tests,
 
 - **Settings → Pages → Source:** GitHub Actions.
 - **Settings → Secrets and variables → Actions → Variables:** `GAME_SERVER_URL` is the public HTTPS address of the multiplayer server, with no credentials.
+- The deployed multiplayer server is `https://dead-draw-server.onrender.com`; its readiness endpoint is [`/health`](https://dead-draw-server.onrender.com/health).
 - `actions/configure-pages` supplies the base path, so builds work under `/REPOSITORY-NAME/` as well as custom domains. GLB assets use Vite’s base URL.
 - `render.yaml` defines one **free Render web service** for multiplayer, deploying `main` after CI checks pass. `ALLOWED_ORIGINS` must include the Pages origin (no path). `SERVER_ONLY=true` serves only `/health` and `/game`; it does not publish source files.
 - If the repository owner changes, update the play link and Render’s allowed origin. If the server address changes, update `GAME_SERVER_URL` and rerun the Actions workflow.
