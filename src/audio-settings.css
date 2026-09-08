@@ -1,0 +1,56 @@
+.audio-settings {
+  margin: 18px 0;
+  border-top: 1px solid #bb9b5855;
+  padding-top: 14px;
+}
+.audio-settings summary {
+  cursor: pointer;
+  color: var(--gold);
+  font-size: 13px;
+  letter-spacing: 0.6px;
+}
+.audio-slider {
+  display: grid;
+  grid-template-columns: 1fr 48px;
+  gap: 8px;
+  margin: 15px 0;
+  font-size: 11px;
+  letter-spacing: 0.7px;
+}
+.audio-slider output {
+  text-align: right;
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+}
+.audio-slider input {
+  grid-column: 1/-1;
+  width: 100%;
+  accent-color: var(--mint);
+}
+.audio-mute {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 12px;
+  margin-top: 18px;
+}
+.audio-mute input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  flex: 0 0 18px;
+  accent-color: var(--mint);
+}
+.audio-settings #testSound {
+  padding: 11px;
+  color: var(--gold);
+  background: #143a2c;
+  border: 1px solid #b89b6355;
+  font-size: 12px;
+}
+.audio-settings #audioStatus {
+  display: block;
+  color: #b7c9bd;
+  font-size: 11px;
+  line-height: 1.5;
+}

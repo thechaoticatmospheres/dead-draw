@@ -1,0 +1,29 @@
+{
+  "name": "dead-draw",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server/index.js",
+    "start": "node server/index.js",
+    "build": "vite build",
+    "test": "node --test tests/*.test.js",
+    "preview": "vite preview",
+    "check:build": "node tools/check-build.js"
+  },
+  "dependencies": {
+    "three": "^0.180.0",
+    "ws": "^8.18.3"
+  },
+  "devDependencies": {
+    "@gltf-transform/core": "^4.5.0",
+    "@gltf-transform/extensions": "^4.5.0",
+    "@gltf-transform/functions": "^4.5.0",
+    "@playwright/test": "^1.55.0",
+    "prettier": "^3.9.6",
+    "vite": "^7.1.5"
+  },
+  "engines": {
+    "node": ">=22.12.0 <23"
+  }
+}

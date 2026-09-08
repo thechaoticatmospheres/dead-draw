@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <meta charset="utf-8" /><title>DEAD DRAW audio QA</title
+  ><style>
+    body {
+      font: 15px system-ui;
+      background: #09221b;
+      color: #d8efe3;
+      padding: 30px;
+    }
+    button {
+      padding: 15px;
+      background: #e7c685;
+      color: #102b20;
+      border: 0;
+      cursor: pointer;
+    }
+    table {
+      border-collapse: collapse;
+      margin-top: 25px;
+    }
+    td,
+    th {
+      text-align: left;
+      padding: 6px 20px;
+      border-bottom: 1px solid #ffffff22;
+    }
+    .fail {
+      color: #ff8585;
+    }
+  </style>
+  <h1>DEAD DRAW · Real Web Audio rendering</h1>
+  <p>
+    Renders every cue through the actual browser mixer into an offline audio
+    buffer. Checks non-silent output, finite samples, peak headroom and silence
+    when muted.
+  </p>
+  <button id="run">RENDER ALL SOUND EFFECTS</button>
+  <p id="result" role="status">Ready</p>
+  <table>
+    <thead>
+      <tr>
+        <th>Cue</th>
+        <th>Peak</th>
+        <th>RMS</th>
+        <th>Result</th>
+      </tr>
+    </thead>
+    <tbody id="results"></tbody>
+  </table>
+  <script type="module">
+    import { Audio } from "../src/audio.js";
+    import { CUE_NAMES } from "../src/audio-cues.js";
+    import { WEAPONS } from "../shared/data.js";
+    document.getElementById("run").onclick = async () => {
+      const result = document.getElementById("result"),
+        rows = document.getElementById("results");
+      rows.innerHTML = "";
+      document.getElementById("run").disabled = true;
+      let passed = 0,
+        failed = 0;
+      try {
+        const profiles = [
+          ...CUE_NAMES.map((name) => ({ name })),
+          ...Object.keys(WEAPONS).map((weapon) => ({ name: "shot", weapon })),
+          { name: "jackpot", muted: true },
+          { name: "explosion", stress: true },
+        ];
+        for (const options of profiles) {
+          const label =
+            options.name +
+            (options.weapon ? " / " + options.weapon : "") +
+            (options.muted ? " / MUTED" : "") +
+            (options.stress ? " / FOUR PLAYER MAX VOLUME" : "");
+          result.textContent = "Rendering " + label;
+          const offline = new OfflineAudioContext(2, 22050 * 4, 22050);
+          // Offline contexts are scheduled before rendering, unlike a live running context.
+          const adapter = new Proxy(offline, {
+            get(target, key) {
+              if (key === "state") return "running";
+              if (key === "close") return () => Promise.resolve();
+              const v = target[key];
+              return typeof v === "function" ? v.bind(target) : v;
+            },
+          });
+          const a = new Audio({
+            contextFactory: () => adapter,
+            storage: { getItem: () => null, setItem: () => {} },
+          });
+          a.start();
+          if (options.stress) {
+            for (const key of ["master", "effects", "casino", "ambience"])
+              a.set(key, 1);
+            for (let i = 0; i < 4; i++) a.play("shot", { weapon: "pitViper" });
+            a.play("boss");
+            a.play("heartbeat");
+          }
+          if (options.muted) a.muted = true;
+          a.play(options.name, options);
+          const buffer = await offline.startRendering();
+          let peak = 0,
+            sum = 0,
+            finite = true;
+          for (let ch = 0; ch < 2; ch++)
+            for (const v of buffer.getChannelData(ch)) {
+              peak = Math.max(peak, Math.abs(v));
+              sum += v * v;
+              if (!Number.isFinite(v)) finite = false;
+            }
+          const rms = Math.sqrt(sum / (buffer.length * 2)),
+            ok =
+              finite &&
+              (options.muted ? peak === 0 : peak > 0.000001 && peak < 0.98);
+          if (ok) passed++;
+          else failed++;
+          const row = document.createElement("tr");
+          row.className = ok ? "" : "fail";
+          for (const value of [
+            label,
+            peak.toFixed(6),
+            rms.toFixed(6),
+            ok ? "PASS" : "FAIL",
+          ]) {
+            const td = document.createElement("td");
+            td.textContent = value;
+            row.append(td);
+          }
+          rows.append(row);
+          a.dispose();
+        }
+        result.textContent = `${failed ? "FAIL" : "PASS"} · ${passed} sound renders passed · ${failed} failed`;
+      } catch (e) {
+        result.textContent = "ERROR · " + e.message;
+        console.error(e);
+      } finally {
+        document.getElementById("run").disabled = false;
+      }
+    };
+  </script>
+</html>

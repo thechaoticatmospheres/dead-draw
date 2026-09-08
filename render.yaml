@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: dead-draw-server
+    runtime: node
+    plan: free
+    branch: main
+    buildCommand: npm ci --omit=dev
+    startCommand: npm start
+    healthCheckPath: /health
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: NODE_VERSION
+        value: 22.22.0
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: SERVER_ONLY
+        value: true
+      - key: ALLOWED_ORIGINS
+        value: https://thechaoticatmospheres.github.io

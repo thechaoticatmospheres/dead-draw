@@ -1,0 +1,640 @@
+/* High Rollers: warm brass, ink-black panels, mint member rewards. */
+:root {
+  --club-mint: #a2efd0;
+  --club-ink: #071b19;
+  --club-gold: #f2cf88;
+}
+#club {
+  position: fixed;
+  z-index: 30;
+  inset: 6vh auto auto 50%;
+  transform: translateX(-50%);
+  width: min(1060px, 92vw);
+  max-height: 88vh;
+  overflow: auto;
+  padding: 32px;
+  background: linear-gradient(140deg, #15352e, #071c19 70%);
+  border: 1px solid #a6874c;
+  box-shadow: 0 24px 100px #000c;
+}
+#club h2 {
+  font:
+    italic 44px Georgia,
+    serif;
+  margin: 10px 0 24px;
+  color: var(--club-gold);
+}
+#club h3 {
+  font:
+    24px Georgia,
+    serif;
+  margin: 6px 0 8px;
+}
+.club-account {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.8fr;
+  gap: 24px;
+  align-items: center;
+  padding: 20px 0;
+  border-top: 1px solid #a6874c66;
+  border-bottom: 1px solid #a6874c66;
+}
+.club-account strong {
+  display: block;
+  font:
+    38px Georgia,
+    serif;
+  color: var(--club-mint);
+  margin-top: 6px;
+}
+.club-account strong small {
+  font: 12px sans-serif;
+  letter-spacing: 2px;
+}
+.club-account p,
+.club-item p,
+.club-upgrade p {
+  color: #bfcdc6;
+  font-size: 14px;
+  line-height: 1.55;
+  margin: 8px 0 14px;
+}
+.club-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 24px 0;
+}
+.club-tabs button {
+  padding: 12px 20px;
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: var(--club-mint);
+  background: #0b211d;
+  border: 1px solid #9cb28d88;
+}
+.club-tabs .selected {
+  color: var(--club-ink);
+  background: var(--club-mint);
+}
+.club-upgrade {
+  padding: 20px;
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #c79f5866;
+  background: linear-gradient(110deg, #b0882820, transparent);
+  margin-bottom: 20px;
+}
+.club-upgrade h3 small {
+  font: 12px sans-serif;
+  color: var(--club-gold);
+  margin-left: 8px;
+}
+.club-item button,
+.club-upgrade button {
+  color: var(--club-gold);
+  padding: 10px 14px;
+  border: 1px solid #c59b5577;
+  background: #0b211d;
+  font-size: 12px;
+  letter-spacing: 0.8px;
+}
+.club-item button:disabled,
+.club-upgrade button:disabled {
+  opacity: 0.42;
+  cursor: default;
+}
+.club-upgrade button {
+  white-space: nowrap;
+}
+.club-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+.club-item {
+  display: flex;
+  gap: 14px;
+  padding: 20px 14px;
+  background: #06181477;
+  border: 1px solid #6c8b733b;
+}
+.club-item.locked {
+  background: #06181433;
+}
+.club-item h3 {
+  font-size: 21px !important;
+}
+.club-item .eyebrow {
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: #9ab7a5;
+}
+.perk-symbol {
+  color: var(--club-gold);
+  font:
+    30px Georgia,
+    serif;
+  padding-top: 12px;
+}
+.club-section {
+  margin: 30px 0 16px !important;
+  font-size: 18px !important;
+  letter-spacing: 1px;
+}
+.supplies-grid .club-item {
+  padding: 16px 14px;
+}
+.club-warning {
+  padding: 14px;
+  border-left: 3px solid var(--club-gold);
+  color: var(--club-gold);
+  background: #c79f5814;
+}
+.ledger-total {
+  text-align: center;
+  padding: 25px;
+  display: grid;
+  gap: 10px;
+}
+.ledger-total b {
+  font:
+    52px Georgia,
+    serif;
+}
+.ledger-total small {
+  color: #a1b5ab;
+}
+.ledger-row {
+  display: grid;
+  grid-template-columns: 100px 1fr auto;
+  gap: 15px;
+  padding: 16px 8px;
+  border-top: 1px solid #9eb39b33;
+  font-size: 14px;
+}
+.ledger-row span {
+  color: #a1b5ab;
+  font-size: 12px;
+}
+.positive {
+  color: var(--club-mint);
+}
+.negative {
+  color: #ffa1a5;
+}
+.progressive-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 22px;
+  margin-bottom: 20px;
+  border: 1px solid #b5975488;
+  background: linear-gradient(100deg, #79512640, #142d24);
+}
+.progressive-strip span {
+  font-size: 12px;
+  letter-spacing: 2px;
+  display: block;
+  color: var(--club-gold);
+}
+.progressive-strip b {
+  font:
+    30px Georgia,
+    serif;
+}
+.vault-stamps {
+  text-align: right;
+}
+.vault-stamps i {
+  font-style: normal;
+  color: #607465;
+  font-size: 24px;
+  padding: 0 6px;
+}
+.vault-stamps i.filled {
+  color: var(--club-gold);
+  text-shadow: 0 0 12px #ffd27b77;
+}
+.vault-stamps small {
+  display: block;
+  font-size: 12px;
+  color: #b0c1b4;
+  margin-top: 5px;
+}
+.vault-bonus {
+  padding: 26px 24px;
+  text-align: center;
+  background: radial-gradient(ellipse at center, #a5812633, transparent 75%);
+  border: 1px solid #b5975466;
+}
+.vault-bonus h3 {
+  font:
+    italic 38px Georgia,
+    serif;
+  color: var(--club-gold);
+  margin: 14px 0;
+}
+.vault-bonus p {
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 700px;
+  margin: 12px auto 24px;
+  color: #c6d0c1;
+}
+.vault-prize {
+  display: flex;
+  justify-content: center;
+  gap: 70px;
+  color: #a8c8b3;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+}
+.vault-prize b {
+  font:
+    34px Georgia,
+    serif;
+  color: var(--club-gold);
+  line-height: 1.5;
+}
+.vault-safes {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  margin: 24px 0;
+}
+.vault-safes button {
+  display: grid;
+  gap: 8px;
+  padding: 26px 8px;
+  min-height: 150px;
+  background: linear-gradient(135deg, #556153, #16261e 45%, #324936);
+  border: 3px double #bcaa7b;
+  box-shadow:
+    inset 0 0 0 8px #06130e77,
+    0 5px 12px #0006;
+  color: var(--club-gold);
+  transition:
+    transform 0.15s,
+    background 0.3s;
+}
+.vault-safes button:hover:not(:disabled) {
+  transform: translateY(-5px);
+  border-color: #ffe19c;
+}
+.vault-safes button span {
+  font:
+    28px Georgia,
+    serif;
+}
+.vault-safes button b {
+  font:
+    32px Georgia,
+    serif;
+}
+.vault-safes button small {
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+.vault-safes button.opened {
+  background: linear-gradient(135deg, #86af7822, #071810);
+  color: var(--club-mint);
+  opacity: 1;
+  box-shadow: inset 0 0 15px #000b;
+}
+#casinoBody .vault-safes button {
+  text-align: center;
+  justify-items: center;
+  background: linear-gradient(135deg, #5b6655, #15271e 48%, #3b503e);
+  border: 3px double #baa475;
+}
+#casinoBody .vault-safes button.opened {
+  background: #071a11;
+  color: var(--club-mint);
+}
+#casinoBody .risk-actions [data-risk="red"] {
+  background: #692b33;
+  text-align: center;
+}
+#casinoBody .risk-actions [data-risk="black"] {
+  background: #18271f;
+  text-align: center;
+}
+#club > .close,
+#casino > .close {
+  position: sticky;
+  top: 0;
+  float: right;
+  z-index: 5;
+  background: #122d23;
+}
+.vault-banked {
+  padding: 15px 20px;
+  margin-top: 16px;
+  color: var(--club-gold);
+  background: #85632622;
+  border: 1px solid #b89b5144;
+  text-align: center;
+  letter-spacing: 2px;
+}
+.risk-panel {
+  display: grid;
+  grid-template-columns: 65px 1fr 180px;
+  gap: 22px;
+  padding: 24px;
+  margin-top: 20px;
+  background: #061711b3;
+  border: 1px solid #768f7355;
+  align-items: center;
+}
+.risk-panel h3 {
+  font:
+    24px Georgia,
+    serif;
+  margin: 7px 0;
+}
+.risk-panel p {
+  font-size: 14px;
+  color: #bdcabb;
+  line-height: 1.6;
+  margin: 8px 0;
+}
+.risk-panel small {
+  color: #99afa0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.risk-card {
+  height: 92px;
+  display: grid;
+  place-content: center;
+  background: #f4ebd6;
+  color: #162f26;
+  border-radius: 5px;
+  box-shadow: 0 5px 10px #0008;
+  font:
+    28px Georgia,
+    serif;
+  text-align: center;
+}
+.risk-card small {
+  font-size: 20px;
+  color: inherit;
+}
+.risk-card.red {
+  color: #9f3744;
+}
+.risk-card.flipping {
+  animation: risk-turn 0.24s infinite alternate;
+  background: #345549;
+  color: var(--club-gold);
+  border: 2px solid #c9b87b;
+}
+@keyframes risk-turn {
+  to {
+    transform: rotateY(85deg);
+  }
+}
+.risk-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.risk-actions button {
+  padding: 14px 6px;
+  background: #21372d;
+  border: 1px solid #9cb28d88;
+  font-size: 13px;
+}
+.risk-actions [data-risk="red"] {
+  background: #692b33;
+}
+.risk-actions button:disabled {
+  opacity: 0.4;
+}
+.risk-actions small {
+  grid-column: 1/-1;
+}
+.comp-strip {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  border-top: 1px solid #739f8833;
+  padding-top: 16px;
+  margin-top: 24px;
+  color: #a4c7b4;
+}
+.comp-strip span:first-child {
+  color: var(--club-mint);
+  white-space: nowrap;
+}
+.craps-odds {
+  padding: 18px;
+  border: 1px solid #cfbb7b66;
+  margin: 20px 0;
+  background: #123325;
+}
+.craps-odds h3 {
+  margin: 8px 0;
+  color: var(--club-gold);
+  font:
+    25px Georgia,
+    serif;
+}
+.craps-odds p {
+  font-size: 14px;
+  color: #adcab7;
+}
+.craps-odds .choice-row {
+  flex-wrap: wrap;
+}
+#tactics {
+  margin-top: 12px;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #b1d8c8;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  width: 250px;
+}
+.stamina-track {
+  width: 100%;
+  height: 3px;
+  background: #143c33;
+}
+.stamina-track i {
+  height: 100%;
+  display: block;
+  background: #98d8c1;
+  transition: width 0.08s;
+}
+#contractHud {
+  position: absolute;
+  left: 34px;
+  top: 140px;
+  width: 255px;
+  display: grid;
+  gap: 7px;
+  padding-left: 10px;
+  border-left: 2px solid #d0b477;
+  background: linear-gradient(90deg, #07181088, transparent);
+}
+#contractHud b {
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: var(--club-gold);
+}
+#contractHud span {
+  font-size: 12px;
+  color: #d9e0d5;
+}
+#contractHud > div {
+  height: 2px;
+  background: #31513e;
+}
+#contractProgress {
+  height: 100%;
+  display: block;
+  background: var(--club-gold);
+}
+#comboHud {
+  position: absolute;
+  top: 220px;
+  left: 44px;
+  font-size: 12px;
+  color: #ffe6a2;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 6px #000;
+}
+#bossHud {
+  position: absolute;
+  left: 50%;
+  top: 36px;
+  transform: translateX(-50%);
+  width: min(380px, 35vw);
+  text-align: center;
+  display: grid;
+  gap: 6px;
+  color: #ffcf82;
+  text-shadow: 0 2px 5px #000;
+}
+#bossHud > span {
+  font:
+    20px Georgia,
+    serif;
+  letter-spacing: 3px;
+}
+#bossHud small {
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+#bossHud > div {
+  height: 6px;
+  background: #251d19;
+  border: 1px solid #af794c;
+}
+#bossHealth {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #d5685a, #efc87b);
+  transition: width 0.15s;
+}
+#wavePreview {
+  display: block;
+  color: #e4c48f;
+  margin-top: 5px;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+body:has(#club:not([hidden])) #intermission,
+body:has(#club:not([hidden])) #prompt {
+  visibility: hidden;
+}
+@media (max-width: 900px) {
+  #club {
+    padding: 22px;
+  }
+  .club-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .club-account {
+    grid-template-columns: 1fr 1fr;
+  }
+  .club-account p {
+    grid-column: 1/-1;
+  }
+  .vault-safes {
+    gap: 7px;
+  }
+  .vault-safes button {
+    min-height: 120px;
+  }
+  .risk-panel {
+    grid-template-columns: 55px 1fr;
+  }
+  .risk-actions {
+    grid-column: 1/-1;
+  }
+  .club-upgrade {
+    flex-wrap: wrap;
+  }
+  #bossHud {
+    top: 108px;
+    width: 280px;
+  }
+  #contractHud {
+    top: 185px;
+    width: 220px;
+  }
+  #comboHud {
+    top: 260px;
+  }
+}
+@media (max-width: 600px) {
+  .club-grid {
+    grid-template-columns: 1fr;
+  }
+  .vault-bonus {
+    padding: 18px 8px;
+  }
+  .vault-bonus h3 {
+    font-size: 28px;
+  }
+  .vault-safes button {
+    padding: 18px 5px;
+  }
+  .vault-safes button small {
+    font-size: 8px;
+  }
+  .vault-prize {
+    gap: 20px;
+  }
+  .progressive-strip {
+    gap: 12px;
+    padding: 12px;
+  }
+  .comp-strip {
+    flex-wrap: wrap;
+  }
+  .ledger-row {
+    grid-template-columns: 60px 1fr auto;
+  }
+  .risk-panel {
+    padding: 16px;
+  }
+  .club-account strong {
+    font-size: 30px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .risk-card.flipping {
+    animation: none;
+  }
+  .vault-safes button {
+    transition: none;
+  }
+}

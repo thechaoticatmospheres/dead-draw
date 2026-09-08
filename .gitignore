@@ -1,0 +1,16 @@
+node_modules/
+dist/
+.cache/
+test-results/
+*.log
+assets/source/*.zip
+.share/
+.env
+.env.*
+!.env.example
+coverage/
+playwright-report/
+.DS_Store
+Thumbs.db
+*.pem
+*.key

@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#102321" />
+    <title>Dead Draw — The Gilded Palm</title>
+  </head>
+  <body>
+    <canvas id="world"></canvas>
+    <div id="vignette"></div>
+    <main id="welcome" class="screen">
+      <div class="brand">
+        <span class="eyebrow">THE GILDED PALM PRESENTS</span>
+        <h1>DEAD<br /><em>DRAW</em><span class="diamond">♦</span></h1>
+        <div class="rule"></div>
+        <p class="tagline">Your luck just ran out.<br />Your chips haven’t.</p>
+        <p class="intro">
+          A co-op casino survival shooter.<br />Kill the dead. Take their chips.
+          Play for your life.
+        </p>
+        <div class="entry">
+          <label
+            >YOUR NAME<input
+              id="name"
+              maxlength="18"
+              placeholder="Lucky guest"
+              value="Lucky guest" /></label
+          ><label
+            >ROOM CODE <span>OPTIONAL</span
+            ><input
+              id="code"
+              maxlength="6"
+              placeholder="Leave blank to host" /></label
+          ><button id="enter" class="primary">
+            ENTER THE CASINO <span>↗</span>
+          </button>
+          <p id="connection">
+            1–4 PLAYERS · PRIVATE CO-OP · HIGH ROLLERS UPDATE
+          </p>
+        </div>
+      </div>
+      <aside class="welcome-aside">
+        <span class="outline-diamond">♠</span>
+        <p>OPEN ALL NIGHT.<br />AND THE AFTERLIFE.</p>
+        <small>PLEASE GAMBLE RESPONSIBLY.<br />THE DEAD DO NOT.</small>
+      </aside>
+      <footer>
+        GILDED PALM / EST. 1978 <span>DESKTOP · MOUSE + KEYBOARD</span>
+      </footer>
+    </main>
+    <section id="hud" hidden>
+      <div class="round-block">
+        <span class="eyebrow" id="location">GILDED PALM / ATRIUM</span>
+        <div>
+          <b id="round">01</b><span id="phase">WELCOME TO THE FLOOR</span>
+        </div>
+        <small id="team"></small>
+      </div>
+      <div class="room-block">
+        <button id="clubButton" hidden>CLUB · U</button>
+        <button id="mapButton" title="Floor plan (M)">MAP · M</button>
+        <span id="room"></span
+        ><button id="helpButton" title="Controls">?</button
+        ><button id="mute" title="Toggle audio">SOUND ON</button>
+      </div>
+      <div id="crosshair"><i></i><i></i><i></i><i></i></div>
+      <div id="hitmarker">×</div>
+      <div id="bossHud" hidden>
+        <span>THE HIGH ROLLER</span><small id="bossState"></small>
+        <div><i id="bossHealth"></i></div>
+      </div>
+      <div id="contractHud" hidden>
+        <b id="contractTitle"></b><span id="contractText"></span>
+        <div><i id="contractProgress"></i></div>
+      </div>
+      <div id="comboHud"></div>
+      <div id="announcement"></div>
+      <div id="prompt"></div>
+      <div class="vitals">
+        <div class="health-row">
+          <span>♥ <b id="health">100</b></span
+          ><small id="status">STILL BREATHING</small>
+        </div>
+        <div class="health-track"><i id="healthbar"></i></div>
+        <div id="chips">◉ 25 <small>CHIPS</small></div>
+        <div id="tactics">
+          <div class="stamina-track"><i id="staminaBar"></i></div>
+          <span id="dodgeLabel">SPACE DODGE</span
+          ><span id="grenadeLabel">G GRENADE · 2</span>
+        </div>
+      </div>
+      <div class="weapon">
+        <span class="eyebrow" id="weaponName">COURTESY .38</span>
+        <div><b id="ammo">12</b><span id="reserve">/ 60</span></div>
+        <small id="reload">R RELOAD &nbsp; Q SWITCH</small>
+      </div>
+      <div id="hint">
+        WASD MOVE &nbsp; SHIFT SPRINT &nbsp; RMB AIM &nbsp; LMB FIRE &nbsp; E
+        INTERACT
+      </div>
+    </section>
+    <section id="intermission" hidden>
+      <div>
+        <span class="eyebrow">THE FLOOR IS CLEAR</span>
+        <p id="intermissionStatus"></p>
+        <small id="difficulty"></small>
+        <small id="wavePreview"></small>
+      </div>
+      <button id="nextRound" class="primary">START NEXT ROUND ↗</button>
+      <small class="ready-shortcut">N TO READY · ESC FOR MOUSE</small>
+    </section>
+    <section id="lobby" class="small-panel" hidden>
+      <span class="eyebrow">YOUR TABLE IS READY</span>
+      <h2>Welcome, survivor.</h2>
+      <p>
+        Share room <strong id="lobbyCode"></strong> with up to three friends on
+        this server.
+      </p>
+      <button id="start" class="primary">START THE RUN ↗</button
+      ><small
+        >Start alone or wait for your crew. Friends can join mid-run.</small
+      >
+    </section>
+    <section id="floorplan" class="small-panel" hidden>
+      <button id="closeMap" class="close">✕</button>
+      <span class="eyebrow">GILDED PALM / GUEST DIRECTORY</span>
+      <h2>Open the floor.</h2>
+      <p>
+        Spend your chips at a shutter to open a room for the whole crew. Access
+        lasts for this run. Every new room brings equipment, escape routes, and
+        more active zombie entrances.
+      </p>
+      <div id="floorRooms"></div>
+      <p class="map-routes">
+        WEST: Atrium → Emerald → Draw Arcade → Crown<br />EAST: Atrium → Velvet
+        → Dice Hall → Crown<br />Crown opens a shortcut back to the Atrium.
+      </p>
+      <small
+        >Doors can be purchased during combat. Casino games remain
+        intermission-only.</small
+      >
+    </section>
+    <section id="casino" hidden>
+      <button id="closeCasino" class="close">✕</button
+      ><span class="eyebrow" id="casinoCategory"></span>
+      <h2 id="casinoTitle"></h2>
+      <div id="casinoBody"></div>
+      <p class="fineprint">
+        TABLES OPEN BETWEEN ROUNDS · NO TIME LIMIT · FICTIONAL CHIPS ONLY
+      </p>
+    </section>
+    <section id="club" hidden>
+      <button id="closeClub" class="close">✕</button>
+      <span class="eyebrow">THE GILDED PALM / MEMBERS ONLY</span>
+      <h2>Make your luck last.</h2>
+      <div id="clubBody"></div>
+      <p class="fineprint">
+        INTERMISSION ONLY · UPGRADES LAST FOR THIS RUN · U / D-PAD → TO OPEN
+      </p>
+    </section>
+    <section id="help" class="small-panel" hidden>
+      <span class="eyebrow">GUEST SERVICES</span>
+      <h2>Stay lucky.</h2>
+      <details class="field-guide">
+        <summary>Survival guide · The High Rollers update</summary>
+        <p>
+          Space / B dodges through danger and costs stamina. G / RS click throws
+          a grenade; charges refill each wave. Consecutive kills within 4
+          seconds build a chip-bonus streak. Finish the crew contract for bonus
+          chips and comps.
+        </p>
+        <p>
+          Runners close fast. Pit Bosses wind up a ground slam—leave the gold
+          circle. Spitters hold back and leave acid pools—move before the green
+          circle fills. Every fifth wave brings the High Roller, whose attacks
+          accelerate below half health. Boss caches restore ammo, health and
+          grenades.
+        </p>
+        <p>
+          Use U / D-pad → between rounds to open the Survivor’s Club. Spend
+          chips on supplies and weapon upgrades, and casino comps on perks. New
+          rooms unlock more club stock. All upgrades reset when a new run
+          starts.
+        </p>
+      </details>
+      <details class="keyboard-guide">
+        <summary>Keyboard, mouse & round flow</summary>
+        <p>
+          WASD — Move<br />Mouse — Look<br />Left click — Fire · Right click —
+          Aim<br />Shift — Sprint · R — Reload<br />Q — Cycle owned weapons<br />E
+          — Use table / buy room access<br />M — Floor plan<br />Hold F — Revive
+          nearby teammate (3 sec)<br />Space — Dodge · G — Grenade<br />U —
+          Survivor’s Club<br />Escape — Release mouse
+        </p>
+        <p>
+          Follow the glowing signs to gamble. Chips collect within four meters.
+          Casino games open between rounds. Take as long as you like, then use
+          Start next round (or N). In co-op, everyone must be ready and all
+          hands finished.
+        </p>
+      </details>
+      <details class="controller-guide" open>
+        <summary>Controller / Xbox-style layout</summary>
+        <p>
+          LS move · RS look · LT aim · RT fire<br />A use / buy · X reload · Y
+          or RB switch weapon<br />Hold LS click to sprint · Hold LB to
+          revive<br />View or D-pad ↑ map · D-pad ↓ next round<br />Menu
+          controls · B dodge / back · RS click grenade<br />D-pad → Survivor’s
+          Club<br />Menus: D-pad / LS navigate · A select · LB/RB previous/next
+          · RS scroll
+        </p>
+        <label
+          >LOOK SENSITIVITY
+          <input
+            id="padSensitivity"
+            type="range"
+            min="0.4"
+            max="2"
+            step="0.1"
+            value="1"
+            aria-label="Controller look sensitivity"
+        /></label>
+        <label
+          ><input id="padInvert" type="checkbox" /> Invert vertical look</label
+        >
+        <label
+          ><input id="padRumble" type="checkbox" checked /> Controller
+          vibration</label
+        >
+        <small
+          >Standard mapped Xbox / PlayStation-compatible pads. Connect, focus
+          the game, and press a button. Names and room codes use the keyboard.
+          Controllers require localhost or HTTPS.</small
+        >
+      </details>
+      <details class="audio-settings" open>
+        <summary>Sound & volume</summary>
+        <label class="audio-slider" for="audio-master"
+          >MASTER VOLUME <output id="volume-master">70%</output
+          ><input
+            id="audio-master"
+            type="range"
+            min="0"
+            max="100"
+            step="5"
+            value="70"
+        /></label>
+        <label class="audio-slider" for="audio-effects"
+          >COMBAT & EFFECTS <output id="volume-effects">85%</output
+          ><input
+            id="audio-effects"
+            type="range"
+            min="0"
+            max="100"
+            step="5"
+            value="85"
+        /></label>
+        <label class="audio-slider" for="audio-casino"
+          >CASINO TABLES <output id="volume-casino">75%</output
+          ><input
+            id="audio-casino"
+            type="range"
+            min="0"
+            max="100"
+            step="5"
+            value="75"
+        /></label>
+        <label class="audio-slider" for="audio-ambience"
+          >ROOM AMBIENCE <output id="volume-ambience">35%</output
+          ><input
+            id="audio-ambience"
+            type="range"
+            min="0"
+            max="100"
+            step="5"
+            value="35"
+        /></label>
+        <label class="audio-mute"
+          ><input id="audioMute" type="checkbox" /> Mute all sound</label
+        >
+        <button id="testSound">TEST SOUND · WEAPON / CHIPS / WIN</button>
+        <small id="audioStatus" role="status"
+          >Select Test sound to enable audio.</small
+        >
+      </details>
+      <label class="quality-label"
+        >GRAPHICS
+        <select id="graphicsQuality">
+          <option value="high">Cinematic lighting</option>
+          <option value="low">Performance</option>
+        </select></label
+      >
+      <button id="resume" class="primary">BACK TO THE FLOOR</button>
+    </section>
+    <section id="gameover" class="small-panel" hidden>
+      <span class="eyebrow">THANK YOU FOR YOUR PATRONAGE</span>
+      <h2>The house<br />always wins.</h2>
+      <p id="runStats"></p>
+      <button id="restart" class="primary">ONE MORE HAND ↗</button>
+    </section>
+    <div id="toast" role="status"></div>
+    <div id="controllerStatus">
+      KEYBOARD + MOUSE · PRESS A CONTROLLER BUTTON TO CONNECT
+    </div>
+    <div id="padMenuHint" hidden>
+      D-PAD NAVIGATE · A SELECT · B BACK · LB / RB CYCLE · RS SCROLL
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
