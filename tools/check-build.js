@@ -41,7 +41,7 @@ async function inspect(dir) {
     else if (/\.(?:html|css|js)$/.test(item.name)) {
       const source = await readFile(path, "utf8");
       assert.ok(
-        !/trycloudflare\.com|(?:C:\\Users\\joshu)|["']\/@(?:vite|fs)\//.test(
+        !/trycloudflare\.com|(?:[A-Z]:\\Users\\)|["']\/@(?:vite|fs)\//i.test(
           source,
         ),
         `Preview dependency in ${item.name}`,
