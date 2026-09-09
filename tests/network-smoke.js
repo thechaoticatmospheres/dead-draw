@@ -1,6 +1,14 @@
 import { WebSocket } from "ws";
 import assert from "node:assert/strict";
 const clients = [];
+async function until(check, label) {
+  const deadline = Date.now() + 8000;
+  while (!check()) {
+    if (Date.now() > deadline)
+      throw new Error(`Timed out waiting for ${label}`);
+    await new Promise((resolve) => setTimeout(resolve, 50));
+  }
+}
 async function join(code = "") {
   return new Promise((resolve, reject) => {
     const ws = new WebSocket(
@@ -34,7 +42,13 @@ try {
   assert.equal(rejected.welcome.type, "error");
   assert.match(rejected.welcome.message, /full/);
   host.ws.send(JSON.stringify({ type: "start" }));
-  await new Promise((r) => setTimeout(r, 500));
+  await until(
+    () =>
+      [host, ...guests].every(
+        (c) => c.state?.phase === "break" && c.state.players.length === 4,
+      ),
+    "four-player intermission",
+  );
   for (const c of [host, ...guests]) {
     assert.equal(c.state.players.length, 4);
     assert.equal(c.state.phase, "break");
@@ -44,17 +58,29 @@ try {
   host.ws.send(
     JSON.stringify({ type: "input", input: { forward: 1, yaw: 0, pitch: 0 } }),
   );
-  await new Promise((r) => setTimeout(r, 150));
+  await until(
+    () =>
+      [host, ...guests].every(
+        (c) => c.state.players.find((p) => p.id === id).z < 9.9,
+      ),
+    "movement replication",
+  );
   const positions = [host, ...guests].map(
     (c) => c.state.players.find((p) => p.id === id).z,
   );
   assert.ok(Math.max(...positions) - Math.min(...positions) < 0.3);
   for (const c of [host, ...guests.slice(0, 2)])
     c.ws.send(JSON.stringify({ type: "nextRound" }));
-  await new Promise((r) => setTimeout(r, 100));
+  await until(
+    () => host.state.players.filter((p) => p.ready).length === 3,
+    "three players ready",
+  );
   assert.equal(host.state.phase, "break");
   guests[2].ws.send(JSON.stringify({ type: "nextRound" }));
-  await new Promise((r) => setTimeout(r, 150));
+  await until(
+    () => [host, ...guests].every((c) => c.state.phase === "combat"),
+    "unanimous combat start",
+  );
   for (const c of [host, ...guests]) {
     assert.equal(c.state.phase, "combat");
     assert.equal(c.state.difficulty.team, 4);
