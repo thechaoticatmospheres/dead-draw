@@ -63,7 +63,7 @@ export class Encounters {
     const stats = ENEMIES[z.kind] || ENEMIES.walker;
     actor.scale.setScalar(stats.scale);
     actor.userData.visual.traverse((o) => {
-      if (!o.isMesh) return;
+      if (!o.isMesh || actor.userData.customEnemy) return;
       const tint = (m) => {
         const key = m.uuid + z.kind;
         if (!this.materials.has(key)) {
@@ -115,14 +115,14 @@ export class Encounters {
       stats.name.toUpperCase(),
       `#${stats.color.toString(16).padStart(6, "0")}`,
     );
-    name.position.y = 2.02;
+    name.position.y = stats.labelY || 2.02;
     actor.add(name);
     const bars = new T.Group(),
       bg = new T.Mesh(this.barGeometry, this.barBg),
       fill = new T.Mesh(this.barGeometry, this.barFill);
     bars.add(bg, fill);
     fill.position.z = 0.002;
-    bars.position.y = 1.83;
+    bars.position.y = (stats.labelY || 2.02) - 0.19;
     actor.add(bars);
     actor.userData.encounter = { bars, fill, name };
   }

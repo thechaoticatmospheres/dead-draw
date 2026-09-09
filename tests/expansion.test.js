@@ -65,7 +65,7 @@ test("comps follow real table stakes, upgrades are scoped, capped and rejected d
 test("wave roster introduces distinct threats and exactly one boss every fifth wave", () => {
   assert.deepEqual(
     Array.from({ length: 6 }, (_, i) => enemyType(1, i)),
-    Array(6).fill("walker"),
+    ["walker", "dealer", "walker", "walker", "crawler", "dealer"],
   );
   const kinds = Array.from({ length: 30 }, (_, i) => enemyType(5, i));
   assert.equal(kinds.filter((k) => k === "boss").length, 1);

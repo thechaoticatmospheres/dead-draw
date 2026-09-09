@@ -24,7 +24,7 @@ const models = (await readdir(join(root, "assets/models"))).filter((f) =>
 );
 assert.equal(
   models.length,
-  26,
+  30,
   "All original models and service props must ship",
 );
 for (const name of [

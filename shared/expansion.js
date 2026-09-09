@@ -1,4 +1,52 @@
 export const ENEMIES = {
+  dealer: {
+    name: "Dead Dealer",
+    hp: 1.1,
+    speed: 0.95,
+    scale: 1,
+    damage: 19,
+    color: 0xc2bd8c,
+    reach: 1.8,
+    model: "dealer",
+  },
+  security: {
+    name: "Casino Security",
+    hp: 2.6,
+    speed: 0.85,
+    scale: 1.18,
+    damage: 28,
+    color: 0x89b4c9,
+    reach: 1.65,
+    model: "security",
+  },
+  wheelchair: {
+    name: "Last Call Regular",
+    hp: 1.15,
+    speed: 1.2,
+    scale: 1,
+    damage: 16,
+    color: 0xc9bfaa,
+    model: "wheelchair",
+    headY: 1.36,
+    bodyY: 0.88,
+    bodyRadius: 0.47,
+    labelY: 1.88,
+  },
+  crawler: {
+    name: "Drunken Crawler",
+    hp: 0.65,
+    speed: 0.66,
+    scale: 1,
+    damage: 13,
+    color: 0xc28d93,
+    model: "crawler",
+    headY: 0.55,
+    headForward: 0.53,
+    headRadius: 0.23,
+    bodyY: 0.34,
+    bodyRadius: 0.38,
+    labelY: 1.03,
+  },
   walker: {
     name: "Drifter",
     hp: 1,
@@ -42,10 +90,33 @@ export const ENEMIES = {
 };
 export function enemyType(round, index) {
   if (round % 5 === 0 && index === 0) return "boss";
+  if (round >= 4 && index % 10 === 6) return "security";
   if (round >= 3 && index % 7 === 3) return "spitter";
   if (round >= 2 && index % 6 === 2) return "brute";
+  if (round >= 2 && index % 9 === 5) return "wheelchair";
+  if (index % 8 === 4) return "crawler";
   if (round >= 2 && index % 3 === 1) return "runner";
+  if (index % 4 === 1) return "dealer";
   return "walker";
+}
+export function enemyHitVolumes(z) {
+  const s = ENEMIES[z.kind] || ENEMIES.walker,
+    scale = s.scale;
+  const forward = (s.headForward || 0) * scale;
+  return {
+    body: {
+      x: z.x,
+      y: (s.bodyY ?? 0.95) * scale,
+      z: z.z,
+      r: (s.bodyRadius ?? 0.53) * scale,
+    },
+    head: {
+      x: z.x - Math.sin(z.yaw || 0) * forward,
+      y: (s.headY ?? 1.68) * scale,
+      z: z.z - Math.cos(z.yaw || 0) * forward,
+      r: (s.headRadius ?? 0.3) * scale,
+    },
+  };
 }
 export const PERKS = [
   {

@@ -70,7 +70,9 @@ export class CampaignScene {
       group.add(panel);
       const text = label(
         d.name.toUpperCase(),
-        "T · CREW & OBJECTIVES",
+        d.id === "power"
+          ? "E / A · RESTORE POWER · 150 CHIPS"
+          : "T · CREW & OBJECTIVES",
         "#e7c482",
         2.1,
         0.5,

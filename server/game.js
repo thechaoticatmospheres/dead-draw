@@ -1,6 +1,7 @@
 import { crewTableMethods } from "./crew-tables.js";
 import { jukeboxMethods } from "./jukebox.js";
 import { newJukebox } from "../shared/services.js";
+import { enemyHitVolumes } from "../shared/expansion.js";
 import { newCampaign, waveClearBonus } from "../shared/campaign.js";
 import { campaignMethods } from "./campaign.js";
 import {
@@ -611,9 +612,19 @@ export class Game {
       }
     }
     for (const z of this.zombies) {
-      const scale = ENEMIES[z.kind]?.scale || 1;
-      const body = sphere(z.x, 0.95 * scale, z.z, 0.53 * scale),
-        h = sphere(z.x, 1.68 * scale, z.z, 0.3 * scale),
+      const volumes = enemyHitVolumes(z);
+      const body = sphere(
+          volumes.body.x,
+          volumes.body.y,
+          volumes.body.z,
+          volumes.body.r,
+        ),
+        h = sphere(
+          volumes.head.x,
+          volumes.head.y,
+          volumes.head.z,
+          volumes.head.r,
+        ),
         t = Math.min(body, h);
       if (t < nearest) {
         nearest = t;
@@ -786,6 +797,7 @@ export class Game {
           alive[0],
         );
         this.specialAttack(z, target, dt);
+        z.yaw = Math.atan2(z.x - target.x, z.z - target.z);
         z.attack -= dt;
         z.stun = Math.max(0, z.stun - dt);
         const d = dist(z, target);
@@ -799,7 +811,11 @@ export class Game {
             0.43,
             this.openRooms,
           );
-        } else if (d > 1 && !z.stun && !(ranged && d < 8)) {
+        } else if (
+          d > (ENEMIES[z.kind]?.reach ? ENEMIES[z.kind].reach - 0.25 : 1) &&
+          !z.stun &&
+          !(ranged && d < 8)
+        ) {
           const waypoint =
             d < 2 && clearPath(z, target, this.openRooms)
               ? target
@@ -808,7 +824,8 @@ export class Game {
             const dx = waypoint.x - z.x,
               dz = waypoint.z - z.z,
               l = Math.hypot(dx, dz);
-            if (l > 0.02)
+            if (l > 0.02) {
+              z.yaw = Math.atan2(-dx, -dz);
               moveCircle(
                 z,
                 (dx / l) * z.speed * dt,
@@ -816,6 +833,7 @@ export class Game {
                 0.43,
                 this.openRooms,
               );
+            }
           }
           for (const other of this.zombies) {
             if (other.id <= z.id) continue;
@@ -832,7 +850,7 @@ export class Game {
             }
           }
         } else if (
-          d <= 1.3 &&
+          d <= (ENEMIES[z.kind]?.reach || 1.3) &&
           !z.stun &&
           z.kind !== "brute" &&
           z.attack <= 0 &&

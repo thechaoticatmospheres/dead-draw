@@ -1,3 +1,16 @@
+import { clearPath, roomAt } from "./map.js";
+export function nearbyPower(p, state) {
+  const d = DEVICES[0];
+  return p &&
+    !p.down &&
+    !p.offline &&
+    state?.openRooms.includes(d.room) &&
+    roomAt(p)?.id === d.room &&
+    Math.hypot(p.x - d.x, p.z - d.z) <= 3 &&
+    clearPath(p, d, state.openRooms)
+    ? d
+    : null;
+}
 export const DEVICES = [
   {
     id: "power",

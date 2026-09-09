@@ -74,7 +74,7 @@ The 48 × 64 casino now has 12 rooms and 12 distinct games. Beyond the original 
 
 Open the Survivor’s Club with **U** to purchase/equip attachments for your current weapon: 1.5× reflex (125), 2.5× scope (275), rifle-only 6× scope (900), extended magazine (250), speed loader (350), and compensator (450). Each requires its listed room. Aim with **RMB / controller LT**, or toggle aim with **V**. Optics use a first-person camera, magnification and reduced aim sensitivity; scopes have a lens mask and reticle. Owned attachments can be switched or removed free between rounds. Reload to fill an extended magazine. Attachments last for the run, like weapons and perks.
 
-New rules and shared payouts: `shared/high-stakes-rules.js`; authoritative hands: `server/high-stakes.js`; table interfaces: `src/high-stakes-ui.js`; attachment data: `shared/attachments.js`. The six original expansion GLBs are reproducible with `node tools/author-expansion-assets.js` and add about 413 KiB. All 26 models remain embedded, self-contained assets served under Vite’s production base path.
+New rules and shared payouts: `shared/high-stakes-rules.js`; authoritative hands: `server/high-stakes.js`; table interfaces: `src/high-stakes-ui.js`; attachment data: `shared/attachments.js`. The six original expansion GLBs are reproducible with `node tools/author-expansion-assets.js` and add about 413 KiB. All 30 models remain embedded, self-contained assets served under Vite’s production base path.
 
 ### Music & Survivor’s Club cashier
 
@@ -83,3 +83,11 @@ Visit the **Golden Hour Jukebox** in the starting Palm Atrium. Click it or appro
 Across the Atrium, the glass-fronted **Survivor’s Club cashier** has a teller, chip trays and a lit sign. Click the booth or press **E / A** nearby to open the Club between rounds. **U / D-pad right** and the labeled HUD button also give quick access.
 
 Music: `public/assets/music/`, `shared/services.js`, `server/jukebox.js`, `src/music.js`, `src/jukebox-ui.js`. Physical props: `src/render/services.js`; rebuild original jukebox/cashier GLBs with `node tools/author-service-assets.js`.
+
+### Casino enemy roster & direct power interaction
+
+Approach the Sapphire power terminal and press **E / controller A** to restore power directly for 150 chips between rounds. The nearby prompt displays the price and changes to ONLINE after activation; the Crew menu remains available as an alternative.
+
+Four original articulated enemies join the existing roster: **Dead Dealers** with a craps rake, chips and cards; **Casino Security** with a uniform, cap, badge and baton; older **Last Call Regulars** in rolling wheelchairs; and bottle-carrying **Drunken Crawlers**. Dealers/crawlers appear from wave 1, wheelchair enemies from wave 2, and tougher security from wave 4. Security has a warned heavy strike and a larger chip reward. Seated and crawling enemies have matching low head/body hitboxes.
+
+Generate the four GLBs with `node tools/author-enemies.js`. Animation lives in `src/render/casino-enemies.js`; shared stats, roster and hit volumes in `shared/expansion.js`; combat remains authoritative on the server.

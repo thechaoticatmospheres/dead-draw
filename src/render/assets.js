@@ -28,6 +28,10 @@ const names = [
   "letitride",
   "jukebox",
   "cashier",
+  "enemy-dealer",
+  "enemy-security",
+  "enemy-wheelchair",
+  "enemy-crawler",
 ];
 function aimBone(bone, child, target) {
   if (!bone || !child) return;

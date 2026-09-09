@@ -7,6 +7,7 @@ import { STATIONS } from "../shared/data.js";
 import { ROOMS } from "../shared/map.js";
 import { giveReward } from "../server/casino.js";
 import { SERVICES } from "../shared/services.js";
+import { ENEMIES } from "../shared/expansion.js";
 const game = new Game("QA2026", () => 0.4);
 const vite = await createServer({
   server: { middlewareMode: true, hmr: { port: 6194 } },
@@ -33,7 +34,38 @@ const server = http.createServer(async (req, res) => {
       res.statusCode = 409;
       return res.end("Join first");
     }
-    if (scenario === "jukebox" || scenario === "cashier") {
+    if (scenario === "enemies" || scenario === "enemy-combat") {
+      game.phase = "combat";
+      game.round = 4;
+      game.pending = 999;
+      game.spawnTimer = 999;
+      game.games = {};
+      game.crewTables = {};
+      game.hazards = [];
+      game.openRooms = ROOMS.map((r) => r.id);
+      p.x = 0;
+      p.z = 13;
+      p.yaw = 0;
+      p.pitch = -0.04;
+      p.down = false;
+      p.hp = 100;
+      game.zombies = ["dealer", "security", "wheelchair", "crawler"].map(
+        (kind, i) => ({
+          id: ++game.serial,
+          kind,
+          x: -4.5 + i * 3,
+          z: 7.8,
+          yaw: Math.PI,
+          hp: 100 * ENEMIES[kind].hp,
+          maxHp: 100 * ENEMIES[kind].hp,
+          speed: 1.4 * ENEMIES[kind].speed,
+          special: 10,
+          attack: 0,
+          stun: 0,
+        }),
+      );
+      paused = scenario === "enemies";
+    } else if (scenario === "jukebox" || scenario === "cashier") {
       game.phase = "break";
       game.games = {};
       game.crewTables = {};

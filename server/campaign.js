@@ -166,7 +166,14 @@ export const campaignMethods = {
       });
       return;
     }
-    if (this.phase !== "break" || this.busy() || p.chips < device.cost) return;
+    if (this.phase !== "break" || this.busy() || p.chips < device.cost) {
+      if (device.id === "power" && this.phase === "break" && this.busy())
+        this.event("notice", {
+          player: p.id,
+          text: "Finish active casino hands before restoring power.",
+        });
+      return;
+    }
     if (device.id === "power" && !c.power) {
       p.chips -= device.cost;
       c.power = true;

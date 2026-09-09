@@ -2,6 +2,7 @@ import { CrewUI } from "./crew-ui.js";
 import { BackgroundMusic } from "./music.js";
 import { JukeboxUI } from "./jukebox-ui.js";
 import { nearbyService } from "../shared/services.js";
+import { nearbyPower } from "../shared/campaign.js";
 import { cosmeticMessage } from "./profile.js";
 import { MovementPrediction } from "./prediction.js";
 import "./crew.css";
@@ -112,6 +113,14 @@ function menuRoot() {
   );
 }
 function interact() {
+  const power = nearbyPower(me(), state);
+  if (power) {
+    if (state.campaign.power) toast("CASINO POWER IS ALREADY ON");
+    else if (state.phase !== "break") toast("RESTORE POWER BETWEEN ROUNDS");
+    else if (me().chips < power.cost) toast("POWER REQUIRES 150 CHIPS");
+    else send({ type: "crew", choice: "power" });
+    return;
+  }
   const service = preferredService();
   if (service) {
     useService(service);
@@ -578,6 +587,12 @@ function updateHUD() {
         ? "OPEN THE OTHER WING TO CONNECT THIS ROUTE"
         : `E · OPEN ${r.name} / ${r.cost} CHIPS · WHOLE CREW`;
   }
+  if (nearbyPower(p, state) && !downed)
+    prompt = state.campaign.power
+      ? "CASINO POWER · ONLINE"
+      : state.phase === "break"
+        ? "E · RESTORE POWER · 150 CHIPS"
+        : "POWER TERMINAL · USE BETWEEN ROUNDS";
   if (
     document.pointerLockElement !== $("world") &&
     controller.mode !== "controller" &&

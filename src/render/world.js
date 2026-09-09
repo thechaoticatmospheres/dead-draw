@@ -1,5 +1,7 @@
 import { CampaignScene } from "./campaign.js";
 import { ServiceScene } from "./services.js";
+import { casinoEnemy, animateCasinoEnemy } from "./casino-enemies.js";
+import { ENEMIES } from "../../shared/expansion.js";
 import { COSMETICS } from "../../shared/campaign.js";
 import { opticFor, gunStats } from "../../shared/attachments.js";
 import {
@@ -184,11 +186,14 @@ export class World {
       this.loaded = true;
     });
   }
-  actor(id, zombie = false, x = 0, z = 0) {
+  actor(id, zombie = false, x = 0, z = 0, kind = "walker") {
     const variant = String(id)
       .split("")
       .reduce((n, c) => n + c.charCodeAt(0), 0);
-    const root = this.assets.character(zombie, variant);
+    const root =
+      zombie && ENEMIES[kind]?.model
+        ? casinoEnemy(this.assets, kind)
+        : this.assets.character(zombie, variant);
     root.position.set(x, 0, z);
     this.scene.add(root);
     this.actors.set(id, root);
@@ -351,7 +356,8 @@ export class World {
       for (const z of state.zombies) {
         const id = "z" + z.id;
         ids.add(id);
-        const a = this.actors.get(id) || this.actor(id, true, z.x, z.z);
+        const a = this.actors.get(id) || this.actor(id, true, z.x, z.z, z.kind);
+        const before = a.position.clone();
         a.position.lerp(new THREE.Vector3(z.x, 0, z.z), 1 - Math.exp(-dt * 16));
         const target = state.players
           .filter((p) => !p.down)
@@ -360,12 +366,16 @@ export class World {
               Math.hypot(p.x - z.x, p.z - z.z) -
               Math.hypot(q.x - z.x, q.z - z.z),
           )[0];
-        if (target) a.rotation.y = Math.atan2(z.x - target.x, z.z - target.z);
+        if (target)
+          a.rotation.y = z.yaw ?? Math.atan2(z.x - target.x, z.z - target.z);
         a.userData.runRate =
           z.kind === "runner" ? 1.1 : z.kind === "boss" ? 0.3 : 0.45;
-        this.assets.animate(a, dt, true, false, null);
+        if (a.userData.customEnemy)
+          animateCasinoEnemy(a, dt, z, before.distanceTo(a.position));
+        else this.assets.animate(a, dt, !z.stun, false, null);
         this.encounters.actor(a, z, this.camera);
-        a.userData.visual.rotation.x = z.stun ? -0.18 : 0.08;
+        if (!a.userData.customEnemy)
+          a.userData.visual.rotation.x = z.stun ? -0.18 : 0.08;
       }
       for (const [id, a] of this.actors)
         if (!ids.has(id)) {

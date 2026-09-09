@@ -123,7 +123,11 @@ export const combatMethods = {
     if (grenade) this.progressContract("grenadeKills");
     const bonus =
       Math.floor(p.combo / 3) * 2 +
-      (z.kind === "boss" ? 75 : z.kind === "brute" ? 10 : 0);
+      (z.kind === "boss"
+        ? 75
+        : ["brute", "security"].includes(z.kind)
+          ? 10
+          : 0);
     for (let i = 0; i < 3; i++)
       this.chips.push({
         id: ++this.serial,
@@ -157,9 +161,9 @@ export const combatMethods = {
   },
   specialAttack(z, target, dt) {
     z.special = (z.special ?? 3) - dt;
-    const brute = z.kind === "brute";
+    const brute = ["brute", "security"].includes(z.kind);
     if (
-      !["spitter", "boss", "brute"].includes(z.kind) ||
+      !["spitter", "boss", "brute", "security"].includes(z.kind) ||
       z.special > 0 ||
       distance(z, target) > (brute ? 2.6 : 13) ||
       !clearPath(z, target, this.openRooms)
@@ -187,11 +191,18 @@ export const combatMethods = {
         delay,
         total: delay,
         life: brute ? 1 : boss ? 1.5 : 4.1,
-        damage: brute ? 32 : boss ? 30 : 9,
+        damage: z.kind === "security" ? 24 : brute ? 32 : boss ? 30 : 9,
         tick: 0,
       });
     }
-    z.special = brute ? 3.2 : boss ? Math.max(2.6, 5 * (z.hp / z.maxHp)) : 5;
+    z.special =
+      z.kind === "security"
+        ? 5
+        : brute
+          ? 3.2
+          : boss
+            ? Math.max(2.6, 5 * (z.hp / z.maxHp))
+            : 5;
     z.stun = brute ? 0.9 : 0.55;
   },
   updateTactics(dt, players) {

@@ -153,3 +153,14 @@ With Microsoft Edge installed:
 The starting Palm Atrium contains the Golden Hour Jukebox and a Survivor’s Club cashier window. Click either prop, or approach and press **E / A**. The cashier opens the Club between rounds; **U / D-pad right** remains a shortcut from anywhere. The HUD now names the Club and shows its binding.
 
 The jukebox plays five supplied three-minute songs in a repeating playlist. Players near it can choose a record, skip forward/back, and pause/resume for the whole crew. Opening it does not prevent a new round; its panel closes when combat starts. Your own music-volume slider persists across refreshes, while playlist position is included in safe run checkpoints. Master volume, Sound Off and window focus also apply, and music gets quieter during combat. If a browser blocks autoplay, click once or use the jukebox's Enable Music button.
+
+## Casino staff & regulars
+
+- **Dead Dealer (wave 1+):** burgundy uniform, chips/cards and a craps rake. Slightly tougher than a drifter, with a longer melee reach.
+- **Drunken Crawler (wave 1+):** slowly drags across the floor holding a bottle. Aim down at its head; standing-height shots pass overhead.
+- **Last Call Regular (wave 2+):** an older zombie in a wheelchair, rolling faster than a drifter. Its seated head and body are lower targets.
+- **Casino Security (wave 4+):** a larger uniformed guard with a baton, 2.6 times base health, and a warned close-range heavy strike. Keep clear of the ground warning or dodge away. Drops an extra 10 chips on defeat.
+
+These join the existing drifters, runners, spitters, pit bosses and High Roller bosses. Normal five-wave boss/key progression remains intact.
+
+**Power shortcut:** stand near the Sapphire terminal and press **E / controller A** during an intermission to buy power for 150 chips. Finish active casino hands first. The prompt changes to ONLINE once purchased for the crew. Repeated presses do not charge again.
