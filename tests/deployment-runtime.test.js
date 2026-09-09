@@ -21,6 +21,7 @@ test(
         HOST: "127.0.0.1",
         PORT: "0",
         SHARE_TOKEN: "",
+        RENDER_GIT_COMMIT: "a".repeat(40),
         ALLOWED_ORIGINS: origin,
       },
       stdio: ["ignore", "pipe", "pipe"],
@@ -53,7 +54,9 @@ test(
         });
       });
       const base = `http://127.0.0.1:${port}`;
-      assert.equal((await fetch(`${base}/health`)).status, 200);
+      const health = await fetch(`${base}/health`);
+      assert.equal(health.status, 200);
+      assert.equal(health.headers.get("x-game-revision"), "a".repeat(40));
       for (const path of ["/", "/.env", "/server/index.js"])
         assert.equal((await fetch(base + path)).status, 404);
       await new Promise((resolve, reject) => {

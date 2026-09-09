@@ -1,6 +1,8 @@
 import { ROOMS, DOORS, roomAt, doorOpen } from "../shared/map.js";
 import "./style.css";
 import "./expansion.css";
+import "./high-stakes.css";
+import { opticFor } from "../shared/attachments.js";
 import { World } from "./render/world.js";
 import { Audio } from "./audio.js";
 import { Soundscape } from "./soundscape.js";
@@ -62,8 +64,11 @@ const controller = new GamepadInput({
   playing: () => ["combat", "break"].includes(state?.phase),
   notice: toast,
   look: (x, y) => {
-    yaw += x;
-    pitch = Math.max(-0.65, Math.min(0.65, pitch + y));
+    const sensitivity = controller.input.aim
+      ? 1 / (opticFor(me())?.zoom || 1)
+      : 1;
+    yaw += x * sensitivity;
+    pitch = Math.max(-0.65, Math.min(0.65, pitch + y * sensitivity));
   },
   mode: (value) => {
     release();
@@ -327,7 +332,7 @@ function toggleMap() {
 }
 function renderMap() {
   const current = roomAt(me())?.id,
-    order = ["arcade", "crown", "dice", "emerald", "atrium", "velvet"];
+    order = [...ROOMS].sort((a, b) => a.z - b.z || a.x - b.x).map((r) => r.id);
   $("floorRooms").innerHTML = order
     .map((id) => {
       const r = ROOMS.find((r) => r.id === id),
@@ -342,14 +347,14 @@ function renderMap() {
         "</span><strong>" +
         r.name +
         "</strong><small>" +
-        {
+        ({
           poker: "VIDEO POKER",
           craps: "CRAPS",
           baccarat: "BACCARAT",
           slots: "SLOTS",
           roulette: "ROULETTE",
           blackjack: "BLACKJACK",
-        }[r.station] +
+        }[r.station] || STATIONS.find((s) => s.id === r.station).category) +
         "</small><b>" +
         (open ? "CREW ACCESS" : r.cost + " ◉") +
         "</b></div>"
@@ -475,7 +480,7 @@ function updateHUD() {
   $("hint").textContent =
     controller.mode === "controller"
       ? "LS MOVE · RS LOOK · LT AIM · RT FIRE · A USE · X RELOAD · Y WEAPON · LB REVIVE"
-      : "WASD MOVE · SHIFT SPRINT · RMB AIM · LMB FIRE · E INTERACT";
+      : "WASD MOVE · SHIFT SPRINT · RMB / V AIM · LMB FIRE · E INTERACT";
   document.querySelector(".ready-shortcut").textContent =
     controller.mode === "controller"
       ? "D-PAD ↓ TO READY · MENU FOR CONTROLS"
@@ -524,14 +529,15 @@ function openCasino() {
   release();
   show("casino");
   $("casinoTitle").textContent = s.name;
-  $("casinoCategory").textContent = {
-    poker: "SHOTGUNS / FIVE-CARD DRAW",
-    craps: "ARMOR / PASS & DON’T PASS",
-    baccarat: "ELITE RIFLES / CROWN SALON",
-    slots: "SIDEARMS / THREE-REEL CLASSIC",
-    roulette: "AUTOMATICS / EUROPEAN ROULETTE",
-    blackjack: "RIFLES / BLACKJACK 3:2",
-  }[s.id];
+  $("casinoCategory").textContent =
+    {
+      poker: "SHOTGUNS / FIVE-CARD DRAW",
+      craps: "ARMOR / PASS & DON’T PASS",
+      baccarat: "ELITE RIFLES / CROWN SALON",
+      slots: "SIDEARMS / THREE-REEL CLASSIC",
+      roulette: "AUTOMATICS / EUROPEAN ROULETTE",
+      blackjack: "RIFLES / BLACKJACK 3:2",
+    }[s.id] || s.category;
   renderCasino();
   $("casino").scrollTop = 0;
 }
@@ -619,6 +625,10 @@ addEventListener("keydown", (e) => {
     return;
   }
   if (me() && !menuRoot() && !e.repeat) {
+    if (e.code === "KeyV") {
+      aim = !aim;
+      return;
+    }
     if (e.code === "KeyE") {
       interact();
       return;
@@ -664,8 +674,12 @@ document.addEventListener("pointerlockchange", () => {
 addEventListener("mousemove", (e) => {
   if (e.movementX || e.movementY) controller.useKeyboard();
   if (document.pointerLockElement !== $("world") || station) return;
-  yaw -= e.movementX * 0.0022;
-  pitch = Math.max(-0.65, Math.min(0.65, pitch - e.movementY * 0.0018));
+  const sensitivity = aim ? 1 / (opticFor(me())?.zoom || 1) : 1;
+  yaw -= e.movementX * 0.0022 * sensitivity;
+  pitch = Math.max(
+    -0.65,
+    Math.min(0.65, pitch - e.movementY * 0.0018 * sensitivity),
+  );
 });
 addEventListener("mousedown", (e) => {
   controller.useKeyboard();
@@ -693,7 +707,10 @@ setInterval(() => {
           : (keys.has("KeyD") ? 1 : 0) - (keys.has("KeyA") ? 1 : 0),
       yaw,
       pitch,
-      aim: controller.mode === "controller" ? controller.input.aim : aim,
+      aim:
+        !menuRoot() &&
+        !me()?.down &&
+        (controller.mode === "controller" ? controller.input.aim : aim),
       shoot: controller.mode === "controller" ? controller.input.shoot : shoot,
       sprint:
         controller.mode === "controller"
@@ -717,7 +734,9 @@ function frame(now) {
     myId,
     yaw,
     pitch,
-    controller.mode === "controller" ? controller.input.aim : aim,
+    !menuRoot() &&
+      !me()?.down &&
+      (controller.mode === "controller" ? controller.input.aim : aim),
   );
   casinoView.animate(state);
   soundscape.update(dt, state, myId, yaw, station?.id, {

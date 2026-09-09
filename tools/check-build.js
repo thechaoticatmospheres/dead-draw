@@ -22,7 +22,7 @@ for (const link of links) {
 const models = (await readdir(join(root, "assets/models"))).filter((f) =>
   f.endsWith(".glb"),
 );
-assert.equal(models.length, 18, "All original models must ship");
+assert.equal(models.length, 24, "All original models must ship");
 for (const model of models) {
   const data = await readFile(join(root, "assets/models", model));
   assert.equal(data.subarray(0, 4).toString(), "glTF", model);

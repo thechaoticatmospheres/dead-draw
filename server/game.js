@@ -10,6 +10,15 @@ import { Navigation } from "./navigation.js";
 import { playerProgression, progressionMethods } from "./progression.js";
 import { combatMethods } from "./combat.js";
 import { casinoExpansionMethods } from "./casino-expansion.js";
+import { HIGH_STAKES } from "../shared/high-stakes-rules.js";
+import { gunStats } from "../shared/attachments.js";
+import {
+  highStakesCost,
+  beginHighStakes,
+  advanceHighStakes,
+  publicHighStakes,
+  highStakesMethods,
+} from "./high-stakes.js";
 import {
   ENEMIES,
   damageMultiplier,
@@ -139,6 +148,8 @@ export class Game {
     }
     if (p.down || !["combat", "break"].includes(this.phase)) return;
     if (msg.type === "buy") return this.buy(p, msg.item);
+    if (msg.type === "attachment") return this.attach(p, msg.item);
+    if (msg.type === "tableChoice") return this.tableChoice(p, msg);
     if (msg.type === "dodge") return this.dodge(p);
     if (msg.type === "grenade") return this.grenade(p);
     if (msg.type === "risk") return this.startRisk(p, msg.station, msg.color);
@@ -171,7 +182,7 @@ export class Game {
     }
     if (msg.type === "reload") {
       const gun = p.guns[p.selected],
-        w = WEAPONS[gun.id];
+        w = gunStats(WEAPONS[gun.id], gun);
       if (!p.reload && gun.ammo < w.mag && gun.reserve > 0)
         p.reload = w.reload * (1 - (p.perks.reload || 0) * 0.15);
     }
@@ -322,6 +333,10 @@ export class Game {
     )
       return;
     let cost = s.cost;
+    if (HIGH_STAKES.includes(s.id)) {
+      cost = highStakesCost(s, msg);
+      if (cost === null) return;
+    }
     const lines = msg.lines === 3 ? 3 : 1,
       stake = [25, 50, 100].includes(msg.stake) ? msg.stake : 25;
     if (s.type === "slots") cost = lines * stake;
@@ -401,6 +416,8 @@ export class Game {
       });
     if (s.type === "baccarat")
       Object.assign(g, dealBaccarat(msg.bet, cost, this.rng));
+    if (HIGH_STAKES.includes(s.id))
+      Object.assign(g, beginHighStakes(s, msg, this.rng));
     this.games[s.id] = g;
     this.event("wager", { player: p.id, station: s.id, cost });
   }
@@ -449,7 +466,7 @@ export class Game {
   }
   shoot(p) {
     const gun = p.guns[p.selected],
-      w = WEAPONS[gun.id];
+      w = gunStats(WEAPONS[gun.id], gun);
     if (p.cooldown > 0 || p.reload || gun.ammo <= 0) return;
     gun.ammo--;
     p.cooldown = w.interval;
@@ -561,7 +578,13 @@ export class Game {
         p.reload = Math.max(0, p.reload - dt);
         if (!p.reload) {
           const gun = p.guns[p.selected],
-            n = Math.min(WEAPONS[gun.id].mag - gun.ammo, gun.reserve);
+            n = Math.max(
+              0,
+              Math.min(
+                gunStats(WEAPONS[gun.id], gun).mag - gun.ammo,
+                gun.reserve,
+              ),
+            );
           gun.ammo += n;
           gun.reserve -= n;
         }
@@ -601,7 +624,9 @@ export class Game {
       g.remaining -= dt;
       if (g.remaining <= 0) {
         if (g.phase === "risk") this.finishRisk(g);
-        else if (id === "blackjack") {
+        else if (HIGH_STAKES.includes(id)) {
+          if (advanceHighStakes(g, this.rng)) this.payTable(g);
+        } else if (id === "blackjack") {
           if (advanceBlackjack(g)) this.payTable(g);
         } else if (id === "craps" && g.phase === "rolling") {
           if (finishCraps(g)) this.payTable(g);
@@ -760,6 +785,7 @@ export class Game {
       chips: this.chips,
       games: Object.fromEntries(
         Object.entries(this.games).map(([id, g]) => {
+          if (HIGH_STAKES.includes(id)) return [id, publicHighStakes(g)];
           const {
             deck,
             playerCards,
@@ -845,4 +871,5 @@ Object.assign(
   progressionMethods,
   combatMethods,
   casinoExpansionMethods,
+  highStakesMethods,
 );

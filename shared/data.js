@@ -1,4 +1,5 @@
 import { BOUNDS, barriers, circleRect, barrierDistance } from "./map.js";
+import { opticFor } from "./attachments.js";
 export const WEAPONS = {
   pitViper: {
     name: "Pit Viper",
@@ -192,12 +193,92 @@ export const STATIONS = [
     category: "ELITE RIFLES",
   },
 ];
+STATIONS.push(
+  {
+    id: "war",
+    type: "war",
+    name: "Sapphire Showdown",
+    room: "sapphire",
+    x: -17,
+    z: -25,
+    r: 2,
+    cost: 50,
+    wagers: [50, 100, 200],
+    color: 0x719ef0,
+    category: "CASINO WAR",
+  },
+  {
+    id: "threecard",
+    type: "threecard",
+    name: "Ivory Three Card",
+    room: "ivory",
+    x: 0,
+    z: -26,
+    r: 2,
+    cost: 75,
+    wagers: [75, 150, 300],
+    color: 0xe8ddd0,
+    category: "ANTE / PLAY / PAIR PLUS",
+  },
+  {
+    id: "sicbo",
+    type: "sicbo",
+    name: "Jade Dragon Dice",
+    room: "jade",
+    x: 17,
+    z: -25,
+    r: 2.2,
+    cost: 100,
+    wagers: [100, 200, 400],
+    color: 0x70cda2,
+    category: "THREE-DICE SIC BO",
+  },
+  {
+    id: "keno",
+    type: "keno",
+    name: "Neon Numbers",
+    room: "neon",
+    x: -17,
+    z: -41,
+    r: 1.5,
+    cost: 125,
+    wagers: [125, 250, 500],
+    color: 0xd887ea,
+    category: "80-BALL KENO",
+  },
+  {
+    id: "hilo",
+    type: "hilo",
+    name: "Obsidian Hi-Lo",
+    room: "obsidian",
+    x: 17,
+    z: -41,
+    r: 1.5,
+    cost: 150,
+    wagers: [150, 300, 600],
+    color: 0xc98f79,
+    category: "PREDICT / PRESS / BANK",
+  },
+  {
+    id: "letitride",
+    type: "letitride",
+    name: "Eclipse Let It Ride",
+    room: "eclipse",
+    x: 0,
+    z: -42,
+    r: 2.2,
+    cost: 200,
+    wagers: [200, 400, 800],
+    color: 0xe8bd6e,
+    category: "THREE BETS / FIVE CARDS",
+  },
+);
 export const OBSTACLES = [
   ...STATIONS.map((s) => ({
     x: s.x,
     z: s.z,
     r: s.r,
-    h: ["slots", "poker"].includes(s.type) ? 2.8 : 1.4,
+    h: ["slots", "poker", "keno", "hilo"].includes(s.type) ? 2.8 : 1.4,
   })),
   { x: 3, z: 4, r: 1.15, h: 1.2 },
   { x: -20, z: 3, r: 1, h: 1.2 },
@@ -237,6 +318,7 @@ export function aimRay(p, yaw, pitch, aim, open = ["atrium"]) {
     y: Math.sin(pitch),
     z: -Math.cos(yaw) * Math.cos(pitch),
   };
+  if (aim && opticFor(p)) return { dir, origin: { x: p.x, y: 1.65, z: p.z } };
   const back = aim ? 2.4 : 4.2,
     dx = -dir.x * back + Math.cos(yaw) * 0.65,
     dz = -dir.z * back - Math.sin(yaw) * 0.65,
@@ -270,7 +352,10 @@ export function aimRay(p, yaw, pitch, aim, open = ["atrium"]) {
         Math.min(BOUNDS.maxX - 0.2, p.x + dx * fraction),
       ),
       y: Math.max(0.5, 1.65 + dy * fraction),
-      z: Math.max(-15.8, Math.min(15.8, p.z + dz * fraction)),
+      z: Math.max(
+        BOUNDS.minZ + 0.2,
+        Math.min(BOUNDS.maxZ - 0.2, p.z + dz * fraction),
+      ),
     },
   };
 }

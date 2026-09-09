@@ -270,7 +270,14 @@ export class CasinoEnvironment {
       const prop = assets.prop(s.id);
       root.add(prop);
       const sign = label(
-        s.id === "poker" ? "VIDEO POKER" : s.type.toUpperCase(),
+        s.id === "poker"
+          ? "VIDEO POKER"
+          : {
+              letitride: "LET IT RIDE",
+              threecard: "THREE CARD POKER",
+              sicbo: "SIC BO",
+              hilo: "HI-LO",
+            }[s.type] || s.type.toUpperCase(),
         s.category + " · " + s.cost + "+ CHIPS",
         "#e7c482",
         s.id === "slots" || s.id === "poker" ? 2.05 : 2.65,
@@ -296,7 +303,7 @@ export class CasinoEnvironment {
       root.userData = { light, prize, prop };
       this.stations[s.id] = root;
       // Seats stay inside the existing table collision footprint.
-      if (!["slots", "poker"].includes(s.id)) {
+      if (!["slots", "poker", "keno", "hilo"].includes(s.id)) {
         for (const x of [-0.9, 0.9]) {
           const chair = assets.prop("chair");
           chair.position.set(x, 0, 1.55);

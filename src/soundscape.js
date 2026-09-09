@@ -4,6 +4,7 @@ const distance = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
 const cards = (g) =>
   [
     ...(g.cards || []),
+    ...(g.community || []),
     ...(g.dealer || []),
     ...(g.hands || []).flatMap((h) => h.cards),
     ...(g.playerCards || []),
@@ -224,7 +225,18 @@ export class Soundscape {
       const visible = cards(g),
         reels = (g.reelStops || []).filter((s) => s !== null).length,
         picks = g.vault?.picks.length || 0;
-      if (!old && ["blackjack", "poker", "baccarat"].includes(id))
+      if (
+        !old &&
+        [
+          "blackjack",
+          "poker",
+          "baccarat",
+          "war",
+          "threecard",
+          "hilo",
+          "letitride",
+        ].includes(id)
+      )
         play("shuffle");
       if (visible && visible !== old?.cards)
         play("card", { delay: old ? 0 : 0.14 });
@@ -241,7 +253,7 @@ export class Soundscape {
         if (old?.phase === "playing" && g.phase !== "playing")
           play("rouletteDrop");
       }
-      if (id === "craps") {
+      if (["craps", "sicbo"].includes(id)) {
         if (g.phase === "rolling" && old?.phase !== "rolling") play("diceRoll");
         if (old?.phase === "rolling" && g.phase !== "rolling") play("diceStop");
       }
@@ -254,7 +266,10 @@ export class Soundscape {
       if (g.phase === "risk" && old?.phase !== "risk") play("riskFlip");
       if (old?.phase === "risk" && g.phase === "result")
         play(g.riskCredit ? "win" : "loss");
+      if (id === "keno" && g.drawn?.length > (old?.balls || 0))
+        play("rouletteDrop");
       games.set(id, {
+        balls: g.drawn?.length || 0,
         key,
         cards: visible,
         reels,

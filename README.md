@@ -1,6 +1,6 @@
 # DEAD DRAW
 
-A third-person zombie casino survival game for 1–4 players. Survive waves together, unlock rooms, and spend fictional chips on six casino games and upgrades between rounds. Built with **Three.js + Vite**, with an authoritative **Node.js/WebSocket** multiplayer server.
+A third-person zombie casino survival game for 1–4 players. Survive waves together, unlock rooms, and spend fictional chips on twelve casino games and upgrades between rounds. Built with **Three.js + Vite**, with an authoritative **Node.js/WebSocket** multiplayer server.
 
 ## Play
 
@@ -57,3 +57,11 @@ No computer, temporary tunnel, or ChatGPT preview is required to keep the deploy
 | `.github/workflows/pages.yml`, `render.yaml` | Deployment configuration                              |
 
 See [gameplay and controls](docs/GAMEPLAY.md) and [asset credits](public/assets/CREDITS.md). Chips are fictional; there are no payments or real-money gambling.
+
+### Second wing & weapon attachments
+
+The 48 × 64 casino now has 12 rooms and 12 distinct games. Beyond the original six rooms: Sapphire Gallery (500 chips, Casino War), Ivory Club (700, Three Card Poker), Jade Pavilion (950, Sic Bo), Neon Exchange (1,250, Keno), Obsidian Vault (1,600, Hi-Lo), and Eclipse Penthouse (2,100, Let It Ride). North doors and crossways connect the wing. Unlocks apply to the whole crew; later tables offer larger stakes. Gambling still happens only between rounds, with unlimited decision time and unanimous readiness to start the next wave.
+
+Open the Survivor’s Club with **U** to purchase/equip attachments for your current weapon: 1.5× reflex (125), 2.5× scope (275), rifle-only 6× scope (900), extended magazine (250), speed loader (350), and compensator (450). Each requires its listed room. Aim with **RMB / controller LT**, or toggle aim with **V**. Optics use a first-person camera, magnification and reduced aim sensitivity; scopes have a lens mask and reticle. Owned attachments can be switched or removed free between rounds. Reload to fill an extended magazine. Attachments last for the run, like weapons and perks.
+
+New rules and shared payouts: `shared/high-stakes-rules.js`; authoritative hands: `server/high-stakes.js`; table interfaces: `src/high-stakes-ui.js`; attachment data: `shared/attachments.js`. The six original expansion GLBs are reproducible with `node tools/author-expansion-assets.js` and add about 413 KiB. All 24 models remain embedded, self-contained assets served under Vite’s production base path.

@@ -1,3 +1,4 @@
+import { opticFor, gunStats } from "../../shared/attachments.js";
 import {
   ROOMS,
   WALLS,
@@ -71,7 +72,7 @@ export class World {
       bottom: -24,
     });
     key.shadow.bias = -0.001;
-    this.scene.add(key);
+    this.scene.add(key, key.target);
     this.composer = new EffectComposer(this.renderer);
     this.composer.addPass(new RenderPass(this.scene, this.camera));
     this.bloom = new UnrealBloomPass(
@@ -222,7 +223,7 @@ export class World {
           7,
           0.25,
         );
-      if (e.player === myId) this.recoil = 0.025;
+      if (e.player === myId) this.recoil = 0.025 * (this.recoilScale || 1);
     }
     if (e.type === "death") {
       this.particles(e.x, 1, e.z, 0x7e926b, 12, 0.6);
@@ -288,6 +289,7 @@ export class World {
           moving,
           p.reload,
           WEAPONS[p.guns[p.selected].id],
+          p.guns[p.selected],
         );
       }
       for (const z of state.zombies) {
@@ -341,7 +343,7 @@ export class World {
       if (p) {
         const a = this.actors.get(myId),
           ray = aimRay(
-            { x: a.position.x, z: a.position.z },
+            { ...p, x: a.position.x, z: a.position.z },
             yaw,
             pitch,
             aim,
@@ -349,6 +351,8 @@ export class World {
           ),
           dir = new THREE.Vector3(ray.dir.x, ray.dir.y, ray.dir.z),
           pos = new THREE.Vector3(ray.origin.x, ray.origin.y, ray.origin.z);
+        this.keyLight.target.position.set(p.x, 0, p.z);
+        this.keyLight.position.set(p.x + 4, 18, p.z + 7);
         this.camera.position.copy(pos);
         this.camera.lookAt(
           pos
@@ -356,7 +360,24 @@ export class World {
             .add(dir)
             .add(new THREE.Vector3(0, this.recoil, 0)),
         );
-        const fov = aim ? 48 : 60;
+        const optic = aim && !p.down ? opticFor(p) : null;
+        a.visible = !optic;
+        this.recoilScale = gunStats(
+          WEAPONS[p.guns[p.selected].id],
+          p.guns[p.selected],
+        ).recoil;
+        const scope = document.getElementById("scopeView");
+        scope.hidden = !optic;
+        scope.className = optic?.id || "";
+        scope.querySelector(".scope-label").textContent = optic
+          ? optic.name.toUpperCase()
+          : "";
+        document.body.classList.toggle("scoped", !!optic);
+        const fov = optic
+          ? (2 * Math.atan(Math.tan(Math.PI / 6) / optic.zoom) * 180) / Math.PI
+          : aim
+            ? 48
+            : 60;
         this.camera.fov += (fov - this.camera.fov) * Math.min(1, dt * 12);
         this.camera.updateProjectionMatrix();
       }

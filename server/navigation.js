@@ -1,7 +1,7 @@
 import { BOUNDS, barriers, circleRect, roomAt } from "../shared/map.js";
 import { OBSTACLES } from "../shared/data.js";
-const WIDTH = 48,
-  HEIGHT = 32;
+const WIDTH = BOUNDS.maxX - BOUNDS.minX,
+  HEIGHT = BOUNDS.maxZ - BOUNDS.minZ;
 const point = (i) => ({
   x: (i % WIDTH) + BOUNDS.minX + 0.5,
   z: Math.floor(i / WIDTH) + BOUNDS.minZ + 0.5,

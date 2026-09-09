@@ -20,6 +20,9 @@ if (serverOnly) {
     res.setHeader("Content-Type", "text/plain; charset=utf-8");
     res.setHeader("X-Content-Type-Options", "nosniff");
     res.setHeader("Cache-Control", "no-store");
+    const revision = process.env.RENDER_GIT_COMMIT;
+    if (/^[a-f0-9]{40}$/i.test(revision || ""))
+      res.setHeader("X-Game-Revision", revision);
     res.writeHead(
       req.url === "/health" && ["GET", "HEAD"].includes(req.method) ? 200 : 404,
     );
@@ -124,5 +127,6 @@ setInterval(() => {
 server.listen(
   port,
   process.env.HOST || (production ? "127.0.0.1" : "0.0.0.0"),
-  () => console.log(`DEAD DRAW ready at http://localhost:${server.address().port}`),
+  () =>
+    console.log(`DEAD DRAW ready at http://localhost:${server.address().port}`),
 );

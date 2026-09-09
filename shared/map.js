@@ -1,4 +1,4 @@
-export const BOUNDS = { minX: -24, maxX: 24, minZ: -16, maxZ: 16 };
+export const BOUNDS = { minX: -24, maxX: 24, minZ: -48, maxZ: 16 };
 export const ROOMS = [
   {
     id: "atrium",
@@ -55,6 +55,62 @@ export const ROOMS = [
     station: "baccarat",
   },
 ];
+ROOMS.push(
+  {
+    id: "sapphire",
+    name: "SAPPHIRE GALLERY",
+    x: -16,
+    z: -24,
+    cost: 500,
+    color: 0x719ef0,
+    station: "war",
+  },
+  {
+    id: "ivory",
+    name: "IVORY CLUB",
+    x: 0,
+    z: -24,
+    cost: 700,
+    color: 0xe8ddd0,
+    station: "threecard",
+  },
+  {
+    id: "jade",
+    name: "JADE PAVILION",
+    x: 16,
+    z: -24,
+    cost: 950,
+    color: 0x70cda2,
+    station: "sicbo",
+  },
+  {
+    id: "neon",
+    name: "NEON EXCHANGE",
+    x: -16,
+    z: -40,
+    cost: 1250,
+    color: 0xd887ea,
+    station: "keno",
+  },
+  {
+    id: "obsidian",
+    name: "OBSIDIAN VAULT",
+    x: 16,
+    z: -40,
+    cost: 1600,
+    color: 0xc98f79,
+    station: "hilo",
+  },
+  {
+    id: "eclipse",
+    name: "ECLIPSE PENTHOUSE",
+    x: 0,
+    z: -40,
+    cost: 2100,
+    color: 0xe8bd6e,
+    station: "letitride",
+  },
+);
 export const DOORS = [
   {
     id: "emerald",
@@ -97,26 +153,72 @@ export const DOORS = [
     shortcut: true,
   },
 ];
-export const WALLS = [
-  ...[-8, 8].flatMap((x) =>
-    [
-      [-16, -10.8],
-      [-7.2, 7.2],
-      [10.8, 16],
-    ].map(([a, b]) => ({ x, z: (a + b) / 2, w: 0.36, d: b - a, h: 5.15 })),
-  ),
+DOORS.push(
   ...[
-    [-24, -17.8],
-    [-14.2, -1.8],
-    [1.8, 14.2],
-    [17.8, 24],
-  ].map(([a, b]) => ({ x: (a + b) / 2, z: 0, w: b - a, d: 0.36, h: 5.15 })),
+    ["arcade", "sapphire", -16, -16],
+    ["crown", "ivory", 0, -16],
+    ["dice", "jade", 16, -16],
+    ["sapphire", "neon", -16, -32],
+    ["ivory", "eclipse", 0, -32],
+    ["jade", "obsidian", 16, -32],
+  ].map(([from, to, x, z]) => ({ id: to, from, to, x, z, w: 3.6, d: 0.36 })),
+  ...[
+    ["sapphire", "ivory", -8, -25],
+    ["jade", "ivory", 8, -25],
+    ["neon", "eclipse", -8, -41],
+    ["obsidian", "eclipse", 8, -41],
+  ].map(([from, to, x, z]) => ({
+    id: `${from}-${to}`,
+    from,
+    to,
+    x,
+    z,
+    w: 0.36,
+    d: 3.6,
+  })),
+);
+// Derive solid partitions from the door openings so render, bullets and AI share one layout.
+function partition(axis, position, low, high) {
+  const vertical = axis === "x";
+  const gaps = DOORS.filter(
+    (d) => d[axis] === position && (vertical ? d.w < 1 : d.d < 1),
+  )
+    .map((d) => [d[vertical ? "z" : "x"] - 1.8, d[vertical ? "z" : "x"] + 1.8])
+    .sort((a, b) => a[0] - b[0]);
+  const segments = [];
+  let cursor = low;
+  for (const [a, b] of [...gaps, [high, high]]) {
+    if (a > cursor)
+      segments.push(
+        vertical
+          ? {
+              x: position,
+              z: (cursor + a) / 2,
+              w: 0.36,
+              d: a - cursor,
+              h: 5.15,
+            }
+          : {
+              x: (cursor + a) / 2,
+              z: position,
+              w: a - cursor,
+              d: 0.36,
+              h: 5.15,
+            },
+      );
+    cursor = b;
+  }
+  return segments;
+}
+export const WALLS = [
+  ...[-8, 8].flatMap((x) => partition("x", x, BOUNDS.minZ, BOUNDS.maxZ)),
+  ...[0, -16, -32].flatMap((z) => partition("z", z, BOUNDS.minX, BOUNDS.maxX)),
 ];
 export const OUTER_WALLS = [
-  { x: 0, z: -16.2, w: 48.4, d: 0.4, h: 5.3 },
+  { x: 0, z: -48.2, w: 48.4, d: 0.4, h: 5.3 },
   { x: 0, z: 16.2, w: 48.4, d: 0.4, h: 5.3 },
-  { x: -24.2, z: 0, w: 0.4, d: 32, h: 5.3 },
-  { x: 24.2, z: 0, w: 0.4, d: 32, h: 5.3 },
+  { x: -24.2, z: -16, w: 0.4, d: 64, h: 5.3 },
+  { x: 24.2, z: -16, w: 0.4, d: 64, h: 5.3 },
 ];
 export const ROOM_SPAWNS = ROOMS.flatMap((room) =>
   [-1, 1].map((side) => ({

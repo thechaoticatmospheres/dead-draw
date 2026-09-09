@@ -7,6 +7,11 @@ import {
 } from "../shared/expansion.js";
 import { WEAPONS } from "../shared/data.js";
 import { giveReward } from "./casino.js";
+import {
+  ATTACHMENTS,
+  attachmentFits,
+  gunStats,
+} from "../shared/attachments.js";
 export const playerProgression = () => ({
   perks: {},
   comps: 0,
@@ -25,6 +30,38 @@ export const playerProgression = () => ({
   secondWindUsed: false,
 });
 export const progressionMethods = {
+  attach(p, id) {
+    if (
+      this.phase !== "break" ||
+      p.down ||
+      p.reload ||
+      Object.values(this.games).some(
+        (g) => g.player === p.id && g.phase !== "result",
+      )
+    )
+      return;
+    const item = ATTACHMENTS.find((a) => a.id === id),
+      gun = p.guns[p.selected];
+    if (
+      !item ||
+      !attachmentFits(item, WEAPONS[gun.id]) ||
+      !this.openRooms.includes(item.room)
+    )
+      return;
+    const owned = gun.ownedAttachments || [];
+    if (!owned.includes(id)) {
+      if (p.chips < item.cost) return;
+      p.chips -= item.cost;
+      gun.ownedAttachments = [...owned, id];
+    }
+    gun.attachments ||= {};
+    gun.attachments[item.slot] = gun.attachments[item.slot] === id ? null : id;
+    this.clearReady();
+    this.event("purchase", {
+      player: p.id,
+      text: `${item.name} ${gun.attachments[item.slot] ? "equipped" : "removed"}`,
+    });
+  },
   buy(p, id) {
     if (
       this.phase !== "break" ||
@@ -67,7 +104,7 @@ export const progressionMethods = {
       if (["house", "pitViper"].includes(id) && p.guns.some((g) => g.id === id))
         return;
       p.chips -= item.chips;
-      if (id === "ammo") gun.reserve += WEAPONS[gun.id].mag * 2;
+      if (id === "ammo") gun.reserve += gunStats(WEAPONS[gun.id], gun).mag * 2;
       else if (id === "heal") p.hp = Math.min(maxHealth(p), p.hp + 50);
       else if (id === "armor") p.armor = 75;
       else if (id === "grenade") p.grenades++;

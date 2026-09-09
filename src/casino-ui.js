@@ -1,4 +1,9 @@
 import { extraTable, bindExtra } from "./extra-casino-ui.js";
+import {
+  HIGH_STAKES,
+  highStakesTable,
+  bindHighStakes,
+} from "./high-stakes-ui.js";
 import { bonusPanel, bindBonus } from "./casino-bonus-ui.js";
 import { REWARDS } from "../shared/data.js";
 import {
@@ -92,6 +97,8 @@ export class CasinoView {
     else if (s.id === "slots") html += this.slots(g);
     else if (s.id === "roulette") html += this.roulette(g, state);
     else if (s.id === "blackjack") html += this.blackjack(g);
+    else if (HIGH_STAKES.includes(s.id))
+      html += highStakesTable(this, g, cards);
     else html += extraTable(this, g, cards);
     if (g?.phase === "result" && g.player === p.id)
       html += this.result(g) + bonusPanel(g, p.chips);
@@ -154,6 +161,7 @@ export class CasinoView {
           }),
       );
     bindExtra(this, root, refresh);
+    bindHighStakes(this, root, refresh);
     root.querySelectorAll("[data-position]").forEach(
       (b) =>
         (b.onclick = () => {
@@ -190,6 +198,8 @@ export class CasinoView {
             lines: this.lines,
             stake: this.stake,
             wager: this.extra[this.s.id] || this.wager,
+            picks: this.extra.kenoPicks,
+            pairPlus: !!this.extra.pairPlus,
             bet: this.extra[this.s.id + "Bet"],
             bets: this.bets,
           });

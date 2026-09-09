@@ -90,7 +90,7 @@ test("gamepad actions are edge-triggered, menus consume fire, and focus/disconne
 });
 test("shipped GLBs are valid containers with embedded resources and animation rigs", async () => {
   const names = await fs.readdir("public/assets/models");
-  assert.equal(names.filter((n) => n.endsWith(".glb")).length, 18);
+  assert.equal(names.filter((n) => n.endsWith(".glb")).length, 24);
   let total = 0;
   for (const name of names.filter((n) => n.endsWith(".glb"))) {
     const bytes = await fs.readFile("public/assets/models/" + name);

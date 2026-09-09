@@ -3,6 +3,7 @@ import http from "node:http";
 import { createServer } from "vite";
 import { WebSocketServer } from "ws";
 import { Game } from "../server/game.js";
+import { STATIONS } from "../shared/data.js";
 import { ROOMS } from "../shared/map.js";
 import { giveReward } from "../server/casino.js";
 const game = new Game("QA2026", () => 0.4);
@@ -31,7 +32,45 @@ const server = http.createServer(async (req, res) => {
       res.statusCode = 409;
       return res.end("Join first");
     }
-    if (scenario === "pause") paused = true;
+    if (scenario.startsWith("table/") || scenario === "scope") {
+      game.phase = "break";
+      game.games = {};
+      game.zombies = [];
+      game.hazards = [];
+      game.openRooms = ROOMS.map((r) => r.id);
+      p.chips = 20000;
+      p.down = false;
+      p.hp = 100;
+      const station =
+        STATIONS.find((s) => s.id === scenario.slice(6)) ||
+        STATIONS.find((s) => s.id === "letitride");
+      p.x = station.x;
+      p.z = station.z + 3;
+      p.yaw = 0;
+      p.pitch = 0;
+      if (scenario === "scope") {
+        giveReward(p, "dividend");
+        p.selected = p.guns.findIndex((g) => g.id === "dividend");
+        const gun = p.guns[p.selected];
+        gun.attachments = {
+          optic: "scope",
+          magazine: "extended",
+          action: "speedloader",
+          barrel: "compensator",
+        };
+        gun.ownedAttachments = [
+          "reflex",
+          "scope",
+          "longscope",
+          "extended",
+          "speedloader",
+          "compensator",
+        ];
+        p.x = 0;
+        p.z = -35;
+      }
+      paused = false;
+    } else if (scenario === "pause") paused = true;
     else if (scenario === "resume") paused = false;
     else if (scenario === "club") {
       game.restart();

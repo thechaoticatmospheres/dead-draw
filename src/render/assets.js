@@ -20,6 +20,12 @@ const names = [
   "smg",
   "rifle",
   "shotgun",
+  "war",
+  "threecard",
+  "sicbo",
+  "keno",
+  "hilo",
+  "letitride",
 ];
 function aimBone(bone, child, target) {
   if (!bone || !child) return;
@@ -133,7 +139,7 @@ export class Assets {
     }
     return root;
   }
-  animate(root, dt, moving, reload, weapon) {
+  animate(root, dt, moving, reload, weapon, gunState) {
     const d = root.userData;
     if (!d.mixer) return;
     const next = moving ? "Run" : "Idle";
@@ -159,10 +165,71 @@ export class Assets {
           : weapon?.category === "shells"
             ? "shotgun"
             : "rifle";
-    if (d.weaponId !== type) {
+    const attachmentKey = JSON.stringify(gunState?.attachments || {});
+    if (d.weaponId !== type || d.attachmentKey !== attachmentKey) {
       d.gun.clear();
       d.gun.add(this.prop(type));
       d.weaponId = type;
+      d.attachmentKey = attachmentKey;
+      d.attachmentMeshes?.forEach((o) => {
+        o.geometry.dispose();
+        o.material.dispose();
+      });
+      d.attachmentMeshes = [];
+      const part = (geometry, color, x, y, z, rx = 0) => {
+        const o = new T.Mesh(
+          geometry,
+          new T.MeshStandardMaterial({ color, metalness: 0.7, roughness: 0.3 }),
+        );
+        o.position.set(x, y, z);
+        o.rotation.x = rx;
+        d.gun.add(o);
+        d.attachmentMeshes.push(o);
+      };
+      const att = gunState?.attachments || {};
+      if (att.optic) {
+        const length =
+          att.optic === "longscope"
+            ? 0.38
+            : att.optic === "scope"
+              ? 0.25
+              : 0.12;
+        part(new T.BoxGeometry(0.055, 0.075, 0.13), 0x222d31, 0, 0.14, -0.16);
+        part(
+          new T.CylinderGeometry(0.055, 0.055, length, 12),
+          0x293539,
+          0,
+          0.2,
+          -0.17,
+          Math.PI / 2,
+        );
+        part(
+          new T.CircleGeometry(0.048, 12),
+          0x5abbd0,
+          0,
+          0.2,
+          -0.17 + length / 2 + 0.001,
+        );
+      }
+      if (att.magazine)
+        part(new T.BoxGeometry(0.07, 0.16, 0.1), 0x2a3335, 0, -0.14, -0.14);
+      if (att.barrel)
+        part(
+          new T.CylinderGeometry(0.045, 0.045, 0.13, 10),
+          0xb58f51,
+          0,
+          0.02,
+          type === "pistol" ? -0.35 : -0.67,
+          Math.PI / 2,
+        );
+      if (att.action)
+        part(
+          new T.BoxGeometry(0.015, 0.045, 0.09),
+          0xb58f51,
+          0.065,
+          0.05,
+          -0.15,
+        );
     }
     poseArm(
       root,

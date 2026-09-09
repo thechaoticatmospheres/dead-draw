@@ -64,6 +64,10 @@
         ><button id="helpButton" title="Controls">?</button
         ><button id="mute" title="Toggle audio">SOUND ON</button>
       </div>
+      <div id="scopeView" hidden>
+        <div class="scope-ring"><i class="scope-dot"></i></div>
+        <span class="scope-label"></span>
+      </div>
       <div id="crosshair"><i></i><i></i><i></i><i></i></div>
       <div id="hitmarker">×</div>
       <div id="bossHud" hidden>
@@ -96,8 +100,8 @@
         <small id="reload">R RELOAD &nbsp; Q SWITCH</small>
       </div>
       <div id="hint">
-        WASD MOVE &nbsp; SHIFT SPRINT &nbsp; RMB AIM &nbsp; LMB FIRE &nbsp; E
-        INTERACT
+        WASD MOVE &nbsp; SHIFT SPRINT &nbsp; RMB / V (toggle) AIM &nbsp; LMB
+        FIRE &nbsp; E INTERACT
       </div>
     </section>
     <section id="intermission" hidden>
@@ -133,8 +137,10 @@
       </p>
       <div id="floorRooms"></div>
       <p class="map-routes">
-        WEST: Atrium → Emerald → Draw Arcade → Crown<br />EAST: Atrium → Velvet
-        → Dice Hall → Crown<br />Crown opens a shortcut back to the Atrium.
+        Continue north into Sapphire, Ivory and Jade, then Neon, Eclipse and
+        Obsidian. Room prices rise from 500 to 2,100 chips. WEST: Atrium →
+        Emerald → Draw Arcade → Crown<br />EAST: Atrium → Velvet → Dice Hall →
+        Crown<br />Crown opens a shortcut back to the Atrium.
       </p>
       <small
         >Doors can be purchased during combat. Casino games remain
