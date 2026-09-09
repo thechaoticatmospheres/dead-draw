@@ -123,6 +123,8 @@ export class GamepadInput {
       this.action("map");
       return;
     }
+    if (pressed(14)) this.action("crew");
+    if (pressed(10) && buttons[6]) this.action("shove");
     if (pressed(0)) this.action("interact");
     if (pressed(1)) this.action("dodge");
     if (pressed(11)) this.action("grenade");

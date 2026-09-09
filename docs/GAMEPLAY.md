@@ -1,5 +1,19 @@
 # DEAD DRAW gameplay and development notes
 
+## Crew, recovery and campaign
+
+**T / D-pad left** opens Crew & Objectives. Ping with **Z**, request ammunition or share one matching magazine within three meters, contribute up to 50 chips to nearby doors, and repair entrance boards for 10 chips each. Each entrance holds three boards; an incoming enemy consumes a board and waits two seconds. **C / LT + LS click** shoves nearby enemies, consuming 20 stamina with a one-second cooldown. Teammate ground outlines and location pings remain visible through walls. Downed players spectate standing teammates with **[ / ]** or **Y/RB**.
+
+Power costs 150 chips at the Sapphire terminal. Two ordinary boss kills supply two keys; the Neon archive supplies the vault code once power is on. Activate the Eclipse terminal and ready up to fight the House. Below two-thirds health it calls collectors; below one-third it also targets survivors with telegraphed acid. After victory, all connected players can vote at the atrium exit to extract. Ignoring the exit continues endless play. Traps in Jade and Ivory cost 75 chips, run for eight seconds and have a 28-second cooldown; they require power. New room cover uses the same collision data on server and client.
+
+Roulette, blackjack, baccarat and craps offer **Shared Crew Table** mode. Everyone sees the same wheel, shoe, tableau or dice; stakes and rewards remain individual. Seat or bet, then all seated players ready to deal/spin. Craps uses one shooter, rotates after seven-out, and supports place 4/5/6/8/9/10 plus travelling come bets. Place stakes stay working until picked up or lost; they are off during come-out. Refunding an unplayed wager grants no comps. Shared decisions have no countdown. Offline blackjack seats stand automatically; uncommitted offline seats refund. The solo modes remain available, including solo craps odds.
+
+Slots have three visual themes and a bank-or-free-spin feature every seventh paid spin, in addition to the five-safe vault. Choose 60 chips or three free 25-chip single-line spins. Free spins cannot recursively earn paid-spin features or comps. Keno now has comparable returns across ticket sizes; see [balance notes](BALANCE.md).
+
+**Resume saved run** uses a browser-held reconnect token and encrypted checkpoint. With teammates online, a disconnected survivor is reserved for two minutes; an entirely offline room pauses for up to 30 minutes. After a server restart, resume restores the last safe intermission, including weapons, modifications, chips, unlocked rooms and campaign. Checkpoints save about every 1.5 seconds only when no casino stake or decision is pending, expire after 90 days, and require the same server `CHECKPOINT_SECRET`. Combat since the last checkpoint can be lost after a server restart. Do not clear this site's localStorage if you want to keep saves.
+
+Career records accumulate on completed runs: cleared waves, kills/headshots, revives, casino hands, net winnings, extractions and per-weapon kills. Five cumulative challenges unlock cosmetic armbands; weapon mastery awards bronze/silver/gold charms at 50/200/500 kills. Neither cosmetics nor mastery change damage. Records and settings are local to this browser; there is no cloud account sync. The end-run report shows combat, casino and exploration results.
+
 ## High Rollers update
 
 The survival-and-casino loop now includes five enemy profiles, telegraphed area attacks, stamina dodges, grenades, chip streaks, combat pickups, rotating crew contracts, and a boss every fifth wave. Spitters keep their distance; Pit Bosses wind up a ground slam; the High Roller attacks faster as its health falls. Boss caches refill ammo, health and grenades and award three comps.
@@ -95,7 +109,7 @@ For round R and P players (1–4):
 
 Round one contains 6 / 12 / 17 / 22 zombies for 1 / 2 / 3 / 4 players. Mid-round arrivals increase the remaining wave and scale living zombie health proportionally. Departures do not weaken a wave already underway; the next wave uses the current roster. Long-session balancing still needs human co-op playtests.
 
-Start with Courtesy .38 (12 loaded, 60 reserve), 25 chips. Kills drop seven chips; nearby chips collect automatically. Round clears grant 25 chips, 12 current-weapon rounds, and 25 health to standing players.
+Start with Courtesy .38 (12 loaded, 60 reserve), 25 chips. Kills drop at least seven chips; nearby chips collect automatically. Round clears grant 25 chips plus five per previous wave (125 total cap), 12 current-weapon rounds, and 25 health to standing players.
 
 ## Casino games
 

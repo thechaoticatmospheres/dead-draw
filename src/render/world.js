@@ -1,3 +1,5 @@
+import { CampaignScene } from "./campaign.js";
+import { COSMETICS } from "../../shared/campaign.js";
 import { opticFor, gunStats } from "../../shared/attachments.js";
 import {
   ROOMS,
@@ -176,6 +178,7 @@ export class World {
       this.environment.install(this.assets);
       this.stations = this.environment.stations;
       this.doors = this.environment.doors;
+      this.campaignScene = new CampaignScene(this.scene, this.assets);
       this.loaded = true;
     });
   }
@@ -193,7 +196,7 @@ export class World {
     if (e.type === "explosion") {
       this.particles(e.x, 0.5, e.z, 0xffbd62, 35, 0.7);
       this.particles(e.x, 0.4, e.z, 0xa0c2c1, 20, 1);
-      this.recoil = 0.055;
+      this.hurtShake = 0.04;
     }
     if (e.type === "dodge") this.particles(e.x, 0.3, e.z, 0x92d0b7, 7, 0.35);
     if (e.type === "shot") {
@@ -263,10 +266,12 @@ export class World {
   }
   update(dt, state, myId, yaw, pitch, aim) {
     this.renderer.info.reset();
+    this.hurtShake = (this.hurtShake || 0) * Math.exp(-dt * 14);
     this.clock += dt;
     this.recoil *= Math.exp(-dt * 20);
     const t = this.clock;
     this.environment.update(dt, state, myId, t);
+    this.campaignScene?.update(state, t, dt);
     this.encounters.update(state, t);
     if (state && this.loaded) {
       const ids = new Set();
@@ -274,8 +279,54 @@ export class World {
         ids.add(p.id);
         const a = this.actors.get(p.id) || this.actor(p.id, false, p.x, p.z);
         const old = a.position.clone();
+        const predicted =
+          p.id === this.localId && this.predicted ? this.predicted : p;
+        a.visible = !p.offline;
+        if (!a.userData.crewOutline) {
+          const marker = new THREE.Mesh(
+            new THREE.TorusGeometry(0.35, 0.018, 4, 20),
+            new THREE.MeshBasicMaterial({
+              color: 0x82ffce,
+              depthTest: false,
+              transparent: true,
+              opacity: 0.65,
+            }),
+          );
+          marker.rotation.x = Math.PI / 2;
+          marker.position.y = 0.08;
+          marker.renderOrder = 40;
+          a.add(marker);
+          a.userData.crewOutline = marker;
+          const badge = new THREE.Mesh(
+            new THREE.BoxGeometry(0.09, 0.16, 0.08),
+            new THREE.MeshStandardMaterial({ color: 0xffffff }),
+          );
+          badge.position.set(0.35, 1.32, 0);
+          a.add(badge);
+          a.userData.badge = badge;
+          const charm = new THREE.Mesh(
+            new THREE.SphereGeometry(0.042, 8, 6),
+            new THREE.MeshStandardMaterial({
+              color: 0xc89162,
+              metalness: 0.85,
+              roughness: 0.24,
+            }),
+          );
+          charm.position.set(0.08, -0.1, 0.03);
+          a.userData.gun.add(charm);
+          a.userData.masteryCharm = charm;
+        }
+        a.userData.crewOutline.visible = p.id !== this.localId;
+        const mastery = p.mastery?.[p.guns[p.selected].id] || 0;
+        a.userData.masteryCharm.visible = mastery > 0;
+        a.userData.masteryCharm.material.color.setHex(
+          [0, 0xc89162, 0xc7d7dd, 0xf3ce6f][mastery],
+        );
+        a.userData.badge.material.color.setHex(
+          COSMETICS.find((c) => c.id === p.skin)?.color || 0xffffff,
+        );
         a.position.lerp(
-          new THREE.Vector3(p.x, p.down ? -0.8 : 0, p.z),
+          new THREE.Vector3(predicted.x, p.down ? -0.8 : 0, predicted.z),
           1 - Math.exp(-dt * 18),
         );
         a.rotation.y = p.id === myId ? yaw : p.yaw;
@@ -291,6 +342,8 @@ export class World {
           WEAPONS[p.guns[p.selected].id],
           p.guns[p.selected],
         );
+        if (a.userData.masteryCharm.parent !== a.userData.gun)
+          a.userData.gun.add(a.userData.masteryCharm);
       }
       for (const z of state.zombies) {
         const id = "z" + z.id;
@@ -358,7 +411,7 @@ export class World {
           pos
             .clone()
             .add(dir)
-            .add(new THREE.Vector3(0, this.recoil, 0)),
+            .add(new THREE.Vector3(0, this.hurtShake || 0, 0)),
         );
         const optic = aim && !p.down ? opticFor(p) : null;
         a.visible = !optic;
@@ -373,6 +426,10 @@ export class World {
           ? optic.name.toUpperCase()
           : "";
         document.body.classList.toggle("scoped", !!optic);
+        if (a.userData.gun) {
+          a.userData.gun.position.z += this.recoil * 1.8;
+          a.userData.gun.rotation.x -= this.recoil * 2;
+        }
         const fov = optic
           ? (2 * Math.atan(Math.tan(Math.PI / 6) / optic.zoom) * 180) / Math.PI
           : aim

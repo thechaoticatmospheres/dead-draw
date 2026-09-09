@@ -35,6 +35,7 @@ const server = http.createServer(async (req, res) => {
     if (scenario.startsWith("table/") || scenario === "scope") {
       game.phase = "break";
       game.games = {};
+      game.crewTables = {};
       game.zombies = [];
       game.hazards = [];
       game.openRooms = ROOMS.map((r) => r.id);
@@ -48,6 +49,17 @@ const server = http.createServer(async (req, res) => {
       p.z = station.z + 3;
       p.yaw = 0;
       p.pitch = 0;
+      for (const mate of Object.values(game.players))
+        if (mate.id !== p.id) {
+          mate.x = p.x + 1;
+          mate.z = p.z;
+          mate.chips = 20000;
+          mate.down = false;
+        }
+      if (station.id === "slots") {
+        p.slotFeature = 1;
+        p.paidSpins = 7;
+      }
       if (scenario === "scope") {
         giveReward(p, "dividend");
         p.selected = p.guns.findIndex((g) => g.id === "dividend");
@@ -68,6 +80,33 @@ const server = http.createServer(async (req, res) => {
         ];
         p.x = 0;
         p.z = -35;
+      }
+      paused = false;
+    } else if (scenario === "campaign") {
+      game.phase = "break";
+      game.openRooms = ROOMS.map((r) => r.id);
+      game.games = {};
+      game.crewTables = {};
+      game.zombies = [];
+      p.x = -21;
+      p.z = -20;
+      p.chips = 20000;
+      p.down = false;
+      p.hp = 100;
+      game.campaign.keys = 2;
+      game.campaign.archive = true;
+      paused = false;
+    } else if (scenario === "extraction") {
+      game.phase = "break";
+      game.campaign.defeated = true;
+      game.campaign.power = true;
+      game.campaign.keys = 2;
+      game.campaign.archive = true;
+      for (const p of Object.values(game.players)) {
+        p.x = 5;
+        p.z = 13;
+        p.hp = 100;
+        p.down = false;
       }
       paused = false;
     } else if (scenario === "pause") paused = true;

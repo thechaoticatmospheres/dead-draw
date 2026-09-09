@@ -58,7 +58,7 @@ export class Soundscape {
     } else if (e.type === "death")
       this.spatial("death", e, state, { kind: e.kind, gain: 0.7 });
     else if (e.type === "explosion") this.spatial("explosion", e, state);
-    else if (e.type === "dodge") play("dodge");
+    else if (e.type === "dodge" || e.type === "shove") play("dodge");
     else if (e.type === "throw") play("throw");
     else if (e.type === "hurt") {
       const before = this.players.get(e.player);
@@ -210,7 +210,19 @@ export class Soundscape {
     }
     this.hazards = hazards;
     const games = new Map();
-    for (const [id, g] of Object.entries(state.games)) {
+    const tables = { ...state.games };
+    for (const [id, t] of Object.entries(state.crewTables || {}))
+      tables[id] = {
+        ...t,
+        player: "crew",
+        phase: id === "roulette" && t.phase === "rolling" ? "playing" : t.phase,
+        duration: 5,
+        remaining: 2,
+        hands: t.seats.flatMap((s) => s.hand?.hands || []),
+        playerCards: t.baccarat?.playerCards,
+        bankerCards: t.baccarat?.bankerCards,
+      };
+    for (const [id, g] of Object.entries(tables)) {
       const previous = this.games.get(id),
         key = g.startedAt + ":" + g.player;
       const old = previous?.key === key ? previous : null;

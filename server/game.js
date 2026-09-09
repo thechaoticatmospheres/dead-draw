@@ -1,3 +1,6 @@
+import { crewTableMethods } from "./crew-tables.js";
+import { newCampaign, waveClearBonus } from "../shared/campaign.js";
+import { campaignMethods } from "./campaign.js";
 import {
   DOORS,
   ROOMS,
@@ -55,6 +58,11 @@ const dist = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
 export class Game {
   constructor(code, rng = Math.random) {
     this.code = code;
+    this.campaign = newCampaign();
+    this.runId = code + "-" + Date.now();
+    this.runStarted = 0;
+    this.summary = null;
+    this.crewTables = {};
     this.rng = rng;
     this.players = {};
     this.zombies = [];
@@ -124,6 +132,7 @@ export class Game {
     if (!p) return;
     if (msg.type === "input") {
       const i = msg.input || {};
+      if (Number.isSafeInteger(i.seq) && i.seq >= 0) p.lastSeq = i.seq;
       p.input = {
         forward: Math.max(-1, Math.min(1, Number(i.forward) || 0)),
         right: Math.max(-1, Math.min(1, Number(i.right) || 0)),
@@ -146,7 +155,37 @@ export class Game {
       this.restart();
       return;
     }
+    if (
+      msg.type === "cosmetic" &&
+      ["classic", "mint", "rose", "gold"].includes(msg.skin)
+    ) {
+      p.skin = msg.skin;
+      p.mastery = Object.fromEntries(
+        Object.keys(WEAPONS).map((id) => [
+          id,
+          [1, 2, 3].includes(msg.mastery?.[id]) ? msg.mastery[id] : 0,
+        ]),
+      );
+      return;
+    }
     if (p.down || !["combat", "break"].includes(this.phase)) return;
+    if (
+      msg.type === "slotFeature" &&
+      this.phase === "break" &&
+      !this.busy(p.id) &&
+      p.slotFeature
+    ) {
+      if (msg.choice === "bank") {
+        p.chips += 60;
+        p.slotFeature--;
+      } else if (msg.choice === "spins") {
+        p.freeSpins = (p.freeSpins || 0) + 3;
+        p.slotFeature--;
+      }
+      return;
+    }
+    if (msg.type === "crewTable") return this.crewTable(p, msg);
+    if (msg.type === "crew") return this.crewAction(p, msg);
     if (msg.type === "buy") return this.buy(p, msg.item);
     if (msg.type === "attachment") return this.attach(p, msg.item);
     if (msg.type === "tableChoice") return this.tableChoice(p, msg);
@@ -212,14 +251,14 @@ export class Game {
     )
       return;
     const room = ROOMS.find((r) => r.id === door.to);
-    if (p.chips < room.cost) {
+    if (p.chips < room.cost - (this.campaign.donations[room.id] || 0)) {
       this.event("notice", {
         player: p.id,
         text: room.name + " requires " + room.cost + " chips.",
       });
       return;
     }
-    p.chips -= room.cost;
+    p.chips -= room.cost - (this.campaign.donations[room.id] || 0);
     this.openRooms.push(room.id);
     this.clearReady();
     this.nav.key = "";
@@ -246,6 +285,7 @@ export class Game {
   }
   readyPlayer(p) {
     if (this.phase !== "break") return;
+    if (this.busy()) return;
     if (Object.values(this.games).some((g) => g.phase !== "result")) {
       this.event("notice", {
         player: p.id,
@@ -253,7 +293,7 @@ export class Game {
       });
       return;
     }
-    if (Object.values(this.players).some((p) => p.down)) {
+    if (Object.values(this.players).some((p) => p.down && !p.offline)) {
       this.event("notice", {
         player: p.id,
         text: "Revive your teammates before the next round.",
@@ -261,18 +301,37 @@ export class Game {
       return;
     }
     p.ready = !p.ready;
-    if (Object.values(this.players).every((p) => p.ready)) this.startRound();
+    if (
+      Object.values(this.players)
+        .filter((p) => !p.offline)
+        .every((p) => p.ready)
+    )
+      this.startRound();
   }
   startRound() {
     this.round++;
     this.phase = "combat";
     this.games = {};
+    this.crewTables = {};
     this.clearReady();
     this.difficulty = roundSettings(
       this.round,
-      Object.keys(this.players).length,
+      Object.values(this.players).filter((p) => !p.offline).length,
     );
-    this.pending = this.difficulty.count;
+    this.pending =
+      this.campaign.finale && !this.campaign.defeated
+        ? 0
+        : this.difficulty.count;
+    if (this.campaign.finale && !this.campaign.defeated) {
+      const boss = this.makeEnemy({ x: 0, z: -40 });
+      Object.assign(boss, {
+        kind: "boss",
+        hp: 3600 * this.difficulty.team,
+        maxHp: 3600 * this.difficulty.team,
+        finalBoss: true,
+      });
+      this.zombies = [boss];
+    }
     this.spawnTimer = 0;
     this.spawned = 0;
     this.hazards = [];
@@ -285,11 +344,22 @@ export class Game {
     this.event("round", { round: this.round });
   }
   restart() {
+    this.campaign = newCampaign();
+    this.runId = this.code + "-" + Date.now();
+    this.runStarted = this.time;
+    this.summary = null;
+    this.crewTables = {};
     for (const p of Object.values(this.players)) {
       const id = p.id,
         name = p.name;
       delete this.players[id];
       this.addPlayer(id, name);
+      Object.assign(this.players[id], {
+        skin: p.skin,
+        mastery: p.mastery,
+        offline: !!p.offline,
+        disconnectedAt: p.disconnectedAt,
+      });
     }
     this.round = 0;
     this.zombies = [];
@@ -312,6 +382,11 @@ export class Game {
     });
   }
   gamble(p, msg) {
+    if (
+      this.crewTables[msg.station] &&
+      Object.keys(this.crewTables[msg.station].seats).length
+    )
+      return;
     if (this.phase !== "break") {
       this.event("notice", {
         player: p.id,
@@ -337,9 +412,16 @@ export class Game {
       cost = highStakesCost(s, msg);
       if (cost === null) return;
     }
-    const lines = msg.lines === 3 ? 3 : 1,
+    let lines = msg.lines === 3 ? 3 : 1,
       stake = [25, 50, 100].includes(msg.stake) ? msg.stake : 25;
     if (s.type === "slots") cost = lines * stake;
+    const freeSpin =
+      s.type === "slots" && msg.freeSpin === true && p.freeSpins > 0;
+    if (freeSpin) {
+      cost = 0;
+      lines = 1;
+      stake = 25;
+    }
     if (s.type === "blackjack")
       cost = [50, 100, 200].includes(msg.wager) ? msg.wager : 50;
     if (s.type === "roulette") {
@@ -359,6 +441,7 @@ export class Game {
     if (s.type === "craps" && !["pass", "dont"].includes(msg.bet)) return;
     if (s.type === "baccarat" && !["player", "banker", "tie"].includes(msg.bet))
       return;
+    if (this.busy(p.id)) return;
     if (p.chips < cost) {
       this.event("notice", {
         player: p.id,
@@ -380,8 +463,15 @@ export class Game {
       cost,
     };
     if (s.type === "slots") {
-      this.jackpot += Math.max(1, Math.floor(cost * 0.05));
-      p.vaultSpins++;
+      if (!freeSpin) this.jackpot += Math.max(1, Math.floor(cost * 0.05));
+      if (freeSpin) {
+        p.freeSpins--;
+        g.freeSpin = true;
+      } else {
+        p.vaultSpins++;
+        p.paidSpins = (p.paidSpins || 0) + 1;
+        if (p.paidSpins % 7 === 0) p.slotFeature = (p.slotFeature || 0) + 1;
+      }
       if (p.vaultSpins >= 5) {
         g.unlockVault = true;
         p.vaultSpins = 0;
@@ -451,7 +541,7 @@ export class Game {
     g.riskCredit = p.chips - before;
     g.credited = g.riskCredit;
     this.recordHand(p, g, g.riskCredit - g.cost);
-    if (g.station === "roulette") {
+    if (g.station === "roulette" && !g.shared) {
       this.history.unshift(g.pocket);
       this.history = this.history.slice(0, 12);
     }
@@ -470,6 +560,7 @@ export class Game {
     if (p.cooldown > 0 || p.reload || gun.ammo <= 0) return;
     gun.ammo--;
     p.cooldown = w.interval;
+    p.shots = (p.shots || 0) + 1;
     const hits = [];
     for (let i = 0; i < (w.pellets || 1); i++) {
       const yaw = p.yaw + (i ? (this.rng() - 0.5) * 2 * w.spread : 0),
@@ -551,6 +642,13 @@ export class Game {
       z: origin.z + dir.z * nearest,
     };
     if (target) {
+      p.hits = (p.hits || 0) + 1;
+      p.damageDealt =
+        (p.damageDealt || 0) +
+        Math.min(
+          target.hp,
+          w.damage * damageMultiplier(gun) * (head ? 2.2 : 1),
+        );
       target.hp -= w.damage * damageMultiplier(gun) * (head ? 2.2 : 1);
       target.stun = 0.16;
       if (target.hp <= 0) {
@@ -562,14 +660,17 @@ export class Game {
   update(dt) {
     this.time += dt;
     if (!["combat", "break"].includes(this.phase)) return;
-    const players = Object.values(this.players),
+    const players = Object.values(this.players).filter((p) => !p.offline),
       alive = players.filter((p) => !p.down);
     if (!players.length) return;
     if (!alive.length) {
       this.phase = "over";
+      this.finishRun();
       this.event("notice", { text: "THE HOUSE ALWAYS WINS" });
       return;
     }
+    this.updateCampaign(dt);
+    this.updateCrewTables?.(dt);
     this.updateTactics(dt, players);
     for (const p of players) {
       if (this.time - p.inputAt > 0.3) p.input = {};
@@ -598,6 +699,7 @@ export class Game {
         );
         p.revive = rescuer ? p.revive + dt : Math.max(0, p.revive - dt * 2);
         if (p.revive >= 3) {
+          rescuer.revives = (rescuer.revives || 0) + 1;
           p.down = false;
           p.hp = 60;
           p.revive = 0;
@@ -660,9 +762,18 @@ export class Game {
           }))
           .sort((a, b) => b.score - a.score);
         const s = ranked[Math.floor(this.rng() * Math.min(2, ranked.length))].s;
-        this.zombies.push(this.makeEnemy(s));
-        this.pending--;
-        this.spawnTimer = this.difficulty.interval;
+        const barricade = SPAWNS.indexOf(s);
+        if (this.campaign.barricades[barricade] > 0) {
+          this.campaign.barricades[barricade]--;
+          this.spawnTimer = 2;
+          this.event("notice", {
+            text: "An entrance barricade is under attack.",
+          });
+        } else {
+          this.zombies.push(this.makeEnemy(s));
+          this.pending--;
+          this.spawnTimer = this.difficulty.interval;
+        }
       }
       for (const z of this.zombies) {
         const target = alive.reduce(
@@ -732,14 +843,16 @@ export class Game {
         this.clearReady();
         this.hazards = [];
         for (const p of players) {
-          p.chips += 25 + (this.contract?.complete ? this.contract.reward : 0);
+          p.chips +=
+            waveClearBonus(this.round) +
+            (this.contract?.complete ? this.contract.reward : 0);
           if (this.contract?.complete) p.comps++;
           p.hp = p.down ? p.hp : Math.min(maxHealth(p), p.hp + 25);
           const gun = p.guns[p.selected];
           gun.reserve += 12;
         }
         this.event("notice", {
-          text: `FLOOR CLEARED · 25 chips + ammo${this.contract?.complete ? ` · CONTRACT +${this.contract.reward} chips + 1 comp` : ""}. Place your bets.`,
+          text: `FLOOR CLEARED · ${waveClearBonus(this.round)} chips + ammo${this.contract?.complete ? ` · CONTRACT +${this.contract.reward} chips + 1 comp` : ""}. Place your bets.`,
         });
       }
     }
@@ -768,6 +881,10 @@ export class Game {
   snapshot() {
     return {
       code: this.code,
+      campaign: this.campaign,
+      summary: this.summary,
+      runId: this.runId,
+      crewTables: this.publicCrewTables?.() || {},
       phase: this.phase,
       round: this.round,
       timer: this.timer,
@@ -869,6 +986,8 @@ export class Game {
 Object.assign(
   Game.prototype,
   progressionMethods,
+  campaignMethods,
+  crewTableMethods,
   combatMethods,
   casinoExpansionMethods,
   highStakesMethods,

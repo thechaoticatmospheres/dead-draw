@@ -39,13 +39,13 @@ export function sicBoProfit(dice, bet) {
 }
 // Total-return multipliers, including the ticket stake. 20 unique balls drawn from 80.
 export const KENO_PAYTABLE = {
-  2: { 2: 12 },
+  2: { 2: 14.1 },
   3: { 2: 2, 3: 42 },
-  4: { 2: 1, 3: 5, 4: 100 },
-  5: { 3: 2, 4: 20, 5: 450 },
-  6: { 3: 1, 4: 7, 5: 50, 6: 1000 },
-  7: { 3: 1, 4: 3, 5: 20, 6: 100, 7: 2000 },
-  8: { 4: 2, 5: 10, 6: 50, 7: 500, 8: 5000 },
+  4: { 2: 1.16, 3: 5.8, 4: 116 },
+  5: { 3: 2.43, 4: 24.3, 5: 546.5 },
+  6: { 3: 1.39, 4: 9.7, 5: 69.3, 6: 1386 },
+  7: { 3: 1.36, 4: 4.07, 5: 27.14, 6: 135.7, 7: 2714 },
+  8: { 4: 3, 5: 15, 6: 75, 7: 750, 8: 7500 },
 };
 export function threeCardRank(cards) {
   const ranks = cards.map(rankValue).sort((a, b) => b - a);

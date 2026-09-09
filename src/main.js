@@ -1,3 +1,7 @@
+import { CrewUI } from "./crew-ui.js";
+import { cosmeticMessage } from "./profile.js";
+import { MovementPrediction } from "./prediction.js";
+import "./crew.css";
 import { ROOMS, DOORS, roomAt, doorOpen } from "../shared/map.js";
 import "./style.css";
 import "./expansion.css";
@@ -47,9 +51,42 @@ const send = (msg) => {
 const me = () => state?.players.find((p) => p.id === myId);
 const casinoView = new CasinoView({ send, audio });
 const clubView = new ClubView(send);
+const crewUI = new CrewUI(send),
+  prediction = new MovementPrediction();
+let inputSeq = 0,
+  latestInput = { yaw: 0 },
+  spectatorIndex = 0,
+  session = {};
+try {
+  session = JSON.parse(localStorage.getItem("dead-draw-session") || "{}");
+} catch {}
+const saveSession = () => {
+  try {
+    localStorage.setItem("dead-draw-session", JSON.stringify(session));
+  } catch {}
+};
+$("enter").insertAdjacentHTML(
+  "afterend",
+  `<button id="resumeRun" ${session.token ? "" : "hidden"}>RESUME LAST RUN / CHECKPOINT</button>`,
+);
+$("resumeRun").onclick = () => join(true);
+$("crewButton").onclick = () => {
+  release();
+  crewUI.toggle(me(), state);
+};
+$("careerButton").onclick = () => crewUI.toggle(me(), state, "career");
 function menuRoot() {
   return (
-    ["help", "club", "floorplan", "casino", "gameover", "lobby", "welcome"]
+    [
+      "crewPanel",
+      "help",
+      "club",
+      "floorplan",
+      "casino",
+      "gameover",
+      "lobby",
+      "welcome",
+    ]
       .map($)
       .find((e) => !e.hidden) || null
   );
@@ -79,7 +116,24 @@ const controller = new GamepadInput({
         : "KEYBOARD + MOUSE · PRESS A CONTROLLER BUTTON TO CONNECT";
   },
   action: (action) => {
+    if (me()?.down && ["switch", "club"].includes(action)) {
+      spectatorIndex++;
+      return;
+    }
+    if (action === "crew") {
+      release();
+      crewUI.toggle(me(), state);
+      return;
+    }
+    if (action === "shove") {
+      send({ type: "crew", choice: "shove" });
+      return;
+    }
     if (action === "back") {
+      if (!$("crewPanel").hidden) {
+        $("crewPanel").hidden = true;
+        return;
+      }
       if (!$("help").hidden) show("help", false);
       else if (!$("club").hidden) show("club", false);
       else if (!$("floorplan").hidden) show("floorplan", false);
@@ -177,7 +231,7 @@ function closeCasino() {
   lock();
 }
 let connectingSince = 0;
-function join() {
+function join(resume = false) {
   if ([WebSocket.OPEN, WebSocket.CONNECTING].includes(socket?.readyState))
     return;
   connectingSince ||= Date.now();
@@ -205,7 +259,13 @@ function join() {
     Math.max(1000, 90000 - (Date.now() - connectingSince)),
   );
   socket.onopen = () =>
-    send({ type: "join", name: $("name").value, code: $("code").value.trim() });
+    send({
+      type: "join",
+      name: $("name").value,
+      code: resume ? session.code || "" : $("code").value.trim(),
+      resumeToken: session.token,
+      checkpoint: resume ? session.checkpoint : undefined,
+    });
   socket.onmessage = (e) => {
     const msg = JSON.parse(e.data);
     if (msg.type === "error") {
@@ -216,7 +276,20 @@ function join() {
       socket.close();
       return;
     }
+    if (msg.type === "checkpoint") {
+      session.checkpoint = msg.checkpoint;
+      saveSession();
+      return;
+    }
     if (msg.type === "welcome") {
+      if (session.code !== msg.code) delete session.checkpoint;
+      session.code = msg.code;
+      session.token = msg.resumeToken;
+      saveSession();
+      $("resumeRun").hidden = false;
+      $("help").querySelector("h2").textContent = "Controls";
+      show("help", false);
+      send(cosmeticMessage());
       clearTimeout(connectionTimer);
       clearTimeout(deadline);
       connectingSince = 0;
@@ -228,6 +301,12 @@ function join() {
     }
     if (msg.type === "state") {
       state = msg;
+      if (me()) prediction.reconcile(me(), state.openRooms);
+      crewUI.update(me(), state, myId);
+      if (state.phase === "over") {
+        delete session.checkpoint;
+        saveSession();
+      }
       for (const event of state.events) handleEvent(event);
       updateHUD();
     }
@@ -238,20 +317,24 @@ function join() {
     if (!myId && !rejected && Date.now() - connectingSince < 90000) {
       $("connection").textContent =
         "WAKING THE GAME SERVER… RETRYING CONNECTION.";
-      setTimeout(join, 2000);
+      setTimeout(() => join(resume), 2000);
       return;
     }
-    connectingSince = 0;
     $("enter").disabled = false;
     if (rejected) return;
     if (myId) {
       release();
-      toast("Disconnected. Reload to rejoin a new run.");
+      toast("Connection interrupted. Reconnecting to your survivor…");
+      if (!connectingSince) connectingSince = Date.now();
+      if (Date.now() - connectingSince < 90000)
+        setTimeout(() => join(true), 2000);
       show("help");
       $("help").querySelector("h2").textContent = "Connection lost";
-    } else
+    } else {
+      connectingSince = 0;
       $("connection").textContent =
         "Server unavailable. Select Enter the casino to retry.";
+    }
   };
   socket.onerror = () => {
     /* onclose handles bounded cold-start retries. */
@@ -450,12 +533,14 @@ function updateHUD() {
       );
   $("prompt").style.display = prompt && !station ? "block" : "none";
   show("intermission", state.phase === "break");
-  const activeGames = Object.values(state.games).some(
-    (g) => g.phase !== "result",
-  );
+  const activeGames =
+    Object.values(state.games).some((g) => g.phase !== "result") ||
+    Object.values(state.crewTables || {}).some(
+      (t) => t.phase !== "result" && t.seats.some((s) => s.cost),
+    );
   const ready = state.players.filter((p) => p.ready).length;
   $("nextRound").disabled =
-    activeGames || p.down || state.players.some((p) => p.down);
+    activeGames || p.down || state.players.some((p) => p.down && !p.offline);
   $("nextRound").textContent = p.ready
     ? "CANCEL READY"
     : state.players.length === 1
@@ -500,6 +585,7 @@ function updateHUD() {
 
     show("lobby", state.phase === "lobby");
     show("gameover", state.phase === "over");
+    if (state.phase === "over") $("crewPanel").hidden = true;
     if (state.phase === "over") {
       show("club", false);
       release();
@@ -568,7 +654,7 @@ $("closeMap").onclick = toggleMap;
 $("nextRound").onclick = () => {
   send({ type: "nextRound" });
 };
-$("enter").onclick = join;
+$("enter").onclick = () => join(false);
 $("start").onclick = () => {
   send({ type: "start" });
   show("lobby", false);
@@ -600,11 +686,21 @@ addEventListener("keydown", (e) => {
   controller.useKeyboard();
   if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) return;
   if (e.code === "Escape") {
+    $("crewPanel").hidden = true;
     if (station) closeCasino();
     show("help", false);
     show("floorplan", false);
     show("club", false);
     release();
+    return;
+  }
+  if (e.code === "KeyT" && me() && !e.repeat) {
+    release();
+    crewUI.toggle(me(), state);
+    return;
+  }
+  if (me()?.down && ["BracketLeft", "BracketRight"].includes(e.code)) {
+    spectatorIndex += e.code === "BracketRight" ? 1 : -1;
     return;
   }
   if (e.code === "KeyM" && me()) {
@@ -625,6 +721,14 @@ addEventListener("keydown", (e) => {
     return;
   }
   if (me() && !menuRoot() && !e.repeat) {
+    if (e.code === "KeyC") {
+      send({ type: "crew", choice: "shove" });
+      return;
+    }
+    if (e.code === "KeyZ") {
+      send({ type: "crew", choice: "ping" });
+      return;
+    }
     if (e.code === "KeyV") {
       aim = !aim;
       return;
@@ -692,48 +796,72 @@ addEventListener("mouseup", (e) => {
   if (e.button === 2) aim = false;
 });
 addEventListener("contextmenu", (e) => e.preventDefault());
+function readInput() {
+  return {
+    forward:
+      controller.mode === "controller"
+        ? controller.input.forward
+        : (keys.has("KeyW") ? 1 : 0) - (keys.has("KeyS") ? 1 : 0),
+    right:
+      controller.mode === "controller"
+        ? controller.input.right
+        : (keys.has("KeyD") ? 1 : 0) - (keys.has("KeyA") ? 1 : 0),
+    yaw,
+    pitch,
+    aim:
+      !menuRoot() &&
+      !me()?.down &&
+      (controller.mode === "controller" ? controller.input.aim : aim),
+    shoot: controller.mode === "controller" ? controller.input.shoot : shoot,
+    sprint:
+      controller.mode === "controller"
+        ? controller.input.sprint
+        : keys.has("ShiftLeft") || keys.has("ShiftRight"),
+    revive:
+      controller.mode === "controller"
+        ? controller.input.revive
+        : keys.has("KeyF"),
+  };
+}
 setInterval(() => {
-  if (!myId) return;
-  send({
-    type: "input",
-    input: {
-      forward:
-        controller.mode === "controller"
-          ? controller.input.forward
-          : (keys.has("KeyW") ? 1 : 0) - (keys.has("KeyS") ? 1 : 0),
-      right:
-        controller.mode === "controller"
-          ? controller.input.right
-          : (keys.has("KeyD") ? 1 : 0) - (keys.has("KeyA") ? 1 : 0),
-      yaw,
-      pitch,
-      aim:
-        !menuRoot() &&
-        !me()?.down &&
-        (controller.mode === "controller" ? controller.input.aim : aim),
-      shoot: controller.mode === "controller" ? controller.input.shoot : shoot,
-      sprint:
-        controller.mode === "controller"
-          ? controller.input.sprint
-          : keys.has("ShiftLeft") || keys.has("ShiftRight"),
-      revive:
-        controller.mode === "controller"
-          ? controller.input.revive
-          : keys.has("KeyF"),
-    },
-  });
+  if (!myId || socket?.readyState !== WebSocket.OPEN) return;
+  latestInput = readInput();
+  latestInput.seq = ++inputSeq;
+  prediction.sent(inputSeq, latestInput);
+  send({ type: "input", input: latestInput });
 }, 1000 / 30);
 function frame(now) {
   const dt = Math.min((now - lastFrame) / 1000, 0.05);
   lastFrame = now;
   controller.update(dt, now);
   $("padMenuHint").hidden = controller.mode !== "controller" || !menuRoot();
+  let viewId = myId,
+    viewYaw = yaw,
+    viewPitch = pitch;
+  const p = me();
+  if (p?.down) {
+    const living = state.players.filter((p) => !p.down && !p.offline);
+    const target =
+      living[
+        ((spectatorIndex % living.length) + living.length) % living.length
+      ];
+    if (target) {
+      viewId = target.id;
+      viewYaw = target.yaw;
+      viewPitch = target.pitch;
+    }
+  }
+  world.predicted =
+    p && !p.down
+      ? prediction.update(dt, p, readInput(), state.openRooms)
+      : null;
+  world.localId = myId;
   world.update(
     dt,
     state,
-    myId,
-    yaw,
-    pitch,
+    viewId,
+    viewYaw,
+    viewPitch,
     !menuRoot() &&
       !me()?.down &&
       (controller.mode === "controller" ? controller.input.aim : aim),

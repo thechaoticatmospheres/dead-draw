@@ -9,6 +9,8 @@ services:
     healthCheckPath: /health
     autoDeployTrigger: checksPass
     envVars:
+      - key: CHECKPOINT_SECRET
+        generateValue: true
       - key: NODE_VERSION
         value: 22.22.0
       - key: NODE_ENV

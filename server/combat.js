@@ -101,11 +101,20 @@ export const combatMethods = {
       }
     }
   },
-  killEnemy(z, p, head = false, grenade = false) {
+  killEnemy(z, p, head = false, grenade = false, weaponCredit = true) {
     if (!this.zombies.includes(z)) return;
     this.zombies = this.zombies.filter((other) => other !== z);
     p.kills++;
     if (head) p.headshots++;
+    if (weaponCredit && !grenade) {
+      p.weaponKills ||= {};
+      const weapon = p.guns[p.selected].id;
+      p.weaponKills[weapon] = (p.weaponKills[weapon] || 0) + 1;
+    }
+    if (z.kind === "boss") {
+      if (z.finalBoss) this.campaign.defeated = true;
+      else this.campaign.keys = Math.min(2, this.campaign.keys + 1);
+    }
     p.combo = this.time < p.comboUntil ? Math.min(10, p.combo + 1) : 1;
     p.comboUntil = this.time + 4;
     p.bestCombo = Math.max(p.bestCombo, p.combo);

@@ -6,7 +6,7 @@ A third-person zombie casino survival game for 1–4 players. Survive waves toge
 
 **[Play on GitHub Pages](https://thechaoticatmospheres.github.io/dead-draw/)**
 
-Leave the room code blank to host; friends enter that code. The free multiplayer server can take about a minute to wake after inactivity. Audio and controller preferences save in localStorage on each browser/origin. Runs are held in server memory; refreshing returns to the welcome screen, and server restarts end active runs.
+Leave the room code blank to host; friends enter that code. The free multiplayer server can take about a minute to wake after inactivity. **Resume saved run** reconnects your survivor after a refresh. Safe intermissions save encrypted checkpoints in this browser, including equipment, chips, rooms and campaign progress. Career, audio and controller preferences also persist locally. Finish active casino hands before leaving to obtain a new checkpoint.
 
 ## Develop locally
 
@@ -37,6 +37,7 @@ GitHub Pages uses **GitHub Actions**. Every push to `main` runs `npm ci`, tests,
 - The deployed multiplayer server is `https://dead-draw-server.onrender.com`; its readiness endpoint is [`/health`](https://dead-draw-server.onrender.com/health).
 - `actions/configure-pages` supplies the base path, so builds work under `/REPOSITORY-NAME/` as well as custom domains. GLB assets use Vite’s base URL.
 - `render.yaml` defines one **free Render web service** for multiplayer, deploying `main` after CI checks pass. `ALLOWED_ORIGINS` must include the Pages origin (no path). `SERVER_ONLY=true` serves only `/health` and `/game`; it does not publish source files.
+- Keep Render's generated `CHECKPOINT_SECRET` stable across deployments. It authenticates checkpoint files and belongs only on the server. Local development generates a key in ignored `.cache/`. A new key invalidates earlier saves. For a public-repository Render service without an installed GitHub integration, use **Manual Deploy → Deploy latest commit** after Pages checks pass; Pages itself updates automatically.
 - If the repository owner changes, update the play link and Render’s allowed origin. If the server address changes, update `GAME_SERVER_URL` and rerun the Actions workflow.
 
 No computer, temporary tunnel, or ChatGPT preview is required to keep the deployed game available. Free-host limits and inactivity startup delays still apply.
@@ -57,6 +58,15 @@ No computer, temporary tunnel, or ChatGPT preview is required to keep the deploy
 | `.github/workflows/pages.yml`, `render.yaml` | Deployment configuration                              |
 
 See [gameplay and controls](docs/GAMEPLAY.md) and [asset credits](public/assets/CREDITS.md). Chips are fictional; there are no payments or real-money gambling.
+
+### Crew & campaign update
+
+- **T / D-pad left:** objectives, pings, ammo requests/sharing, door contributions, entrance repairs and paid traps. **C / LT + left-stick click:** emergency shove. **Z:** location ping. Downed survivors watch teammates; **[ / ]**, **Y/RB** cycle the camera.
+- Shared roulette, blackjack, baccarat and craps support separate stakes at one public table. Everyone readies for cards/wheel; the craps shooter controls rolls. Shared craps adds place bets, travelling come bets and shooter rotation. Solo tables remain available.
+- Restore power, collect two boss keys, recover the vault code, challenge the House, and vote to extract—or continue endless waves. Intermissions have no time limit.
+- Slot themes, bank-or-free-spin features, animated dealers/chips, room cover, traps, predicted movement, career challenges, cosmetic armbands and mastery charms add depth without permanent combat advantages.
+- `server/crew-tables.js`, `server/campaign.js`, `server/checkpoints.js` own multiplayer rules. `src/crew-ui.js`, `src/crew-casino-ui.js`, `src/profile.js`, `src/prediction.js` own their browser interfaces.
+- Run `node tools/balance-report.js` for exact Keno returns and solo/co-op room-unlock projections. See [balance notes](docs/BALANCE.md).
 
 ### Second wing & weapon attachments
 

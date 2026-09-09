@@ -31,6 +31,7 @@ export const playerProgression = () => ({
 });
 export const progressionMethods = {
   attach(p, id) {
+    if (this.busy(p.id)) return;
     if (
       this.phase !== "break" ||
       p.down ||
@@ -63,6 +64,7 @@ export const progressionMethods = {
     });
   },
   buy(p, id) {
+    if (this.busy(p.id)) return;
     if (
       this.phase !== "break" ||
       p.down ||
@@ -125,6 +127,7 @@ export const progressionMethods = {
     p.comps += Math.floor(p.wagered / 50) - before;
   },
   recordHand(p, g, net) {
+    p.handsPlayed = (p.handsPlayed || 0) + 1;
     p.casinoNet += net;
     p.ledger.unshift({
       id: ++this.serial,

@@ -1,0 +1,250 @@
+.crew-panel {
+  position: fixed;
+  z-index: 25;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(920px, 94vw);
+  max-height: 90vh;
+  overflow: auto;
+  padding: 32px;
+  color: #f1ebd9;
+  background: linear-gradient(135deg, #102e29fa, #071916fc);
+  border: 1px solid #d5b67470;
+  border-radius: 10px;
+  box-shadow: 0 25px 100px #000b;
+}
+.crew-panel h2 {
+  font:
+    600 36px "Barlow Condensed",
+    sans-serif;
+  margin: 10px 0 24px;
+}
+.crew-panel h3 {
+  color: var(--gold);
+  font-size: 13px;
+  letter-spacing: 1px;
+  margin-top: 24px;
+}
+.crew-panel button,
+.crew-mode button,
+.crew-bets button,
+.career-button,
+#resumeRun {
+  padding: 10px 15px;
+  border: 1px solid #d5b67455;
+  border-radius: 4px;
+  background: #1b3b32;
+  color: #f1ebd9;
+  margin: 3px;
+  font-size: 12px;
+}
+.crew-panel button:hover:not(:disabled),
+.crew-bets button:hover:not(:disabled) {
+  background: #2a5846;
+}
+.crew-mode {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.crew-mode .selected,
+.crew-panel .selected {
+  border-color: var(--gold);
+  color: var(--gold);
+}
+#closeCrew {
+  position: absolute;
+  right: 18px;
+  top: 16px;
+}
+.crew-objective {
+  padding: 16px;
+  background: #1b3b3266;
+  border-left: 3px solid var(--gold);
+}
+.crew-objective p,
+.crew-statline {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #c5d4ca;
+}
+.crew-seats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
+  margin: 16px 0;
+}
+.crew-seats article {
+  border: 1px solid #d5b67444;
+  border-radius: 6px;
+  padding: 14px;
+  background: #071b1888;
+  min-width: 0;
+}
+.crew-seats .your-seat {
+  border-color: var(--gold);
+}
+.crew-seats span,
+.crew-seats small,
+.crew-seats strong {
+  display: block;
+  margin: 8px 0;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.crew-seats p {
+  font-size: 12px;
+}
+.crew-seats .playing-card {
+  transform: scale(0.85);
+  margin: 0 -3px;
+}
+.crew-seats .playing-cards {
+  min-height: 95px;
+  margin: 8px 0;
+}
+body:has(#casino:not([hidden])) #campaignHud,
+body:has(#crewPanel:not([hidden])) #campaignHud,
+body:has(#club:not([hidden])) #campaignHud,
+body:has(#help:not([hidden])) #campaignHud,
+body:has(#floorplan:not([hidden])) #campaignHud {
+  display: none;
+}
+.crew-bets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 12px 0;
+}
+.crew-bets button {
+  min-width: 44px;
+  flex: 0 1 auto;
+}
+.crew-wheel {
+  width: 115px;
+  height: 115px;
+  margin: auto;
+  border: 10px double #d5b674;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 32px;
+  background: repeating-conic-gradient(#12372d 0deg 12deg, #702e35 12deg 24deg);
+  text-shadow: 0 1px 5px #000;
+}
+.crew-wheel.spinning {
+  animation: crew-spin 0.5s linear infinite;
+}
+.crew-hands {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+}
+#campaignHud {
+  position: fixed;
+  left: 50%;
+  top: 85px;
+  transform: translateX(-50%);
+  max-width: 50vw;
+  padding: 7px 13px;
+  border-radius: 5px;
+  color: #ead9b3;
+  font-size: 11px;
+  text-align: center;
+  background: #071916b8;
+  pointer-events: none;
+}
+#spectatorHud {
+  position: fixed;
+  left: 50%;
+  top: 26%;
+  transform: translateX(-50%);
+  padding: 12px;
+  color: var(--gold);
+  font-size: 12px;
+  background: #071916d9;
+  pointer-events: none;
+}
+#crewButton {
+  font-size: 10px;
+  padding: 5px 8px;
+  background: #12342c;
+  color: #eac67f;
+  border: 1px solid #d5b67455;
+}
+.career-button {
+  display: block;
+  margin-top: 18px;
+}
+.mastery-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  font-size: 12px;
+  gap: 0 16px;
+}
+.run-summary {
+  padding: 16px;
+  margin-top: 16px;
+  border: 1px solid #d5b67455;
+  font-size: 13px;
+}
+.run-summary p {
+  line-height: 1.8;
+}
+.slot-feature {
+  padding: 12px;
+  border: 1px solid #d5b67466;
+  margin: 10px 0;
+  background: #183b3066;
+}
+.slot-feature p {
+  font-size: 12px;
+  color: #c5d4ca;
+}
+.theme-neon,
+.slot-theme-neon,
+.reels.neon {
+  box-shadow: 0 0 24px #c16cff55;
+  border-color: #c16cff;
+}
+.theme-gold,
+.slot-theme-gold,
+.reels.gold {
+  box-shadow: 0 0 24px #ffba3955;
+  border-color: #eac67f;
+}
+.theme-afterlife,
+.slot-theme-afterlife,
+.reels.afterlife {
+  box-shadow: 0 0 24px #70eaba33;
+}
+@keyframes crew-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (max-width: 700px) {
+  .crew-panel {
+    padding: 24px 15px;
+  }
+  .crew-panel h2 {
+    font-size: 28px;
+  }
+  #campaignHud {
+    top: 105px;
+    max-width: 72vw;
+    font-size: 10px;
+  }
+  .mastery-list {
+    grid-template-columns: 1fr;
+  }
+  .crew-hands {
+    gap: 5px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .crew-wheel.spinning {
+    animation: none;
+  }
+}

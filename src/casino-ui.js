@@ -1,3 +1,4 @@
+import { CREW_GAMES, crewCasino, bindCrewCasino } from "./crew-casino-ui.js";
 import { extraTable, bindExtra } from "./extra-casino-ui.js";
 import {
   HIGH_STAKES,
@@ -60,6 +61,9 @@ export class CasinoView {
     this.s = s;
     this.p = p;
     this.state = state;
+    if (state.crewTables?.[s.id] && this.openedStation !== s.id)
+      this.crewMode = s.id;
+    this.openedStation = s.id;
     const g = state.games[s.id];
     const fingerprint = JSON.stringify([
       s.id,
@@ -67,6 +71,10 @@ export class CasinoView {
       p.losses,
       p.comps,
       p.vaultSpins,
+      p.freeSpins,
+      p.slotFeature,
+      this.crewMode,
+      state.crewTables?.[s.id],
       state.jackpot,
       g ? { ...g, remaining: undefined } : null,
       state.history,
@@ -107,14 +115,33 @@ export class CasinoView {
     if (this.displayPhase !== g?.phase && ["bonus", "risk"].includes(g?.phase))
       panel.scrollTop = 0;
     this.displayPhase = g?.phase;
+    if (CREW_GAMES.includes(s.id)) {
+      const active = this.crewMode === s.id;
+      document
+        .getElementById("casinoBody")
+        .insertAdjacentHTML(
+          "afterbegin",
+          `<div class="choice-row"><button data-table-mode="solo">SOLO TABLE</button><button data-table-mode="crew">SHARED CREW TABLE</button></div>`,
+        );
+      if (active) {
+        const mode =
+          document.querySelector("[data-table-mode]").parentElement.outerHTML;
+        document.getElementById("casinoBody").innerHTML =
+          mode + crewCasino(this, cards, wheel);
+      }
+    }
     this.bind(g);
     bindBonus(this, document.getElementById("casinoBody"));
   }
   slots(g) {
     const lines = g?.lines || this.lines,
       stake = g?.stake || this.stake;
-    const reels = `<div class="slot-cabinet"><div class="slot-marquee">LUCKY AFTERLIFE <span>777</span></div><div class="reel-window">${[0, 1, 2].map((i) => `<div class="physical-reel" data-reel="${i}">${[-1, 0, 1].map((row) => `<span data-row="${row}" class="${row === 0 ? "center-symbol" : ""}">7</span>`).join("")}</div>`).join("")}<div class="payline center"></div>${lines === 3 ? '<div class="payline upper"></div><div class="payline lower"></div>' : ""}</div><div class="slot-readout"><span>${lines} PAYLINE${lines === 3 ? "S" : ""}</span><span>${stake} ◉ / LINE</span><span>${g?.phase === "playing" ? "REELS SPINNING" : g?.phase === "result" ? g.result : "INSERT CHIPS"}</span></div></div>`;
-    return `<div class="progressive-strip"><div><span>THE GILDED VAULT</span><b>◉ ${this.state.jackpot || 250}</b></div><div class="vault-stamps">${[0, 1, 2, 3, 4].map((i) => `<i class="${i < (this.p.vaultSpins || 0) ? "filled" : ""}">◆</i>`).join("")}<small>Every 5 paid spins opens the vault · ${this.p.vaultSpins || 0}/5</small></div></div><div class="casino-layout slots-layout"><div>${reels}${!g ? `<div class="choice-label">PAYLINES</div><div class="choice-row">${[1, 3].map((n) => `<button data-lines="${n}" class="${this.lines === n ? "selected" : ""}">${n === 1 ? "CENTER LINE" : "ALL 3 LINES"}</button>`).join("")}</div><div class="choice-label">CHIPS PER LINE</div><div class="choice-row">${[25, 50, 100].map((n) => `<button data-stake="${n}" class="${this.stake === n ? "selected" : ""}">${n} ◉</button>`).join("")}</div><button class="deal-button" data-play="slots" ${this.p.chips < lines * stake ? "disabled" : ""}>PULL THE LEVER <b>${lines * stake} ◉</b></button>` : ""}<p class="table-note">${g?.protection ? "A third losing spin activated your safety ammo." : `Safety net: ${Math.min(2, this.p.losses)} / 2 losses. A third losing spin gives 36 rounds.`}</p></div><div class="paytable"><span class="eyebrow">THE PAYTABLE</span><p>Matches run left to right on each active horizontal line.</p>${SLOT_PAYTABLE.map((r) => `<div><strong>${r.pattern}</strong><span>${r.detail}<small>${r.chance} per line</small></span></div>`).join("")}<p>20 stops per reel. Each stop is equally likely. Higher stakes multiply chips and ammo; weapon quality stays the same. Safety ammo stays fixed.</p></div></div>`;
+    const reels = `<div class="slot-cabinet theme-${this.extra.slotTheme || "afterlife"}"><div class="slot-marquee">LUCKY AFTERLIFE <span>777</span></div><div class="reel-window">${[0, 1, 2].map((i) => `<div class="physical-reel" data-reel="${i}">${[-1, 0, 1].map((row) => `<span data-row="${row}" class="${row === 0 ? "center-symbol" : ""}">7</span>`).join("")}</div>`).join("")}<div class="payline center"></div>${lines === 3 ? '<div class="payline upper"></div><div class="payline lower"></div>' : ""}</div><div class="slot-readout"><span>${lines} PAYLINE${lines === 3 ? "S" : ""}</span><span>${stake} ◉ / LINE</span><span>${g?.phase === "playing" ? "REELS SPINNING" : g?.phase === "result" ? g.result : "INSERT CHIPS"}</span></div></div>`;
+    const feature = `<div class="slot-feature"><span class="eyebrow">NEON RUSH · EVERY 7 PAID SPINS</span><p>${(this.p.paidSpins || 0) % 7}/7 paid spins · Bonus pulls use the 25-chip center-line paytable.</p>${this.p.slotFeature ? `<div class="choice-row"><button data-slot-feature="bank" ${g ? "disabled" : ""}>BANK 60 CHIPS</button><button data-slot-feature="spins" ${g ? "disabled" : ""}>TAKE 3 FREE SPINS</button></div>` : ""}${this.p.freeSpins ? `<button data-free-spin ${g ? "disabled" : ""}>NEON RUSH · ${this.p.freeSpins} FREE PULLS LEFT</button>` : ""}<div class="choice-row"><button data-slot-theme="afterlife">AFTERLIFE</button><button data-slot-theme="neon">NEON RUSH</button><button data-slot-theme="gold">GILDED PALM</button></div></div>`;
+    return (
+      feature +
+      `<div class="progressive-strip"><div><span>THE GILDED VAULT</span><b>◉ ${this.state.jackpot || 250}</b></div><div class="vault-stamps">${[0, 1, 2, 3, 4].map((i) => `<i class="${i < (this.p.vaultSpins || 0) ? "filled" : ""}">◆</i>`).join("")}<small>Every 5 paid spins opens the vault · ${this.p.vaultSpins || 0}/5</small></div></div><div class="casino-layout slots-layout"><div>${reels}${!g ? `<div class="choice-label">PAYLINES</div><div class="choice-row">${[1, 3].map((n) => `<button data-lines="${n}" class="${this.lines === n ? "selected" : ""}">${n === 1 ? "CENTER LINE" : "ALL 3 LINES"}</button>`).join("")}</div><div class="choice-label">CHIPS PER LINE</div><div class="choice-row">${[25, 50, 100].map((n) => `<button data-stake="${n}" class="${this.stake === n ? "selected" : ""}">${n} ◉</button>`).join("")}</div><button class="deal-button" data-play="slots" ${this.p.chips < lines * stake ? "disabled" : ""}>PULL THE LEVER <b>${lines * stake} ◉</b></button>` : ""}<p class="table-note">${g?.protection ? "A third losing spin activated your safety ammo." : `Safety net: ${Math.min(2, this.p.losses)} / 2 losses. A third losing spin gives 36 rounds.`}</p></div><div class="paytable"><span class="eyebrow">THE PAYTABLE</span><p>Matches run left to right on each active horizontal line.</p>${SLOT_PAYTABLE.map((r) => `<div><strong>${r.pattern}</strong><span>${r.detail}<small>${r.chance} per line</small></span></div>`).join("")}<p>20 stops per reel. Each stop is equally likely. Higher stakes multiply chips and ammo; weapon quality stays the same. Safety ammo stays fixed.</p></div></div>`
+    );
   }
   roulette(g, state) {
     const total = this.bets.reduce((n, b) => n + b.amount, 0),
@@ -160,6 +187,35 @@ export class CasinoView {
             refresh();
           }),
       );
+    root.querySelectorAll("[data-table-mode]").forEach(
+      (b) =>
+        (b.onclick = () => {
+          this.crewMode = b.dataset.tableMode === "crew" ? this.s.id : null;
+          refresh();
+        }),
+    );
+    bindCrewCasino(this, root, refresh);
+    root
+      .querySelectorAll("[data-slot-feature]")
+      .forEach(
+        (b) =>
+          (b.onclick = () =>
+            this.send({ type: "slotFeature", choice: b.dataset.slotFeature })),
+      );
+    root
+      .querySelectorAll("[data-free-spin]")
+      .forEach(
+        (b) =>
+          (b.onclick = () =>
+            this.send({ type: "gamble", station: "slots", freeSpin: true })),
+      );
+    root.querySelectorAll("[data-slot-theme]").forEach(
+      (b) =>
+        (b.onclick = () => {
+          this.extra.slotTheme = b.dataset.slotTheme;
+          refresh();
+        }),
+    );
     bindExtra(this, root, refresh);
     bindHighStakes(this, root, refresh);
     root.querySelectorAll("[data-position]").forEach(
@@ -221,7 +277,14 @@ export class CasinoView {
   }
   animate(state) {
     if (document.getElementById("casino").hidden || !this.s) return;
-    const g = state?.games[this.s.id],
+    const shared =
+      this.crewMode === this.s.id ? state?.crewTables?.[this.s.id] : null;
+    const g = shared
+        ? {
+            ...shared,
+            phase: shared.phase === "rolling" ? "playing" : shared.phase,
+          }
+        : state?.games[this.s.id],
       now = performance.now() / 1000;
     if (this.s.id === "slots") {
       document.querySelectorAll("[data-reel]").forEach((el) => {

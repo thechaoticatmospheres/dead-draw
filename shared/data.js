@@ -1,3 +1,4 @@
+import { COVER } from "./campaign.js";
 import { BOUNDS, barriers, circleRect, barrierDistance } from "./map.js";
 import { opticFor } from "./attachments.js";
 export const WEAPONS = {
@@ -274,6 +275,7 @@ STATIONS.push(
   },
 );
 export const OBSTACLES = [
+  ...COVER,
   ...STATIONS.map((s) => ({
     x: s.x,
     z: s.z,
