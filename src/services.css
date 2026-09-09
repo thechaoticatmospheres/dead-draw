@@ -1,0 +1,174 @@
+.jukebox-panel {
+  position: fixed;
+  z-index: 26;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(660px, 94vw);
+  max-height: 90vh;
+  overflow: auto;
+  padding: 30px;
+  background: linear-gradient(135deg, #183d33fa, #081a19fc);
+  border: 1px solid #d9b777;
+  border-radius: 10px;
+  box-shadow: 0 24px 90px #000b;
+  color: #f1ebd9;
+}
+.jukebox-panel h2 {
+  font:
+    600 38px "Barlow Condensed",
+    sans-serif;
+  margin: 10px 0;
+}
+.jukebox-panel p {
+  font-size: 12px;
+  color: #b6c9be;
+  line-height: 1.7;
+}
+.jukebox-panel button {
+  background: #163c30;
+  border: 1px solid #cfa86766;
+  padding: 12px;
+  border-radius: 5px;
+}
+#closeJukebox {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+}
+.now-playing {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+  padding: 22px 0;
+  border-block: 1px solid #ccaa6633;
+  margin: 20px 0;
+}
+.now-playing h3 {
+  font-size: 21px;
+  margin: 8px 0;
+}
+.now-playing #musicProgress {
+  font-size: 12px;
+  color: #b6c9be;
+}
+.record-disc {
+  display: grid;
+  place-items: center;
+  width: 85px;
+  height: 85px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 12px double #26372e;
+  outline: 2px solid #cfa867;
+  background: radial-gradient(#cfa867 0 24%, #071916 25% 100%);
+  color: #091d17;
+  font-size: 11px;
+  font-weight: bold;
+}
+.record-playing {
+  animation: record-spin 8s linear infinite;
+}
+@keyframes record-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.jukebox-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.jukebox-controls button {
+  flex: 1;
+  font-size: 11px;
+}
+.jukebox-tracks {
+  display: grid;
+  gap: 6px;
+}
+.jukebox-tracks button {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  text-align: left;
+  background: #0b241e;
+}
+.jukebox-tracks button[aria-pressed="true"] {
+  border-color: #eac67f;
+  background: #28503e;
+}
+.jukebox-tracks span {
+  color: #eac67f;
+  font-size: 12px;
+}
+.jukebox-tracks strong {
+  flex: 1;
+  font-size: 13px;
+}
+.jukebox-tracks small {
+  color: #adbcab;
+}
+.music-volume {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin: 20px 0 10px;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+.music-volume input {
+  flex: 1;
+  min-width: 50px;
+  accent-color: #eac67f;
+}
+.music-volume output {
+  width: 36px;
+}
+#clubButton {
+  border-color: #eac67f !important;
+  color: #f2d99f !important;
+  box-shadow: 0 0 10px #eac67f18;
+}
+body:has(#jukeboxPanel:not([hidden])) #campaignHud {
+  display: none;
+}
+@media (max-height: 800px) {
+  .jukebox-panel {
+    padding: 20px 26px;
+  }
+  .jukebox-panel h2 {
+    font-size: 30px;
+    margin: 5px 0;
+  }
+  .jukebox-panel p {
+    margin: 6px 0;
+  }
+  .now-playing {
+    padding: 12px 0;
+    margin: 12px 0;
+    gap: 20px;
+  }
+  .now-playing h3 {
+    font-size: 18px;
+  }
+  .record-disc {
+    width: 58px;
+    height: 58px;
+    border-width: 8px;
+  }
+  .jukebox-panel button {
+    padding: 10px;
+  }
+  .jukebox-controls {
+    margin-bottom: 10px;
+  }
+  .music-volume {
+    margin-top: 12px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .record-playing {
+    animation: none;
+  }
+}

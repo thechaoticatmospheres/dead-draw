@@ -1,4 +1,5 @@
 import { CampaignScene } from "./campaign.js";
+import { ServiceScene } from "./services.js";
 import { COSMETICS } from "../../shared/campaign.js";
 import { opticFor, gunStats } from "../../shared/attachments.js";
 import {
@@ -179,6 +180,7 @@ export class World {
       this.stations = this.environment.stations;
       this.doors = this.environment.doors;
       this.campaignScene = new CampaignScene(this.scene, this.assets);
+      this.serviceScene = new ServiceScene(this.scene, this.assets);
       this.loaded = true;
     });
   }
@@ -272,6 +274,7 @@ export class World {
     const t = this.clock;
     this.environment.update(dt, state, myId, t);
     this.campaignScene?.update(state, t, dt);
+    this.serviceScene?.update(dt, state);
     this.encounters.update(state, t);
     if (state && this.loaded) {
       const ids = new Set();

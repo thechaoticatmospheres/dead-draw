@@ -9,6 +9,7 @@ import { deflateSync, inflateSync } from "node:zlib";
 import { Game } from "./game.js";
 const fields = [
   "serial",
+  "jukebox",
   "round",
   "phase",
   "time",
@@ -68,7 +69,7 @@ export class Checkpoints {
   }
   restore(data) {
     const g = new Game(data.code);
-    for (const k of fields) g[k] = data[k];
+    for (const k of fields) if (data[k] !== undefined) g[k] = data[k];
     for (const p of data.players)
       g.players[p.id] = {
         ...p,

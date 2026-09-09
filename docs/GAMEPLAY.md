@@ -42,19 +42,19 @@ WASD move, mouse look, left click fire, right click aim, Shift sprint, R reload,
 
 Standard mapped Xbox and PlayStation-compatible controllers use the browser [Gamepad API](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API). Connect the controller, focus the game, release its controls, then press a button. Prompts switch when you use the controller or return to keyboard/mouse. Gamepads require localhost or HTTPS; plain HTTP on a LAN address may not expose the API.
 
-| Input (Xbox labels) | Action |
-| --- | --- |
-| Left / right stick | Move / look |
-| LT / RT | Aim / fire |
-| A | Interact, buy access, select menu item |
-| X | Reload |
-| Y or RB | Cycle weapons |
-| Hold left stick click | Sprint |
-| Hold LB | Revive |
-| View or D-pad up | Floor plan |
-| D-pad down | Ready / start next round |
-| Menu | Controls and settings |
-| B | Close a table, map or settings |
+| Input (Xbox labels)   | Action                                 |
+| --------------------- | -------------------------------------- |
+| Left / right stick    | Move / look                            |
+| LT / RT               | Aim / fire                             |
+| A                     | Interact, buy access, select menu item |
+| X                     | Reload                                 |
+| Y or RB               | Cycle weapons                          |
+| Hold left stick click | Sprint                                 |
+| Hold LB               | Revive                                 |
+| View or D-pad up      | Floor plan                             |
+| D-pad down            | Ready / start next round               |
+| Menu                  | Controls and settings                  |
+| B                     | Close a table, map or settings         |
 
 Menus support D-pad/left-stick spatial navigation, LB/RB cycling, A selection and right-stick scrolling. Settings include look sensitivity, inverted vertical look, optional vibration, and cinematic/performance graphics. Controller settings persist locally. Names and room codes use keyboard text entry; a blank room code hosts a run. Browsers may require a mouse/keyboard gesture before audio can start. One local controller controls one survivor; co-op still uses separate browser clients.
 
@@ -82,14 +82,14 @@ Characters come from Kenney's CC0 [Animated Characters Survivors](https://kenney
 
 The 48×32-meter floor has six rooms, separated by solid walls and purchasable shutters. One player pays from their own chips; the entire crew gains access for the current run. Doors can be bought during combat or intermissions. Purchases are validated on the server for price, proximity and prerequisite access. A fresh run resets all access to the Atrium.
 
-| Room | Access cost | Game | Equipment |
-| --- | ---: | --- | --- |
-| Palm Atrium | Free | Slots | Sidearms |
-| Emerald Lounge | 75 | Roulette | Automatics |
-| Velvet Room | 125 | Blackjack | Rifles |
-| Draw Arcade | 200 | Video poker | Pit Viper shotgun / shells |
-| Dice Hall | 250 | Craps | Armor |
-| Crown Salon | 350 | Baccarat | Elite rifles |
+| Room           | Access cost | Game        | Equipment                  |
+| -------------- | ----------: | ----------- | -------------------------- |
+| Palm Atrium    |        Free | Slots       | Sidearms                   |
+| Emerald Lounge |          75 | Roulette    | Automatics                 |
+| Velvet Room    |         125 | Blackjack   | Rifles                     |
+| Draw Arcade    |         200 | Video poker | Pit Viper shotgun / shells |
+| Dice Hall      |         250 | Craps       | Armor                      |
+| Crown Salon    |         350 | Baccarat    | Elite rifles               |
 
 Routes: **Atrium → Emerald → Draw Arcade → Crown**, or **Atrium → Velvet → Dice Hall → Crown**. Prices are per room, additional to earlier purchases and table wagers. Crown opens a free shortcut to the Atrium; opening both wings joins the outer loop. M shows costs, access and the current room.
 
@@ -147,3 +147,9 @@ With Microsoft Edge installed:
 `src/gamepad.js` handles controller sampling, menu navigation and focus state. `src/render/assets.js` loads/clones GLBs and animates characters; `environment.js` builds the casino; `surfaces.js` creates materials. Navigation uses a one-meter grid with circle/rectangle collision and refreshes four times per second. Multiplayer smooths snapshots without local prediction or latency compensation. Reconnection persistence, richer combat animations, hardware controller checks and extended co-op balancing remain future work. See the root README for permanent GitHub Pages and multiplayer hosting.
 
 `tests/expansion.test.js` checks progression, enemy rosters, dodge and grenade authority, hazard timing, crew payouts, vault concealment and settlement, double-or-bank and true-odds craps. `node tests/expansion-fixture.js` runs loopback-only deterministic browser QA scenes on port 5194; those fixture controls are never included in the production server.
+
+## Jukebox & Club cashier
+
+The starting Palm Atrium contains the Golden Hour Jukebox and a Survivor’s Club cashier window. Click either prop, or approach and press **E / A**. The cashier opens the Club between rounds; **U / D-pad right** remains a shortcut from anywhere. The HUD now names the Club and shows its binding.
+
+The jukebox plays five supplied three-minute songs in a repeating playlist. Players near it can choose a record, skip forward/back, and pause/resume for the whole crew. Opening it does not prevent a new round; its panel closes when combat starts. Your own music-volume slider persists across refreshes, while playlist position is included in safe run checkpoints. Master volume, Sound Off and window focus also apply, and music gets quieter during combat. If a browser blocks autoplay, click once or use the jukebox's Enable Music button.

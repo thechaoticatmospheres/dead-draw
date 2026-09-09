@@ -6,6 +6,7 @@ import { Game } from "../server/game.js";
 import { STATIONS } from "../shared/data.js";
 import { ROOMS } from "../shared/map.js";
 import { giveReward } from "../server/casino.js";
+import { SERVICES } from "../shared/services.js";
 const game = new Game("QA2026", () => 0.4);
 const vite = await createServer({
   server: { middlewareMode: true, hmr: { port: 6194 } },
@@ -27,12 +28,25 @@ const server = http.createServer(async (req, res) => {
   }
   if (req.url.startsWith("/__qa/") && req.method === "POST") {
     const scenario = req.url.slice(6),
-      p = game.players.qa;
+      p = Object.values(game.players).find((p) => !p.offline);
     if (!p) {
       res.statusCode = 409;
       return res.end("Join first");
     }
-    if (scenario.startsWith("table/") || scenario === "scope") {
+    if (scenario === "jukebox" || scenario === "cashier") {
+      game.phase = "break";
+      game.games = {};
+      game.crewTables = {};
+      game.zombies = [];
+      const service = SERVICES.find((s) => s.id === scenario);
+      p.x = service.x;
+      p.z = service.z + 3.2;
+      p.yaw = 0;
+      p.pitch = 0;
+      p.down = false;
+      p.hp = 100;
+      paused = false;
+    } else if (scenario.startsWith("table/") || scenario === "scope") {
       game.phase = "break";
       game.games = {};
       game.crewTables = {};
@@ -113,7 +127,7 @@ const server = http.createServer(async (req, res) => {
     else if (scenario === "resume") paused = false;
     else if (scenario === "club") {
       game.restart();
-      const p = game.players.qa;
+      const p = Object.values(game.players).find((p) => !p.offline);
       p.chips = 2000;
       p.comps = 40;
       game.openRooms = ROOMS.map((r) => r.id);

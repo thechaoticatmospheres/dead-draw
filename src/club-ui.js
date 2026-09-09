@@ -135,7 +135,8 @@ export function updateExpansionHud(p, state, controller) {
         : "DODGE THE GOLD MARKERS";
   }
   $("clubButton").hidden = state.phase !== "break";
-  $("clubButton").textContent = `CLUB · ${p.comps} COMPS`;
+  $("clubButton").textContent =
+    `SURVIVOR’S CLUB · ${controller ? "D-PAD →" : "U"} · ${p.comps} COMPS`;
   $("wavePreview").textContent =
     (state.round + 1) % 5 === 0
       ? "NEXT: THE HIGH ROLLER · BOSS WAVE"

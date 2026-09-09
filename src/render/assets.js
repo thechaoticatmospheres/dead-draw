@@ -26,6 +26,8 @@ const names = [
   "keno",
   "hilo",
   "letitride",
+  "jukebox",
+  "cashier",
 ];
 function aimBone(bone, child, target) {
   if (!bone || !child) return;

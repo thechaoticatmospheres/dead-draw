@@ -74,4 +74,12 @@ The 48 × 64 casino now has 12 rooms and 12 distinct games. Beyond the original 
 
 Open the Survivor’s Club with **U** to purchase/equip attachments for your current weapon: 1.5× reflex (125), 2.5× scope (275), rifle-only 6× scope (900), extended magazine (250), speed loader (350), and compensator (450). Each requires its listed room. Aim with **RMB / controller LT**, or toggle aim with **V**. Optics use a first-person camera, magnification and reduced aim sensitivity; scopes have a lens mask and reticle. Owned attachments can be switched or removed free between rounds. Reload to fill an extended magazine. Attachments last for the run, like weapons and perks.
 
-New rules and shared payouts: `shared/high-stakes-rules.js`; authoritative hands: `server/high-stakes.js`; table interfaces: `src/high-stakes-ui.js`; attachment data: `shared/attachments.js`. The six original expansion GLBs are reproducible with `node tools/author-expansion-assets.js` and add about 413 KiB. All 24 models remain embedded, self-contained assets served under Vite’s production base path.
+New rules and shared payouts: `shared/high-stakes-rules.js`; authoritative hands: `server/high-stakes.js`; table interfaces: `src/high-stakes-ui.js`; attachment data: `shared/attachments.js`. The six original expansion GLBs are reproducible with `node tools/author-expansion-assets.js` and add about 413 KiB. All 26 models remain embedded, self-contained assets served under Vite’s production base path.
+
+### Music & Survivor’s Club cashier
+
+Visit the **Golden Hour Jukebox** in the starting Palm Atrium. Click it or approach and press **E / controller A** to select any of five songs, skip, or pause/resume the shared room playlist. Your music volume is personal and saved locally. Music automatically continues through the playlist, softens in combat, and respects master volume, mute and window focus.
+
+Across the Atrium, the glass-fronted **Survivor’s Club cashier** has a teller, chip trays and a lit sign. Click the booth or press **E / A** nearby to open the Club between rounds. **U / D-pad right** and the labeled HUD button also give quick access.
+
+Music: `public/assets/music/`, `shared/services.js`, `server/jukebox.js`, `src/music.js`, `src/jukebox-ui.js`. Physical props: `src/render/services.js`; rebuild original jukebox/cashier GLBs with `node tools/author-service-assets.js`.

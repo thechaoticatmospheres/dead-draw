@@ -1,4 +1,6 @@
 import { crewTableMethods } from "./crew-tables.js";
+import { jukeboxMethods } from "./jukebox.js";
+import { newJukebox } from "../shared/services.js";
 import { newCampaign, waveClearBonus } from "../shared/campaign.js";
 import { campaignMethods } from "./campaign.js";
 import {
@@ -85,6 +87,7 @@ export class Game {
     this.pickups = [];
     this.spawned = 0;
     this.jackpot = 250;
+    this.jukebox = newJukebox();
     this.contract = null;
   }
   event(type, data = {}) {
@@ -169,6 +172,7 @@ export class Game {
       return;
     }
     if (p.down || !["combat", "break"].includes(this.phase)) return;
+    if (msg.type === "music") return this.controlMusic(p, msg);
     if (
       msg.type === "slotFeature" &&
       this.phase === "break" &&
@@ -659,6 +663,7 @@ export class Game {
   }
   update(dt) {
     this.time += dt;
+    this.updateMusic();
     if (!["combat", "break"].includes(this.phase)) return;
     const players = Object.values(this.players).filter((p) => !p.offline),
       alive = players.filter((p) => !p.down);
@@ -881,6 +886,7 @@ export class Game {
   snapshot() {
     return {
       code: this.code,
+      jukebox: { ...this.jukebox },
       campaign: this.campaign,
       summary: this.summary,
       runId: this.runId,
@@ -988,6 +994,7 @@ Object.assign(
   progressionMethods,
   campaignMethods,
   crewTableMethods,
+  jukeboxMethods,
   combatMethods,
   casinoExpansionMethods,
   highStakesMethods,

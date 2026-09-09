@@ -22,7 +22,24 @@ for (const link of links) {
 const models = (await readdir(join(root, "assets/models"))).filter((f) =>
   f.endsWith(".glb"),
 );
-assert.equal(models.length, 24, "All original models must ship");
+assert.equal(
+  models.length,
+  26,
+  "All original models and service props must ship",
+);
+for (const name of [
+  "golden-velvet-room",
+  "double-down-swing",
+  "midnight-roll-of-the-dice",
+  "red-velvet-lounge",
+  "midnight-rollers",
+]) {
+  const file = await stat(join(root, "assets/music", name + ".mp3"));
+  assert.ok(
+    file.size > 100000 && file.size < 5000000,
+    "Missing or oversized music: " + name,
+  );
+}
 for (const model of models) {
   const data = await readFile(join(root, "assets/models", model));
   assert.equal(data.subarray(0, 4).toString(), "glTF", model);

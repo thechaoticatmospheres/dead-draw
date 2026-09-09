@@ -1,4 +1,7 @@
 import { CrewUI } from "./crew-ui.js";
+import { BackgroundMusic } from "./music.js";
+import { JukeboxUI } from "./jukebox-ui.js";
+import { nearbyService } from "../shared/services.js";
 import { cosmeticMessage } from "./profile.js";
 import { MovementPrediction } from "./prediction.js";
 import "./crew.css";
@@ -22,6 +25,19 @@ const $ = (id) => document.getElementById(id),
 const audio = new Audio();
 const soundscape = new Soundscape(audio);
 bindAudioSettings(audio);
+const music = new BackgroundMusic(audio);
+addEventListener("pointerdown", () => music.unlock(), { capture: true });
+addEventListener(
+  "keydown",
+  (e) => {
+    if (e.isTrusted) music.unlock();
+  },
+  { capture: true },
+);
+for (const event of ["blur", "focus", "pagehide"])
+  addEventListener(event, () => music.update(state));
+document.addEventListener("visibilitychange", () => music.update(state));
+if (import.meta.hot) import.meta.hot.dispose(() => music.dispose());
 let world;
 try {
   world = new World($("world"));
@@ -53,6 +69,8 @@ const casinoView = new CasinoView({ send, audio });
 const clubView = new ClubView(send);
 const crewUI = new CrewUI(send),
   prediction = new MovementPrediction();
+const jukeboxUI = new JukeboxUI(music, send);
+let serviceClick = false;
 let inputSeq = 0,
   latestInput = { yaw: 0 },
   spectatorIndex = 0,
@@ -71,6 +89,7 @@ $("enter").insertAdjacentHTML(
 );
 $("resumeRun").onclick = () => join(true);
 $("crewButton").onclick = () => {
+  show("jukeboxPanel", false);
   release();
   crewUI.toggle(me(), state);
 };
@@ -78,6 +97,7 @@ $("careerButton").onclick = () => crewUI.toggle(me(), state, "career");
 function menuRoot() {
   return (
     [
+      "jukeboxPanel",
       "crewPanel",
       "help",
       "club",
@@ -92,9 +112,36 @@ function menuRoot() {
   );
 }
 function interact() {
+  const service = preferredService();
+  if (service) {
+    useService(service);
+    return;
+  }
   const d = nearDoor();
   if (d) send({ type: "unlock", door: d.id });
   else openCasino();
+}
+function preferredService() {
+  const p = me(),
+    service = nearbyService(p, state?.openRooms || []),
+    table = nearby();
+  if (!service || nearDoor()) return null;
+  return !table ||
+    Math.hypot(p.x - service.x, p.z - service.z) <
+      Math.hypot(p.x - table.x, p.z - table.z)
+    ? service
+    : null;
+}
+function useService(service) {
+  if (service.id === "cashier") toggleClub();
+  else {
+    if (station) closeCasino();
+    show("club", false);
+    show("crewPanel", false);
+    show("floorplan", false);
+    release();
+    jukeboxUI.open(me(), state);
+  }
 }
 const controller = new GamepadInput({
   menu: menuRoot,
@@ -121,6 +168,7 @@ const controller = new GamepadInput({
       return;
     }
     if (action === "crew") {
+      show("jukeboxPanel", false);
       release();
       crewUI.toggle(me(), state);
       return;
@@ -130,6 +178,10 @@ const controller = new GamepadInput({
       return;
     }
     if (action === "back") {
+      if (!$("jukeboxPanel").hidden) {
+        show("jukeboxPanel", false);
+        return;
+      }
       if (!$("crewPanel").hidden) {
         $("crewPanel").hidden = true;
         return;
@@ -142,6 +194,7 @@ const controller = new GamepadInput({
     }
     if (action === "pause") {
       release();
+      show("jukeboxPanel", false);
       show("help");
       return;
     }
@@ -328,6 +381,7 @@ function join(resume = false) {
       if (!connectingSince) connectingSince = Date.now();
       if (Date.now() - connectingSince < 90000)
         setTimeout(() => join(true), 2000);
+      show("jukeboxPanel", false);
       show("help");
       $("help").querySelector("h2").textContent = "Connection lost";
     } else {
@@ -402,6 +456,7 @@ function nearDoor() {
     : null;
 }
 function toggleMap() {
+  show("jukeboxPanel", false);
   show("club", false);
   if (!$("floorplan").hidden) {
     show("floorplan", false);
@@ -448,6 +503,7 @@ function renderMap() {
 function updateHUD() {
   const p = me();
   if (!p) return;
+  jukeboxUI.render(p, state);
   updateExpansionHud(p, state, controller.mode === "controller");
   if (!$("club").hidden) clubView.render(p, state);
   $("location").textContent = "GILDED PALM / " + (roomAt(p)?.name || "FLOOR");
@@ -506,6 +562,14 @@ function updateHUD() {
           : "CASINO CLOSED · FINISH THE ROUND"
         : "";
   const door = nearDoor();
+  const service = preferredService();
+  if (service && !downed)
+    prompt =
+      service.id === "cashier"
+        ? state.phase === "break"
+          ? "E · SURVIVOR’S CLUB · OR CLICK · U SHORTCUT"
+          : "CASHIER CLOSED · U BETWEEN ROUNDS"
+        : "E · GOLDEN HOUR JUKEBOX · OR CLICK";
   if (door && !p.down && !downed) {
     const r = ROOMS.find((r) => r.id === door.to);
     prompt = door.shortcut
@@ -565,13 +629,14 @@ function updateHUD() {
   $("hint").textContent =
     controller.mode === "controller"
       ? "LS MOVE · RS LOOK · LT AIM · RT FIRE · A USE · X RELOAD · Y WEAPON · LB REVIVE"
-      : "WASD MOVE · SHIFT SPRINT · RMB / V AIM · LMB FIRE · E INTERACT";
+      : "WASD MOVE · SHIFT SPRINT · RMB / V AIM · LMB FIRE · E INTERACT · U SURVIVOR’S CLUB";
   document.querySelector(".ready-shortcut").textContent =
     controller.mode === "controller"
       ? "D-PAD ↓ TO READY · MENU FOR CONTROLS"
       : "N TO READY · ESC FOR MOUSE";
   if (state.phase !== lastPhase) {
     if (state.phase === "combat") {
+      show("jukeboxPanel", false);
       show("club", false);
       station = null;
       show("casino", false);
@@ -587,6 +652,7 @@ function updateHUD() {
     show("gameover", state.phase === "over");
     if (state.phase === "over") $("crewPanel").hidden = true;
     if (state.phase === "over") {
+      show("jukeboxPanel", false);
       show("club", false);
       release();
       show("casino", false);
@@ -632,6 +698,7 @@ function renderCasino() {
 }
 $("mapButton").onclick = toggleMap;
 function toggleClub() {
+  show("jukeboxPanel", false);
   if (!$("club").hidden) {
     show("club", false);
     lock();
@@ -673,8 +740,15 @@ $("restart").onclick = () => {
       ?.catch(() => {});
 };
 $("closeCasino").onclick = closeCasino;
-$("world").onclick = lock;
+$("world").onclick = () => {
+  if (serviceClick) {
+    serviceClick = false;
+    return;
+  }
+  lock();
+};
 $("helpButton").onclick = () => {
+  show("jukeboxPanel", false);
   release();
   show("help");
 };
@@ -691,10 +765,12 @@ addEventListener("keydown", (e) => {
     show("help", false);
     show("floorplan", false);
     show("club", false);
+    show("jukeboxPanel", false);
     release();
     return;
   }
   if (e.code === "KeyT" && me() && !e.repeat) {
+    show("jukeboxPanel", false);
     release();
     crewUI.toggle(me(), state);
     return;
@@ -787,6 +863,24 @@ addEventListener("mousemove", (e) => {
 });
 addEventListener("mousedown", (e) => {
   controller.useKeyboard();
+  if (e.button === 0 && e.target === $("world") && !menuRoot() && me()) {
+    const locked = document.pointerLockElement === $("world"),
+      r = $("world").getBoundingClientRect();
+    const service = world.serviceScene?.pick(
+      locked ? r.left + r.width / 2 : e.clientX,
+      locked ? r.top + r.height / 2 : e.clientY,
+      world.camera,
+      $("world"),
+      me(),
+      state.openRooms,
+    );
+    if (service) {
+      serviceClick = true;
+      useService(service);
+      e.preventDefault();
+      return;
+    }
+  }
   if (document.pointerLockElement !== $("world")) return;
   if (e.button === 0) shoot = true;
   if (e.button === 2) aim = true;
@@ -867,6 +961,7 @@ function frame(now) {
       (controller.mode === "controller" ? controller.input.aim : aim),
   );
   casinoView.animate(state);
+  music.update(state);
   soundscape.update(dt, state, myId, yaw, station?.id, {
     trigger: controller.mode === "controller" ? controller.input.shoot : shoot,
     menu: !!menuRoot(),

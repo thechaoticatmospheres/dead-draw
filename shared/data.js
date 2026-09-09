@@ -1,4 +1,5 @@
 import { COVER } from "./campaign.js";
+import { SERVICES } from "./services.js";
 import { BOUNDS, barriers, circleRect, barrierDistance } from "./map.js";
 import { opticFor } from "./attachments.js";
 export const WEAPONS = {
@@ -276,13 +277,13 @@ STATIONS.push(
 );
 export const OBSTACLES = [
   ...COVER,
+  ...SERVICES,
   ...STATIONS.map((s) => ({
     x: s.x,
     z: s.z,
     r: s.r,
     h: ["slots", "poker", "keno", "hilo"].includes(s.type) ? 2.8 : 1.4,
   })),
-  { x: 3, z: 4, r: 1.15, h: 1.2 },
   { x: -20, z: 3, r: 1, h: 1.2 },
   { x: 20, z: 3, r: 1, h: 1.2 },
   { x: -12, z: -11, r: 1, h: 3.6 },

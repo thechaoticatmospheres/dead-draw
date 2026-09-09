@@ -10,6 +10,8 @@ import {
   doorOpen,
 } from "../../shared/map.js";
 import { STATIONS, OBSTACLES } from "../../shared/data.js";
+import { COVER } from "../../shared/campaign.js";
+import { SERVICES } from "../../shared/services.js";
 import { surfaces, label } from "./surfaces.js";
 function box(root, w, h, d, x, y, z, m) {
   const o = new T.Mesh(new T.BoxGeometry(w, h, d), m);
@@ -257,7 +259,9 @@ export class CasinoEnvironment {
       chandelier.position.set(room.x, 4.6, room.z);
       g.add(chandelier);
     }
-    for (const o of OBSTACLES.slice(STATIONS.length)) {
+    for (const o of OBSTACLES.slice(
+      COVER.length + SERVICES.length + STATIONS.length,
+    )) {
       const prop = assets.prop(o.h > 3 ? "column" : "cocktail");
       prop.position.set(o.x, 0, o.z);
       if (o.h > 3) prop.scale.x = prop.scale.z = o.r / 0.78;
