@@ -124,14 +124,14 @@ export class GamepadInput {
       return;
     }
     if (pressed(14)) this.action("crew");
-    if (pressed(10) && buttons[6]) this.action("shove");
+    if (pressed(10)) this.action(buttons[6] ? "shove" : "jump");
     if (pressed(0)) this.action("interact");
     if (pressed(1)) this.action("dodge");
     if (pressed(11)) this.action("grenade");
     if (pressed(15)) this.action("club");
     if (pressed(2)) this.action("reload");
     if (pressed(3) || pressed(5)) this.action("switch");
-    if (pressed(13)) this.action("nextRound");
+    if (pressed(13)) this.action("jump");
     this.look(
       -right.x * 2.5 * dt * this.settings.sensitivity * (buttons[6] ? 0.45 : 1),
       -right.y *
@@ -148,7 +148,7 @@ export class GamepadInput {
         right: left.x,
         aim: !!buttons[6],
         shoot: !!buttons[7],
-        sprint: !!buttons[10],
+        sprint: false,
         revive: !!buttons[4],
       };
   }

@@ -1,7 +1,7 @@
 import { deck } from "./casino.js";
 export const casinoExpansionMethods = {
   startRisk(p, station, color) {
-    const g = this.games[station];
+    const g = this.hand(p, station);
     if (
       this.phase !== "break" ||
       !g ||
@@ -76,7 +76,7 @@ export const casinoExpansionMethods = {
     });
   },
   vaultAction(p, choice) {
-    const g = this.games.slots;
+    const g = this.hand(p, "slots");
     if (this.phase !== "break" || g?.player !== p.id || g.phase !== "bonus")
       return;
     const v = g.vault;
@@ -126,7 +126,7 @@ export const casinoExpansionMethods = {
     });
   },
   changeOdds(p, amount) {
-    const g = this.games.craps;
+    const g = this.hand(p, "craps");
     if (
       this.phase !== "break" ||
       !g ||

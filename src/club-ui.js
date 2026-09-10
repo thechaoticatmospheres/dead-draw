@@ -53,6 +53,7 @@ export class ClubView {
         : p.guns.some((g) => g.id === item.id);
       const price = perk ? item.price * (rank + 1) : item.chips;
       const full =
+        (item.id === "ammo" && weapon.melee) ||
         (item.id === "heal" && p.hp >= maxHealth(p)) ||
         (item.id === "armor" && p.armor >= 75) ||
         (item.id === "grenade" && p.grenades >= grenadeLimit(p));
@@ -117,7 +118,7 @@ export function updateExpansionHud(p, state, controller) {
   }
   $("tactics").hidden = !["combat", "break"].includes(state.phase);
   $("staminaBar").style.width = p.stamina + "%";
-  $("dodgeLabel").textContent = `${controller ? "B" : "SPACE"} DODGE`;
+  $("dodgeLabel").textContent = `${controller ? "B" : "SHIFT"} ROLL`;
   $("grenadeLabel").textContent =
     `${controller ? "RS CLICK" : "G"} GRENADE · ${p.grenades}`;
   $("comboHud").textContent =

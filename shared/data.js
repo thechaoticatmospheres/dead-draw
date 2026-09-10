@@ -1,8 +1,10 @@
 import { COVER } from "./campaign.js";
+import { SPECIAL_WEAPONS, WHEEL_PADS } from "./arsenal.js";
 import { SERVICES } from "./services.js";
 import { BOUNDS, barriers, circleRect, barrierDistance } from "./map.js";
 import { opticFor } from "./attachments.js";
 export const WEAPONS = {
+  ...SPECIAL_WEAPONS,
   pitViper: {
     name: "Pit Viper",
     category: "shells",
@@ -77,6 +79,12 @@ export const WEAPONS = {
   },
 };
 export const REWARDS = {
+  ...Object.fromEntries(
+    Object.entries(SPECIAL_WEAPONS).map(([id, w]) => [
+      id,
+      { weapon: id, label: w.name.toUpperCase() },
+    ]),
+  ),
   shells: { ammo: "shells", amount: 18, label: "18 shotgun shells" },
   pitViper: { weapon: "pitViper", label: "PIT VIPER SHOTGUN" },
   gildedViper: {
@@ -276,6 +284,7 @@ STATIONS.push(
   },
 );
 export const OBSTACLES = [
+  ...WHEEL_PADS,
   ...COVER,
   ...SERVICES,
   ...STATIONS.map((s) => ({
@@ -316,12 +325,14 @@ export function moveCircle(entity, dx, dz, r = 0.4, open = ["atrium"]) {
 }
 // Same shoulder-camera origin on client and server, including furniture avoidance.
 export function aimRay(p, yaw, pitch, aim, open = ["atrium"]) {
+  const lift = p.height || 0;
   const dir = {
     x: -Math.sin(yaw) * Math.cos(pitch),
     y: Math.sin(pitch),
     z: -Math.cos(yaw) * Math.cos(pitch),
   };
-  if (aim && opticFor(p)) return { dir, origin: { x: p.x, y: 1.65, z: p.z } };
+  if (aim && opticFor(p))
+    return { dir, origin: { x: p.x, y: 1.65 + lift, z: p.z } };
   const back = aim ? 2.4 : 4.2,
     dx = -dir.x * back + Math.cos(yaw) * 0.65,
     dz = -dir.z * back - Math.sin(yaw) * 0.65,
@@ -354,7 +365,7 @@ export function aimRay(p, yaw, pitch, aim, open = ["atrium"]) {
         BOUNDS.minX + 0.2,
         Math.min(BOUNDS.maxX - 0.2, p.x + dx * fraction),
       ),
-      y: Math.max(0.5, 1.65 + dy * fraction),
+      y: Math.max(0.5, 1.65 + lift + dy * fraction),
       z: Math.max(
         BOUNDS.minZ + 0.2,
         Math.min(BOUNDS.maxZ - 0.2, p.z + dz * fraction),

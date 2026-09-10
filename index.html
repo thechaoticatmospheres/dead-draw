@@ -90,7 +90,7 @@
         <div id="chips">◉ 25 <small>CHIPS</small></div>
         <div id="tactics">
           <div class="stamina-track"><i id="staminaBar"></i></div>
-          <span id="dodgeLabel">SPACE DODGE</span
+          <span id="dodgeLabel">SHIFT ROLL</span
           ><span id="grenadeLabel">G GRENADE · 2</span>
         </div>
       </div>
@@ -100,8 +100,8 @@
         <small id="reload">R RELOAD &nbsp; Q SWITCH</small>
       </div>
       <div id="hint">
-        WASD MOVE &nbsp; SHIFT SPRINT &nbsp; RMB / V (toggle) AIM &nbsp; LMB
-        FIRE &nbsp; E INTERACT
+        WASD MOVE &nbsp; SHIFT ROLL · SPACE JUMP &nbsp; RMB / V (toggle) AIM
+        &nbsp; LMB FIRE &nbsp; E INTERACT
       </div>
     </section>
     <section id="intermission" hidden>
@@ -111,8 +111,8 @@
         <small id="difficulty"></small>
         <small id="wavePreview"></small>
       </div>
-      <button id="nextRound" class="primary">START NEXT ROUND ↗</button>
-      <small class="ready-shortcut">N TO READY · ESC FOR MOUSE</small>
+      <button id="nextRound" class="primary" disabled>NEXT WAVE · 1:30</button>
+      <small class="ready-shortcut">90-SECOND BREAKS · ESC FOR MOUSE</small>
     </section>
     <section id="lobby" class="small-panel" hidden>
       <span class="eyebrow">YOUR TABLE IS READY</span>
@@ -153,7 +153,7 @@
       <h2 id="casinoTitle"></h2>
       <div id="casinoBody"></div>
       <p class="fineprint">
-        TABLES OPEN BETWEEN ROUNDS · NO TIME LIMIT · FICTIONAL CHIPS ONLY
+        90-SECOND BREAKS · HANDS SETTLE AT THE BELL · FICTIONAL CHIPS ONLY
       </p>
     </section>
     <section id="club" hidden>
@@ -193,7 +193,7 @@
       <details class="field-guide">
         <summary>Survival guide · The High Rollers update</summary>
         <p>
-          Space / B dodges through danger and costs stamina. G / RS click throws
+          Shift / B rolls through danger and costs stamina. G / RS click throws
           a grenade; charges refill each wave. Consecutive kills within 4
           seconds build a chip-bonus streak. Finish the crew contract for bonus
           chips and comps.
@@ -216,27 +216,27 @@
         <summary>Keyboard, mouse & round flow</summary>
         <p>
           WASD — Move<br />Mouse — Look<br />Left click — Fire · Right click —
-          Aim<br />Shift — Sprint · R — Reload<br />Q — Cycle owned weapons<br />E
+          Aim<br />Shift — Roll · R — Reload<br />Q — Cycle owned weapons<br />E
           — Use table / buy room access<br />M — Floor plan<br />Hold F — Revive
-          nearby teammate (3 sec)<br />Space — Dodge · G — Grenade<br />U —
+          nearby teammate (3 sec)<br />Space — Jump · G — Grenade<br />U —
           Survivor’s Club<br />Escape — Release mouse
         </p>
         <p>
           Follow the glowing signs to gamble. Chips collect within four meters.
-          Casino games open between rounds. Take as long as you like, then use
-          Start next round (or N). In co-op, everyone must be ready and all
-          hands finished.
+          Casino games open for 90 seconds between waves. Everyone can use each
+          table independently. New wagers close with 7 seconds left; unfinished
+          hands settle automatically at the bell. Countdown sounds play for the
+          final 10 seconds.
         </p>
       </details>
       <details class="controller-guide" open>
         <summary>Controller / Xbox-style layout</summary>
         <p>
           LS move · RS look · LT aim · RT fire<br />A use / buy · X reload · Y
-          or RB switch weapon<br />Hold LS click to sprint · Hold LB to
-          revive<br />View or D-pad ↑ map · D-pad ↓ next round<br />Menu
-          controls · B dodge / back · RS click grenade<br />D-pad → Survivor’s
-          Club<br />Menus: D-pad / LS navigate · A select · LB/RB previous/next
-          · RS scroll
+          or RB switch weapon<br />LS click / D-pad down to jump · Hold LB to
+          revive<br />View or D-pad ↑ map<br />Menu controls · B roll / back ·
+          RS click grenade<br />D-pad → Survivor’s Club<br />Menus: D-pad / LS
+          navigate · A select · LB/RB previous/next · RS scroll
         </p>
         <label
           >LOOK SENSITIVITY

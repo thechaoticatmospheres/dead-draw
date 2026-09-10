@@ -98,6 +98,7 @@ export const progressionMethods = {
     } else if (item) {
       if (p.chips < item.chips || !this.openRooms.includes(item.room)) return;
       if (
+        (id === "ammo" && WEAPONS[gun.id].melee) ||
         (id === "heal" && p.hp >= maxHealth(p)) ||
         (id === "armor" && p.armor >= 75) ||
         (id === "grenade" && p.grenades >= grenadeLimit(p))
@@ -106,7 +107,12 @@ export const progressionMethods = {
       if (["house", "pitViper"].includes(id) && p.guns.some((g) => g.id === id))
         return;
       p.chips -= item.chips;
-      if (id === "ammo") gun.reserve += gunStats(WEAPONS[gun.id], gun).mag * 2;
+      if (id === "ammo")
+        gun.reserve += Math.ceil(
+          gunStats(WEAPONS[gun.id], gun).mag *
+            2 *
+            (1 + (p.perks.scavenger || 0) * 0.25),
+        );
       else if (id === "heal") p.hp = Math.min(maxHealth(p), p.hp + 50);
       else if (id === "armor") p.armor = 75;
       else if (id === "grenade") p.grenades++;

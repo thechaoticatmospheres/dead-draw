@@ -1,8 +1,8 @@
 import { WebSocket } from "ws";
 import assert from "node:assert/strict";
 const clients = [];
-async function until(check, label) {
-  const deadline = Date.now() + 8000;
+async function until(check, label, timeout = 8000) {
+  const deadline = Date.now() + timeout;
   while (!check()) {
     if (Date.now() > deadline)
       throw new Error(`Timed out waiting for ${label}`);
@@ -69,17 +69,19 @@ try {
     (c) => c.state.players.find((p) => p.id === id).z,
   );
   assert.ok(Math.max(...positions) - Math.min(...positions) < 0.3);
-  for (const c of [host, ...guests.slice(0, 2)])
+  const remaining = host.state.timer;
+  for (const c of [host, ...guests])
     c.ws.send(JSON.stringify({ type: "nextRound" }));
   await until(
-    () => host.state.players.filter((p) => p.ready).length === 3,
-    "three players ready",
+    () => host.state.timer < remaining - 0.2,
+    "timer continues without readiness",
   );
   assert.equal(host.state.phase, "break");
-  guests[2].ws.send(JSON.stringify({ type: "nextRound" }));
+  assert.ok(host.state.players.every((p) => !p.ready));
   await until(
     () => [host, ...guests].every((c) => c.state.phase === "combat"),
-    "unanimous combat start",
+    "automatic combat start",
+    95000,
   );
   for (const c of [host, ...guests]) {
     assert.equal(c.state.phase, "combat");

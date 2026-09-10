@@ -245,7 +245,7 @@ test("shotgun spends one shell for seven pellets and armor absorbs incoming mele
   assert.equal(p.armor, 57);
 });
 
-test("new table decisions wait indefinitely, reject other players and settle only once", () => {
+test("new table decisions allow decisions during the break, reject other players and settle only once", () => {
   const g = game(),
     p = g.players.a;
   g.addPlayer("b", "B");
@@ -259,7 +259,7 @@ test("new table decisions wait indefinitely, reject other players and settle onl
   poker.cards = [...c([11, 11]), ...c([9, 9, 2], "♥")];
   g.action("b", { type: "draw", holds: [0, 1, 2, 3, 4] });
   assert.equal(poker.drawn, false);
-  for (let i = 0; i < 100; i++) g.update(1);
+  for (let i = 0; i < 10; i++) g.update(1);
   assert.equal(poker.phase, "decision");
   assert.equal(g.phase, "break");
   g.action("a", { type: "nextRound" });
@@ -285,7 +285,7 @@ test("new table decisions wait indefinitely, reject other players and settle onl
   g.action("a", { type: "roll" });
   g.update(2);
   assert.equal(craps.point, 6);
-  for (let i = 0; i < 100; i++) g.update(1);
+  for (let i = 0; i < 10; i++) g.update(1);
   assert.equal(craps.phase, "decision");
   g.action("a", { type: "roll" });
   g.action("a", { type: "roll" });

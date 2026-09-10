@@ -96,6 +96,13 @@ export function soundCue(
         dividend: [125, 0.17, 6200, 0.21],
         sovereign: [82, 0.25, 3500, 0.28],
         pitViper: [68, 0.34, 2200, 0.37],
+        sword: [380, 0.12, 1400, 0.12],
+        crossbow: [260, 0.1, 3300, 0.13],
+        rpg: [46, 0.55, 1700, 0.38],
+        flamethrower: [70, 0.13, 800, 0.1],
+        minigun: [110, 0.065, 4100, 0.14],
+        railgun: [880, 0.45, 7400, 0.25],
+        tesla: [420, 0.3, 6800, 0.2],
       }[weapon] || [145, 0.13, 4200, 0.2];
       return {
         priority: 2,
@@ -215,6 +222,14 @@ export function soundCue(
         cooldown: 0.85,
       };
     case "enemy": {
+      if (kind === "goose")
+        return {
+          layers: [
+            tone(430, 0.18, 0.12, 0, { end: 300, type: "sawtooth" }),
+            tone(470, 0.22, 0.1, 0.22, { end: 330, type: "sawtooth" }),
+          ],
+          cooldown: 1.5,
+        };
       const f =
         kind === "boss"
           ? 42

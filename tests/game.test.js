@@ -15,7 +15,7 @@ test("rooms cap at four and start with individual balances", () => {
   g.players.a.chips = 0;
   assert.equal(g.players.b.chips, 25);
 });
-test("server enforces distance, balance, station exclusivity and concealed outcomes", () => {
+test("server enforces distance, balance, one active hand per player and concealed outcomes", () => {
   const g = game(),
     p = g.players.a;
   g.action("a", { type: "gamble", station: "slots" });
@@ -34,7 +34,7 @@ test("server enforces distance, balance, station exclusivity and concealed outco
 });
 test("rounds spawn and all-down ends run; restart resets economy", () => {
   const g = game();
-  g.action("a", { type: "nextRound" });
+  g.timer = 0;
   g.update(0.03);
   assert.equal(g.round, 1);
   assert.equal(g.phase, "combat");
@@ -118,8 +118,8 @@ test("furniture occludes bullets and retracts the shoulder camera", () => {
   g.zombies = [{ id: 99, x: -2.35, z: 2, hp: 100 }];
   g.shoot(p);
   assert.equal(g.zombies[0].hp, 100);
-  const ray=aimRay({x:0,z:1.8},Math.PI,0,false);
-  assert.ok(ray.origin.z>.3,'camera stays south of the closed shortcut');
+  const ray = aimRay({ x: 0, z: 1.8 }, Math.PI, 0, false);
+  assert.ok(ray.origin.z > 0.3, "camera stays south of the closed shortcut");
 });
 test("active wager does not prevent escaping the table", () => {
   const g = game(),
@@ -133,13 +133,14 @@ test("active wager does not prevent escaping the table", () => {
   assert.ok(g.games.slots);
 });
 
-test("intermissions never auto-start, and gambling is rejected during combat", () => {
+test("90-second intermissions automatically start and combat rejects gambling", () => {
   const g = game(),
     p = g.players.a;
-  g.update(3600);
-  assert.equal(g.phase, "break");
-  assert.equal(g.round, 0);
   g.action("a", { type: "nextRound" });
+  assert.equal(g.phase, "break");
+  g.update(89);
+  assert.equal(g.phase, "break");
+  g.update(1);
   assert.equal(g.phase, "combat");
   p.x = -3;
   p.z = 7;
@@ -150,47 +151,11 @@ test("intermissions never auto-start, and gambling is rejected during combat", (
   g.pending = 0;
   g.zombies = [];
   g.update(0.03);
-  assert.equal(g.phase, "break");
-  g.update(3600);
-  assert.equal(g.round, 1);
-});
-test("every teammate must ready, wagers reset readiness, and active hands block round start", () => {
-  const g = game();
-  g.addPlayer("b", "B");
-  g.action("a", { type: "nextRound" });
-  assert.equal(g.phase, "break");
-  assert.equal(g.players.a.ready, true);
-  const p = g.players.b;
-  p.x = -3;
-  p.z = 7;
-  g.action("b", { type: "gamble", station: "slots" });
-  assert.equal(g.players.a.ready, false);
-  g.action("a", { type: "nextRound" });
-  assert.equal(g.players.a.ready, false);
-  g.update(5);
-  g.action("a", { type: "nextRound" });
-  g.action("b", { type: "nextRound" });
-  assert.equal(g.phase, "combat");
-  assert.equal(g.difficulty.team, 2);
-  assert.deepEqual(g.games, {});
-});
-test("no start with a downed teammate; readiness can be cancelled and roster changes reset it", () => {
-  const g = game();
-  g.addPlayer("b", "B");
-  g.players.b.down = true;
-  g.action("a", { type: "nextRound" });
-  assert.equal(g.players.a.ready, false);
-  g.players.b.down = false;
-  g.action("a", { type: "nextRound" });
-  g.action("a", { type: "nextRound" });
-  assert.equal(g.players.a.ready, false);
-  g.action("a", { type: "nextRound" });
-  g.addPlayer("c", "C");
-  assert.equal(g.players.a.ready, false);
+  assert.equal(g.timer, 90);
 });
 test("a mid-round join scales remaining wave and enemies while disconnect never heals or weakens them", () => {
   const g = game();
-  g.action("a", { type: "nextRound" });
+  g.timer = 0;
   g.update(0.03);
   const pending = g.pending,
     hp = g.zombies[0].hp;
@@ -201,16 +166,18 @@ test("a mid-round join scales remaining wave and enemies while disconnect never 
   g.removePlayer("b");
   assert.equal(g.zombies[0].hp, scaled);
 });
-test("blackjack waits indefinitely for a decision and settlement credits exactly once", () => {
+test("blackjack allows decisions during the break and settlement credits exactly once", () => {
   const g = game(),
     p = g.players.a;
-  p.x=17;p.z=10;g.openRooms.push("velvet");
-  p.chips=200;
+  p.x = 17;
+  p.z = 10;
+  g.openRooms.push("velvet");
+  p.chips = 200;
   g.action("a", { type: "gamble", station: "blackjack", wager: 50 });
   g.update(1.2);
   assert.equal(g.games.blackjack.phase, "decision");
   const cards = g.games.blackjack.hands[0].cards.length;
-  g.update(1000);
+  g.update(10);
   assert.equal(g.games.blackjack.hands[0].cards.length, cards);
   assert.equal(g.games.blackjack.phase, "decision");
   const snapshot = g.snapshot().games.blackjack;
@@ -220,7 +187,7 @@ test("blackjack waits indefinitely for a decision and settlement credits exactly
   g.update(1);
   assert.equal(g.games.blackjack.phase, "result");
   assert.equal(p.chips, 175);
-  g.update(1000);
+  g.update(10);
   assert.equal(p.chips, 175);
   g.action("a", { type: "collect", station: "blackjack" });
   assert.equal(g.games.blackjack, undefined);

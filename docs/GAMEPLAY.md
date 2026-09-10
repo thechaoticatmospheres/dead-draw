@@ -4,9 +4,9 @@
 
 **T / D-pad left** opens Crew & Objectives. Ping with **Z**, request ammunition or share one matching magazine within three meters, contribute up to 50 chips to nearby doors, and repair entrance boards for 10 chips each. Each entrance holds three boards; an incoming enemy consumes a board and waits two seconds. **C / LT + LS click** shoves nearby enemies, consuming 20 stamina with a one-second cooldown. Teammate ground outlines and location pings remain visible through walls. Downed players spectate standing teammates with **[ / ]** or **Y/RB**.
 
-Power costs 150 chips at the Sapphire terminal. Two ordinary boss kills supply two keys; the Neon archive supplies the vault code once power is on. Activate the Eclipse terminal and ready up to fight the House. Below two-thirds health it calls collectors; below one-third it also targets survivors with telegraphed acid. After victory, all connected players can vote at the atrium exit to extract. Ignoring the exit continues endless play. Traps in Jade and Ivory cost 75 chips, run for eight seconds and have a 28-second cooldown; they require power. New room cover uses the same collision data on server and client.
+Power costs 150 chips at the Sapphire terminal. Two ordinary boss kills supply two keys; the Neon archive supplies the vault code once power is on. Activate the Eclipse terminal; the House arrives when the break ends. Below two-thirds health it calls collectors; below one-third it also targets survivors with telegraphed acid. After victory, all connected players can vote at the atrium exit to extract. Ignoring the exit continues endless play. Traps in Jade and Ivory cost 75 chips, run for eight seconds and have a 28-second cooldown; they require power. New room cover uses the same collision data on server and client.
 
-Roulette, blackjack, baccarat and craps offer **Shared Crew Table** mode. Everyone sees the same wheel, shoe, tableau or dice; stakes and rewards remain individual. Seat or bet, then all seated players ready to deal/spin. Craps uses one shooter, rotates after seven-out, and supports place 4/5/6/8/9/10 plus travelling come bets. Place stakes stay working until picked up or lost; they are off during come-out. Refunding an unplayed wager grants no comps. Shared decisions have no countdown. Offline blackjack seats stand automatically; uncommitted offline seats refund. The solo modes remain available, including solo craps odds.
+Every player has a private game at each station. Four players can use the same machine at once, with independent decisions, wagers and rewards. Cards and unrevealed outcomes stay private. Craps retains pass/don’t-pass bets and optional true odds.
 
 Slots have three visual themes and a bank-or-free-spin feature every seventh paid spin, in addition to the five-safe vault. Choose 60 chips or three free 25-chip single-line spins. Free spins cannot recursively earn paid-spin features or comps. Keno now has comparable returns across ticket sizes; see [balance notes](BALANCE.md).
 
@@ -18,43 +18,43 @@ Career records accumulate on completed runs: cleared waves, kills/headshots, rev
 
 The survival-and-casino loop now includes five enemy profiles, telegraphed area attacks, stamina dodges, grenades, chip streaks, combat pickups, rotating crew contracts, and a boss every fifth wave. Spitters keep their distance; Pit Bosses wind up a ground slam; the High Roller attacks faster as its health falls. Boss caches refill ammo, health and grenades and award three comps.
 
-- **Space / B:** dodge, spending stamina. **G / right-stick click:** grenade. Charges refill at the start of every wave.
-- **U / D-pad right:** Survivor’s Club during intermission. Six ranked perks use comps; supplies, guaranteed room-gated weapons and three weapon upgrade ranks use chips. All progression lasts for the current run.
+- **Shift / B:** roll, spending stamina. **G / right-stick click:** grenade. Charges refill at the start of every wave.
+- **U / D-pad right:** Survivor’s Club during intermission. Eleven ranked perks use comps; supplies, guaranteed room-gated weapons and three weapon upgrade ranks use chips. All progression lasts for the current run.
 - **Comps:** one per 50 chips wagered at the base casino games, including blackjack doubles/splits. True-odds and double-or-bank bets do not earn comps. Each completed crew contract adds chips and one comp per crew member at wave clear.
 - **Slot vault:** every fifth paid spin opens five shuffled safes: four cash prizes and an alarm. Pick up to three or bank after a safe. An alarm loses only vault winnings. One safe contains the crew progressive pot, starting at 250 and funded by 5% of slot stakes (minimum one chip). Banking that safe resets the pot.
 - **Double or bank:** optionally risk a credited chip payout on a fresh card’s color, at 50% red / 50% black. Correct doubles the risked chips; wrong loses them. Maximum three attempts; equipment is retained. Close the result or play again to keep the credited amount. Risking more than 10,000 chips at once is disabled.
 - **Craps odds:** after a point is established, add or take down up to twice the line stake in 30-chip units. Odds settle alongside the line at true odds; no rounded fractional payouts.
 - **Session ledger:** the Club records the last 12 settlements and casino chip profit/loss, including vault and double-or-bank results.
 
-Table interactions and combat action shortcuts work without recapturing the mouse. Menus consume gameplay keys; mouse look and WASD movement still use pointer capture. Controller menus support the new choices. Casino bonuses and pending color calls block wave readiness just like active hands.
+Table interactions and combat action shortcuts work without recapturing the mouse. Menus consume gameplay keys; mouse look and WASD movement still use pointer capture. Controller menus support the new choices. Casino bonuses and pending color calls settle when the break ends.
 
 ## Round flow
 
-Start the run to enter an **unlimited intermission**. Casino games are playable only during intermissions, enforced on the server. After a wave is cleared, the floor stays safe until the next round is explicitly started.
+Start the run to enter a **90-second intermission**. All waves start automatically when the clock reaches zero, including with downed teammates. Revive your crew before the bell. The last ten seconds sound a countdown; new wagers and wheel spins close at seven seconds.
 
-Use **Start next round**, or **N**. With multiple players this marks you ready; every connected teammate must ready up. Click again to cancel readiness. Active casino games and downed teammates block readiness. Any new wager, door purchase, or roster change clears readiness. Finish active hands and dice bets, revive teammates, and then ready up. Results are credited once automatically; Play again clears the result. Closing a resolved table also frees it. Closing an unfinished hand leaves it waiting for its owner, without a decision timer.
+At the deadline: blackjack stands; poker keeps all five cards; craps finishes committed rolls; War surrenders ties; Three Card folds unpaid play bets; Let It Ride keeps outstanding wagers; Hi-Lo and vault bonuses bank their current value. Pending reveals and color bets finish. Each hand pays once; there is no readiness vote. Closing a menu leaves your hand running until the deadline.
 
 ## Controls
 
-WASD move, mouse look, left click fire, right click aim, Shift sprint, R reload, Q cycle owned weapons, **E use a nearby table or purchase a shutter**, **M open the floor plan**, hold F near a downed teammate for three seconds to revive. Escape releases the mouse. Click the floor to recapture it. Intermissions release the pointer so the round-start button is immediately clickable. Touch controls are not implemented.
+WASD move, mouse look, left click fire, right click aim, Shift roll, Space jump, R reload, Q cycle owned weapons, **E use a nearby table or purchase a shutter**, **M open the floor plan**, hold F near a downed teammate for three seconds to revive. Escape releases the mouse. Click the floor to recapture it. Intermissions release the pointer for casino and Club menus. Touch controls are not implemented.
 
 ### Controller
 
 Standard mapped Xbox and PlayStation-compatible controllers use the browser [Gamepad API](https://developer.mozilla.org/en-US/docs/Web/API/Gamepad_API). Connect the controller, focus the game, release its controls, then press a button. Prompts switch when you use the controller or return to keyboard/mouse. Gamepads require localhost or HTTPS; plain HTTP on a LAN address may not expose the API.
 
-| Input (Xbox labels)   | Action                                 |
-| --------------------- | -------------------------------------- |
-| Left / right stick    | Move / look                            |
-| LT / RT               | Aim / fire                             |
-| A                     | Interact, buy access, select menu item |
-| X                     | Reload                                 |
-| Y or RB               | Cycle weapons                          |
-| Hold left stick click | Sprint                                 |
-| Hold LB               | Revive                                 |
-| View or D-pad up      | Floor plan                             |
-| D-pad down            | Ready / start next round               |
-| Menu                  | Controls and settings                  |
-| B                     | Close a table, map or settings         |
+| Input (Xbox labels) | Action                                 |
+| ------------------- | -------------------------------------- |
+| Left / right stick  | Move / look                            |
+| LT / RT             | Aim / fire                             |
+| A                   | Interact, buy access, select menu item |
+| X                   | Reload                                 |
+| Y or RB             | Cycle weapons                          |
+| Left stick click    | Jump                                   |
+| Hold LB             | Revive                                 |
+| View or D-pad up    | Floor plan                             |
+| D-pad down          | Jump                                   |
+| Menu                | Controls and settings                  |
+| B                   | Roll / close menus                     |
 
 Menus support D-pad/left-stick spatial navigation, LB/RB cycling, A selection and right-stick scrolling. Settings include look sensitivity, inverted vertical look, optional vibration, and cinematic/performance graphics. Controller settings persist locally. Names and room codes use keyboard text entry; a blank room code hosts a run. Browsers may require a mouse/keyboard gesture before audio can start. One local controller controls one survivor; co-op still uses separate browser clients.
 
@@ -62,7 +62,7 @@ Input uses a radial deadzone and analog movement. Menus consume movement/fire in
 
 ## Sound effects
 
-The sound pass adds 56 original procedural cues, including seven distinct weapon profiles, surface-aware footsteps, reload/ready/empty-magazine sounds, hit and headshot feedback, dodging, grenade throws and explosions, armor and health damage, down/revive cues, low-health heartbeats, enemy voices and telegraphed attacks. Room shutters, supplies, upgrades, crew contracts and round transitions also have dedicated cues.
+The sound pass adds 56 original procedural cues, including fourteen distinct weapon profiles, surface-aware footsteps, reload/ready/empty-magazine sounds, hit and headshot feedback, dodging, grenade throws and explosions, armor and health damage, down/revive cues, low-health heartbeats, enemy voices and telegraphed attacks. Room shutters, supplies, upgrades, crew contracts and round transitions also have dedicated cues.
 
 All six casino games have synchronized Foley: slot motors and individual reel stops, roulette ball clicks and landing, card shuffles/deals/holds, dice rattles and impacts, chip stacks, wins/losses/pushes, jackpot fanfares, vault doors/safes/alarms and double-or-bank reveals. Sounds follow public state; they cannot reveal hidden outcomes.
 
@@ -164,3 +164,21 @@ The jukebox plays five supplied three-minute songs in a repeating playlist. Play
 These join the existing drifters, runners, spitters, pit bosses and High Roller bosses. Normal five-wave boss/key progression remains intact.
 
 **Power shortcut:** stand near the Sapphire terminal and press **E / controller A** during an intermission to buy power for 150 chips. Finish active casino hands first. The prompt changes to ONLINE once purchased for the crew. Repeated presses do not charge again.
+
+## Roaming arsenal & mascot waves
+
+The Grand Prize Wheel is marked in the location HUD. Approach and press E / A during a break. Each of eleven equally likely prizes is a weapon or special supply. Spins resolve after five seconds. Cost starts at 500 chips and rises by 100 per crew spin, capped at 1,500. After at least three spins, the wheel moves to a different unlocked room once all ongoing spins finish. With only the atrium open it stays there. Duplicate weapons add reserve ammo; the sword has unlimited swings. Max Ammo fills all weapons; Golden Vest grants 150 armor; Second Chance adds one automatic revive token. Wheel stakes do not earn comps.
+
+| Weapon              | Use                                    | Availability                     |
+| ------------------- | -------------------------------------- | -------------------------------- |
+| Velvet Saber        | Wide, close-range cleave; no ammo      | Natural blackjack + wheel        |
+| Pit Boss Crossbow   | Powerful single bolt; reload each shot | Flush or better in poker + wheel |
+| Housebreaker RPG    | Rocket impact blasts a 4 m area        | Wheel only                       |
+| Dragon’s Breath     | Continuous short-range flame cone      | Wheel only                       |
+| Debt Collector      | Rapid fire after 0.35 s spin-up        | Wheel only                       |
+| Royal Flush Railgun | Pierces up to four aligned enemies     | Wheel only                       |
+| Static Jackpot      | Chains to up to four nearby enemies    | Wheel only                       |
+
+Every fourth wave becomes **Mascot Meltdown**, except fifth-wave bosses and the campaign finale. Jackpot geese waddle, flap, honk and attack quickly; clearing them grants 75 extra chips and two extra magazines. Boss keys remain on the normal fifth-wave schedule.
+
+Existing comp prices rise by 50%, rounded up. New ranks: Field Medic (5 comps, max 2, +40% revive speed/rank); Scavenger (4, max 2, +25% purchased/pickup ammo/rank); Thick Skin (6, max 3, 8% damage reduction/rank); High Interest (5, max 3, +15% wave-clear base chips/rank); Hot Streak (8, max 3, +10% weapon damage/rank). Each next rank costs its base price times rank number. These are run upgrades and persist in safe checkpoints.

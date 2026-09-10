@@ -301,7 +301,7 @@ export function publicHighStakes(g) {
 }
 export const highStakesMethods = {
   tableChoice(p, msg) {
-    const g = this.games[msg.station];
+    const g = this.hand(p, msg.station);
     if (
       this.phase !== "break" ||
       !g ||

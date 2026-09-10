@@ -32,141 +32,12 @@ const bet = (g, id, station, key, amount = 30) =>
 const step = (g, s = 6) => {
   for (let i = 0; i < s * 30; i++) g.update(1 / 30);
 };
-test("shared roulette has one pocket, individual accounting, no hidden outcome and no refunded comp farming", () => {
+test("retired shared-table messages cannot reserve a station or debit chips", () => {
   const g = setup();
-  for (let i = 0; i < 5; i++) {
-    bet(g, 0, "roulette", "red");
-    act(g, 0, "clear");
-  }
+  bet(g, 0, "roulette", "red");
+  act(g, 0, "ready");
   assert.equal(g.players[0].chips, 5000);
-  assert.equal(g.players[0].comps, 0);
-  bet(g, 0, "roulette", "red");
-  bet(g, 1, "roulette", "black");
-  act(g, 0, "ready");
-  assert.equal(g.crewTables.roulette.phase, "betting");
-  g.action("0", { type: "nextRound" });
-  assert.equal(g.phase, "break");
-  act(g, 1, "ready");
-  assert.equal(g.snapshot().crewTables.roulette.pocket, null);
-  step(g);
-  const t = g.crewTables.roulette;
-  assert.equal(t.phase, "result");
-  assert.equal(t.pocket, 14);
-  assert.equal(g.players[0].chips, 5030);
-  assert.equal(g.players[1].chips, 4970);
-  assert.deepEqual(g.history, [14]);
-  step(g);
-  assert.equal(g.players[0].chips, 5030);
-});
-test("crew mode rejects remote play, solo conflicts and betting during combat", () => {
-  const g = setup();
-  g.players[0].x = 0;
-  bet(g, 0, "roulette", "red");
   assert.deepEqual(g.crewTables, {});
-  bet(g, 1, "roulette", "black");
-  const before = g.players[1].chips;
-  g.action("1", {
-    type: "gamble",
-    station: "roulette",
-    bets: [{ key: "red", amount: 30 }],
-  });
-  assert.equal(g.players[1].chips, before);
-  g.phase = "combat";
-  bet(g, 1, "roulette", "red");
-  assert.equal(g.players[1].chips, before);
-});
-test("shared blackjack deals one unique shoe, masks the dealer and waits for all decisions", () => {
-  const g = setup("blackjack");
-  bet(g, 0, "blackjack", "ante", 50);
-  bet(g, 1, "blackjack", "ante", 50);
-  act(g, 0, "ready");
-  act(g, 1, "ready");
-  const t = g.crewTables.blackjack;
-  assert.equal(t.seats[0].hand.deck, t.seats[1].hand.deck);
-  assert.equal(t.seats[0].hand.dealer, t.dealer);
-  const all = [
-    ...t.shoe,
-    ...t.dealer,
-    ...Object.values(t.seats).flatMap((s) =>
-      s.hand.hands.flatMap((h) => h.cards),
-    ),
-  ];
-  assert.equal(all.length, 52);
-  assert.equal(new Set(all.map((c) => c.rank + c.suit)).size, 52);
-  assert.equal(g.snapshot().crewTables.blackjack.dealer[1].rank, 0);
-  assert.equal(JSON.stringify(g.snapshot()).includes('"shoe"'), false);
-  step(g, 2.1);
-  for (const s of Object.values(t.seats)) {
-    s.hand.phase = "decision";
-    s.hand.hands[0].status = "playing";
-    s.hand.hands[0].cards = [
-      { rank: 5, suit: "♠" },
-      { rank: 6, suit: "♥" },
-    ];
-  }
-  act(g, 0, "card", { action: "double" });
-  const chips = g.players[0].chips;
-  act(g, 0, "card", { action: "double" });
-  assert.equal(g.players[0].chips, chips);
-  step(g, 0.2);
-  assert.equal(t.phase, "decision");
-  g.players[1].offline = true;
-  step(g, 8);
-  assert.equal(t.phase, "result");
-  assert.equal(g.players[0].handsPlayed, 1);
-});
-test("baccarat seats observe the same cards and settle only once", () => {
-  const g = setup("baccarat");
-  bet(g, 0, "baccarat", "player", 40);
-  bet(g, 1, "baccarat", "player", 40);
-  act(g, 0, "ready");
-  act(g, 1, "ready");
-  assert.equal(g.snapshot().crewTables.baccarat.baccarat, null);
-  step(g);
-  assert.equal(g.players[0].chips, g.players[1].chips);
-  assert.equal(g.players[0].handsPlayed, 1);
-  assert.ok(g.snapshot().crewTables.baccarat.baccarat.playerCards.length >= 2);
-});
-test("craps place bets remain working, come bets travel and seven-out rotates shooter", () => {
-  const g = setup("craps");
-  bet(g, 0, "craps", "pass");
-  bet(g, 1, "craps", "place:6");
-  act(g, 0, "roll");
-  step(g, 2);
-  const t = g.crewTables.craps;
-  assert.equal(t.point, 6);
-  assert.equal(t.seats[1].cost, 30);
-  assert.equal(g.players[1].wagered, 0);
-  bet(g, 0, "craps", "come");
-  act(g, 0, "roll");
-  step(g, 2);
-  assert.equal(g.players[1].chips, 5005);
-  assert.equal(t.seats[0].bets.find((b) => b.key === "come").point, 6);
-  assert.equal(t.point, 0);
-  assert.equal(g.players[1].wagered, 30);
-  act(g, 1, "clear");
-  assert.equal(g.players[1].chips, 5035);
-  t.point = 6;
-  let rolls = [0.01, 0.999];
-  g.rng = () => rolls.shift() ?? 0.4;
-  act(g, 0, "roll");
-  step(g, 2);
-  assert.equal(t.point, 0);
-  assert.equal(t.shooter, "1");
-  assert.equal(t.seats[0].cost, 0);
-  assert.equal(g.busy(), false);
-});
-test("offline betting seats refund without blocking shared rounds", () => {
-  const g = setup();
-  bet(g, 0, "roulette", "red");
-  bet(g, 1, "roulette", "black");
-  g.players[1].offline = true;
-  step(g, 0.1);
-  assert.equal(g.players[1].chips, 5000);
-  assert.equal(g.crewTables.roulette.seats[1], undefined);
-  act(g, 0, "ready");
-  step(g);
-  assert.equal(g.crewTables.roulette.phase, "result");
 });
 test("checkpoints authenticate, preserve equipment and reject active casino hands", () => {
   const g = setup();
@@ -186,7 +57,11 @@ test("checkpoints authenticate, preserve equipment and reject active casino hand
   assert.throws(() => vault.open(token.slice(0, 30) + "!" + token.slice(31)));
   assert.throws(() => new Checkpoints("wrong").open(token));
   assert.notEqual(playerId("a".repeat(64)), playerId("b".repeat(64)));
-  bet(g, 0, "roulette", "red");
+  g.action("0", {
+    type: "gamble",
+    station: "roulette",
+    bets: [{ key: "red", amount: 30 }],
+  });
   assert.equal(vault.seal(g), null);
 });
 test("door contributions charge only the remainder and open once for the crew", () => {
@@ -298,7 +173,7 @@ test("local prediction responds immediately and reconciles acknowledged inputs",
   v.sent(1, input);
   v.update(1 / 30, p, input, ["atrium"]);
   assert.ok(v.position.z < 8);
-  v.reconcile({ ...p, z: 8 - 3.8 / 30, lastSeq: 1 }, ["atrium"]);
+  v.reconcile({ ...p, z: 8 - 6 / 30, lastSeq: 1 }, ["atrium"]);
   assert.equal(v.pending.length, 0);
   assert.ok(Math.abs(v.correction.z) < 0.0001);
   for (let i = 0; i < 200; i++)

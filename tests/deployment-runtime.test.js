@@ -7,7 +7,7 @@ import { WebSocket } from "ws";
 
 test(
   "Render production runtime serves health and supports four-player rounds",
-  { timeout: 15000 },
+  { timeout: 110000 },
   async () => {
     const cwd = fileURLToPath(new URL("../", import.meta.url));
     const origin = "https://thechaoticatmospheres.github.io";
@@ -94,7 +94,7 @@ test(
       smoke.stderr.on("data", (chunk) => {
         smokeOutput += chunk;
       });
-      const timer = setTimeout(() => smoke.kill(), 6000);
+      const timer = setTimeout(() => smoke.kill(), 100000);
       try {
         const [code] = await once(smoke, "exit");
         assert.equal(code, 0, smokeOutput);

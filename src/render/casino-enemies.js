@@ -41,7 +41,14 @@ export function animateCasinoEnemy(root, dt, z, distance) {
     node.rotation.copy(rotation);
   }
   const p = (name) => d.pivots[name]?.node;
-  if (kind === "wheelchair") {
+  if (kind === "goose") {
+    p("LegL").rotation.x = swing * 0.7;
+    p("LegR").rotation.x = -swing * 0.7;
+    p("ArmL").rotation.z = swing * 0.5 - 0.4;
+    p("ArmR").rotation.z = -swing * 0.5 + 0.4;
+    p("Head").rotation.x = attack * 0.7 + Math.sin(t) * 0.12;
+    d.visual.position.y = moving ? Math.abs(swing) * 0.08 : 0;
+  } else if (kind === "wheelchair") {
     d.wheelSpin = (d.wheelSpin || 0) - distance / 0.4;
     for (const name of ["WheelL", "WheelR", "CasterL", "CasterR"])
       p(name).rotation.x = d.wheelSpin;

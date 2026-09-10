@@ -1,4 +1,3 @@
-import { CREW_GAMES, crewCasino, bindCrewCasino } from "./crew-casino-ui.js";
 import { extraTable, bindExtra } from "./extra-casino-ui.js";
 import {
   HIGH_STAKES,
@@ -61,9 +60,10 @@ export class CasinoView {
     this.s = s;
     this.p = p;
     this.state = state;
-    if (state.crewTables?.[s.id] && this.openedStation !== s.id)
-      this.crewMode = s.id;
     this.openedStation = s.id;
+    const clock = document.getElementById("casinoDeadline");
+    if (clock)
+      clock.textContent = `NEXT WAVE ${Math.ceil(state.timer)}s${state.timer < 7 ? " · NEW WAGERS CLOSED" : ""}`;
     const g = state.games[s.id];
     const fingerprint = JSON.stringify([
       s.id,
@@ -73,8 +73,7 @@ export class CasinoView {
       p.vaultSpins,
       p.freeSpins,
       p.slotFeature,
-      this.crewMode,
-      state.crewTables?.[s.id],
+      state.timer < 7,
       state.jackpot,
       g ? { ...g, remaining: undefined } : null,
       state.history,
@@ -96,7 +95,7 @@ export class CasinoView {
           g.reward === "gildedHouse" ||
           g.reward === "sovereign"),
     );
-    let html = `<div class="table-topline"><span>INTERMISSION · NO TIME LIMIT</span><span>YOUR CHIPS <b>◉ ${p.chips}</b></span></div>`;
+    let html = `<div class="table-topline"><span>PRIVATE GAME · <b id="casinoDeadline">NEXT WAVE ${Math.ceil(state.timer)}s</b></span><span>YOUR CHIPS <b>◉ ${p.chips}</b></span></div>`;
     if (g && g.player !== p.id) {
       html +=
         '<div class="table-wait"><span>♠</span><h3>Table occupied</h3><p>Another survivor is finishing a game.<br>The next round will wait.</p></div>';
@@ -115,21 +114,12 @@ export class CasinoView {
     if (this.displayPhase !== g?.phase && ["bonus", "risk"].includes(g?.phase))
       panel.scrollTop = 0;
     this.displayPhase = g?.phase;
-    if (CREW_GAMES.includes(s.id)) {
-      const active = this.crewMode === s.id;
+    if (state.timer < 7)
       document
-        .getElementById("casinoBody")
-        .insertAdjacentHTML(
-          "afterbegin",
-          `<div class="choice-row"><button data-table-mode="solo">SOLO TABLE</button><button data-table-mode="crew">SHARED CREW TABLE</button></div>`,
-        );
-      if (active) {
-        const mode =
-          document.querySelector("[data-table-mode]").parentElement.outerHTML;
-        document.getElementById("casinoBody").innerHTML =
-          mode + crewCasino(this, cards, wheel);
-      }
-    }
+        .querySelectorAll(
+          "#casinoBody [data-play],#casinoBody [data-free-spin]",
+        )
+        .forEach((b) => (b.disabled = true));
     this.bind(g);
     bindBonus(this, document.getElementById("casinoBody"));
   }
@@ -163,7 +153,7 @@ export class CasinoView {
   }
   blackjack(g) {
     const opts = g ? handOptions(g, this.p.chips) : {};
-    return `<div class="blackjack-felt"><div class="felt-lettering">BLACKJACK PAYS 3 TO 2 <span>DEALER STANDS ON ALL 17s</span></div><div class="dealer-hand"><span class="hand-label">DEALER ${g && !["decision", "dealing"].includes(g.phase) ? "· " + score(g.dealer) : ""}</span>${g ? cards(g.dealer) : '<div class="empty-shoe">♠</div>'}</div><div class="player-hands">${g ? g.hands.map((h, i) => `<div class="hand-zone ${g.activeHand === i && g.phase === "decision" ? "active-hand" : ""}"><span class="hand-label">${g.hands.length > 1 ? "HAND " + (i + 1) : "YOUR HAND"} · ${score(h.cards)} ${h.result ? "· " + h.result : ""}</span>${cards(h.cards)}<div class="hand-wager"><span class="casino-chip">${h.bet}</span>${h.doubled ? "<b>DOUBLED</b>" : ""}${h.split ? "<b>SPLIT</b>" : ""}</div></div>`).join("") : '<div class="empty-hand">PLACE YOUR WAGER</div>'}</div></div>${!g ? `<div class="blackjack-controls"><div><div class="choice-label">WAGER</div><div class="choice-row">${[50, 100, 200].map((n) => `<button data-wager="${n}" class="${this.wager === n ? "selected" : ""}">${n} ◉</button>`).join("")}</div></div><button class="deal-button" data-play="blackjack" ${this.p.chips < this.wager ? "disabled" : ""}>DEAL HAND <b>${this.wager} ◉</b></button></div>` : g.phase === "decision" ? `<div class="hand-decisions">${button("HIT", "hit", !opts.hit, "Draw another card")}${button("STAND", "stand", !opts.stand, "Keep your total")}${button("DOUBLE", "double", !opts.double, "Match bet, draw once")}${button("SPLIT", "split", !opts.split, "Two hands, two wagers")}${button("SURRENDER", "surrender", !opts.surrender, "Return half your bet")}</div><p class="table-note decision-note">YOUR DECISION · TAKE YOUR TIME</p>` : g.phase !== "result" ? `<p class="table-note decision-note">${g.phase === "dealer" ? "DEALER IS PLAYING" : "DEALING YOUR HAND"}</p>` : ""}<details class="table-rules"><summary>House rules & weapon rewards</summary><p>Fresh 52-card deck. Dealer peeks for blackjack, then stands on soft 17. Win pays 1:1, natural blackjack 3:2, push returns the stake. One split of equal ranks; split aces receive one card each. Split 21 is an ordinary win. Double any initial two cards, including after a split. Surrender your original two-card hand for half back. No insurance.</p><p>Win → Dividend rifle. Natural → Sovereign. Push → 90 rifle rounds. Equipment is awarded per hand, in addition to chip returns.</p></details>`;
+    return `<div class="blackjack-felt"><div class="felt-lettering">BLACKJACK PAYS 3 TO 2 <span>DEALER STANDS ON ALL 17s</span></div><div class="dealer-hand"><span class="hand-label">DEALER ${g && !["decision", "dealing"].includes(g.phase) ? "· " + score(g.dealer) : ""}</span>${g ? cards(g.dealer) : '<div class="empty-shoe">♠</div>'}</div><div class="player-hands">${g ? g.hands.map((h, i) => `<div class="hand-zone ${g.activeHand === i && g.phase === "decision" ? "active-hand" : ""}"><span class="hand-label">${g.hands.length > 1 ? "HAND " + (i + 1) : "YOUR HAND"} · ${score(h.cards)} ${h.result ? "· " + h.result : ""}</span>${cards(h.cards)}<div class="hand-wager"><span class="casino-chip">${h.bet}</span>${h.doubled ? "<b>DOUBLED</b>" : ""}${h.split ? "<b>SPLIT</b>" : ""}</div></div>`).join("") : '<div class="empty-hand">PLACE YOUR WAGER</div>'}</div></div>${!g ? `<div class="blackjack-controls"><div><div class="choice-label">WAGER</div><div class="choice-row">${[50, 100, 200].map((n) => `<button data-wager="${n}" class="${this.wager === n ? "selected" : ""}">${n} ◉</button>`).join("")}</div></div><button class="deal-button" data-play="blackjack" ${this.p.chips < this.wager ? "disabled" : ""}>DEAL HAND <b>${this.wager} ◉</b></button></div>` : g.phase === "decision" ? `<div class="hand-decisions">${button("HIT", "hit", !opts.hit, "Draw another card")}${button("STAND", "stand", !opts.stand, "Keep your total")}${button("DOUBLE", "double", !opts.double, "Match bet, draw once")}${button("SPLIT", "split", !opts.split, "Two hands, two wagers")}${button("SURRENDER", "surrender", !opts.surrender, "Return half your bet")}</div><p class="table-note decision-note">YOUR DECISION · SETTLES WHEN THE BREAK ENDS</p>` : g.phase !== "result" ? `<p class="table-note decision-note">${g.phase === "dealer" ? "DEALER IS PLAYING" : "DEALING YOUR HAND"}</p>` : ""}<details class="table-rules"><summary>House rules & weapon rewards</summary><p>Fresh 52-card deck. Dealer peeks for blackjack, then stands on soft 17. Win pays 1:1, natural blackjack 3:2, push returns the stake. One split of equal ranks; split aces receive one card each. Split 21 is an ordinary win. Double any initial two cards, including after a split. Surrender your original two-card hand for half back. No insurance.</p><p>Win → Dividend rifle. Natural → Sovereign + Velvet Saber. Push → 90 rifle rounds. Equipment is awarded per hand, in addition to chip returns.</p></details>`;
   }
   result(g) {
     return `<div class="settlement"><div><span class="eyebrow">${g.result}</span><strong>${`${g.credited ?? g.returned ?? 0} ◉ RETURNED · ${(g.credited ?? g.returned ?? 0) - g.cost >= 0 ? "+" : ""}${(g.credited ?? g.returned ?? 0) - g.cost} NET`}</strong><p>${g.awards.length ? g.awards.map((a) => `${REWARDS[a.reward].label}${a.multiplier > 1 ? " × " + a.multiplier : ""}`).join(" · ") : "No equipment awarded."}</p></div><button class="deal-button" data-collect="${g.station}">PLAY AGAIN ↗</button></div>`;
@@ -187,14 +177,7 @@ export class CasinoView {
             refresh();
           }),
       );
-    root.querySelectorAll("[data-table-mode]").forEach(
-      (b) =>
-        (b.onclick = () => {
-          this.crewMode = b.dataset.tableMode === "crew" ? this.s.id : null;
-          refresh();
-        }),
-    );
-    bindCrewCasino(this, root, refresh);
+
     root
       .querySelectorAll("[data-slot-feature]")
       .forEach(

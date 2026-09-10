@@ -115,6 +115,11 @@ export class Soundscape {
     if (!p) return;
     a.listener = { x: p.x, z: p.z, yaw };
     a.duck(state.phase === "combat");
+    const count = state.phase === "break" ? Math.ceil(state.timer || 0) : -1;
+    if (count > 0 && count <= 10 && count !== this.countdown)
+      a.play("ready", { gain: count <= 5 ? 1 : 0.55 });
+    this.countdown = count;
+
     // Continue observing while muted so resuming never replays old wins or movement.
     if (this.phase && state.phase !== this.phase) {
       if (state.phase === "break" && this.phase === "combat") a.play("clear");

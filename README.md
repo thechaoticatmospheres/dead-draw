@@ -62,15 +62,15 @@ See [gameplay and controls](docs/GAMEPLAY.md) and [asset credits](public/assets/
 ### Crew & campaign update
 
 - **T / D-pad left:** objectives, pings, ammo requests/sharing, door contributions, entrance repairs and paid traps. **C / LT + left-stick click:** emergency shove. **Z:** location ping. Downed survivors watch teammates; **[ / ]**, **Y/RB** cycle the camera.
-- Shared roulette, blackjack, baccarat and craps support separate stakes at one public table. Everyone readies for cards/wheel; the craps shooter controls rolls. Shared craps adds place bets, travelling come bets and shooter rotation. Solo tables remain available.
-- Restore power, collect two boss keys, recover the vault code, challenge the House, and vote to extract—or continue endless waves. Intermissions have no time limit.
+- Every survivor has a private hand at every machine. All four players can use the same table simultaneously.
+- Restore power, collect two boss keys, recover the vault code, challenge the House, and vote to extract—or continue endless waves. Intermissions last 90 seconds, then the next wave starts automatically.
 - Slot themes, bank-or-free-spin features, animated dealers/chips, room cover, traps, predicted movement, career challenges, cosmetic armbands and mastery charms add depth without permanent combat advantages.
-- `server/crew-tables.js`, `server/campaign.js`, `server/checkpoints.js` own multiplayer rules. `src/crew-ui.js`, `src/crew-casino-ui.js`, `src/profile.js`, `src/prediction.js` own their browser interfaces.
+- `server/game.js`, `server/intermissions.js`, `server/campaign.js`, `server/checkpoints.js` own multiplayer rules. `src/crew-ui.js`, `src/profile.js`, `src/prediction.js` own their browser interfaces.
 - Run `node tools/balance-report.js` for exact Keno returns and solo/co-op room-unlock projections. See [balance notes](docs/BALANCE.md).
 
 ### Second wing & weapon attachments
 
-The 48 × 64 casino now has 12 rooms and 12 distinct games. Beyond the original six rooms: Sapphire Gallery (500 chips, Casino War), Ivory Club (700, Three Card Poker), Jade Pavilion (950, Sic Bo), Neon Exchange (1,250, Keno), Obsidian Vault (1,600, Hi-Lo), and Eclipse Penthouse (2,100, Let It Ride). North doors and crossways connect the wing. Unlocks apply to the whole crew; later tables offer larger stakes. Gambling still happens only between rounds, with unlimited decision time and unanimous readiness to start the next wave.
+The 48 × 64 casino now has 12 rooms and 12 distinct games. Beyond the original six rooms: Sapphire Gallery (500 chips, Casino War), Ivory Club (700, Three Card Poker), Jade Pavilion (950, Sic Bo), Neon Exchange (1,250, Keno), Obsidian Vault (1,600, Hi-Lo), and Eclipse Penthouse (2,100, Let It Ride). North doors and crossways connect the wing. Unlocks apply to the whole crew; later tables offer larger stakes. Gambling still happens only between rounds, with 90-second breaks and automatic settlement at the bell.
 
 Open the Survivor’s Club with **U** to purchase/equip attachments for your current weapon: 1.5× reflex (125), 2.5× scope (275), rifle-only 6× scope (900), extended magazine (250), speed loader (350), and compensator (450). Each requires its listed room. Aim with **RMB / controller LT**, or toggle aim with **V**. Optics use a first-person camera, magnification and reduced aim sensitivity; scopes have a lens mask and reticle. Owned attachments can be switched or removed free between rounds. Reload to fill an extended magazine. Attachments last for the run, like weapons and perks.
 
@@ -91,3 +91,14 @@ Approach the Sapphire power terminal and press **E / controller A** to restore p
 Four original articulated enemies join the existing roster: **Dead Dealers** with a craps rake, chips and cards; **Casino Security** with a uniform, cap, badge and baton; older **Last Call Regulars** in rolling wheelchairs; and bottle-carrying **Drunken Crawlers**. Dealers/crawlers appear from wave 1, wheelchair enemies from wave 2, and tougher security from wave 4. Security has a warned heavy strike and a larger chip reward. Seated and crawling enemies have matching low head/body hitboxes.
 
 Generate the four GLBs with `node tools/author-enemies.js`. Animation lives in `src/render/casino-enemies.js`; shared stats, roster and hit volumes in `shared/expansion.js`; combat remains authoritative on the server.
+
+### Friends playtest update (0.7)
+
+- Private concurrent casino games, 90-second breaks, visible countdown and final-ten-second audio. Pending hands settle once at the bell; new wagers close at seven seconds.
+- Space jumps, Shift rolls, and ordinary movement runs at the former sprint speed. Controller: B rolls; LS click or D-pad down jumps (LT + LS still shoves). Downed teammates remain visibly on the floor with a revive label.
+- Seven original weapon types: Velvet Saber and Pit Boss Crossbow also drop from natural blackjack and flush-or-better poker. RPG, flamethrower, minigun, piercing railgun and chain-lightning Tesla weapon are wheel-exclusive.
+- The Grand Prize Wheel starts in the atrium, relocates among unlocked rooms after three completed spins, and awards only weapons or rare supplies. Spins cost 500 chips, rising by 100 to a 1,500 cap; multiple survivors can spin independently.
+- Mascot Meltdown waves feature angry jackpot geese every fourth wave, except fifth-wave bosses. Clear them for 75 bonus chips and extra ammunition.
+- Eleven Club perks, higher comp prices, and new healing, ammo, protection, income and damage ranks.
+
+New systems: `shared/arsenal.js`, `server/arsenal.js`, `server/prize-wheel.js`, `src/prize-wheel-ui.js`, `src/render/arsenal-props.js`, `src/render/prize-wheel.js`. Procedural models ship inside the normal build without extra downloads. The real-socket integration test includes a full 90-second countdown.

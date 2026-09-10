@@ -11,6 +11,7 @@ import {
 } from "../../shared/map.js";
 import { STATIONS, OBSTACLES } from "../../shared/data.js";
 import { COVER } from "../../shared/campaign.js";
+import { WHEEL_PADS } from "../../shared/arsenal.js";
 import { SERVICES } from "../../shared/services.js";
 import { surfaces, label } from "./surfaces.js";
 function box(root, w, h, d, x, y, z, m) {
@@ -260,7 +261,7 @@ export class CasinoEnvironment {
       g.add(chandelier);
     }
     for (const o of OBSTACLES.slice(
-      COVER.length + SERVICES.length + STATIONS.length,
+      WHEEL_PADS.length + COVER.length + SERVICES.length + STATIONS.length,
     )) {
       const prop = assets.prop(o.h > 3 ? "column" : "cocktail");
       prop.position.set(o.x, 0, o.z);

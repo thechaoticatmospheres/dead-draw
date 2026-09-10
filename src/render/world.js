@@ -1,3 +1,4 @@
+import { PrizeWheelScene } from "./prize-wheel.js";
 import { CampaignScene } from "./campaign.js";
 import { ServiceScene } from "./services.js";
 import { casinoEnemy, animateCasinoEnemy } from "./casino-enemies.js";
@@ -183,6 +184,7 @@ export class World {
       this.doors = this.environment.doors;
       this.campaignScene = new CampaignScene(this.scene, this.assets);
       this.serviceScene = new ServiceScene(this.scene, this.assets);
+      this.prizeWheelScene = new PrizeWheelScene(this.scene);
       this.loaded = true;
     });
   }
@@ -215,7 +217,7 @@ export class World {
         const line = new THREE.Line(
           geo,
           new THREE.LineBasicMaterial({
-            color: 0xffda8e,
+            color: WEAPONS[e.weapon]?.color || 0xffda8e,
             transparent: true,
             opacity: 0.8,
           }),
@@ -223,7 +225,18 @@ export class World {
         this.scene.add(line);
         this.effects.push({ mesh: line, life: 0.07, max: 0.07 });
       }
-      this.particles(e.x, 1.4, e.z, 0xffd181, 3, 0.12);
+      this.particles(
+        e.x,
+        e.y,
+        e.z,
+        WEAPONS[e.weapon]?.color || 0xffd181,
+        3,
+        0.12,
+      );
+      if (e.weapon === "flamethrower")
+        this.particles(e.end.x, e.end.y, e.end.z, 0xff7634, 8, 0.35);
+      const actor = this.actors.get(e.player);
+      if (actor) actor.userData.swing = 0.25;
       if (e.hit)
         this.particles(
           e.end.x,
@@ -280,6 +293,7 @@ export class World {
     this.environment.update(dt, state, myId, t);
     this.campaignScene?.update(state, t, dt);
     this.serviceScene?.update(dt, state);
+    this.prizeWheelScene?.update(dt, state, myId);
     this.encounters.update(state, t);
     if (state && this.loaded) {
       const ids = new Set();
@@ -324,6 +338,15 @@ export class World {
           a.userData.gun.add(charm);
           a.userData.masteryCharm = charm;
         }
+        if (!a.userData.reviveLabel) {
+          a.userData.reviveLabel = this.encounters.label(
+            "DOWNED · HOLD F TO REVIVE",
+            "#ff919f",
+          );
+          a.userData.reviveLabel.position.set(0, 0.95, 0);
+          a.add(a.userData.reviveLabel);
+        }
+        a.userData.reviveLabel.visible = !!p.down;
         a.userData.crewOutline.visible = p.id !== this.localId;
         const mastery = p.mastery?.[p.guns[p.selected].id] || 0;
         a.userData.masteryCharm.visible = mastery > 0;
@@ -334,22 +357,49 @@ export class World {
           COSMETICS.find((c) => c.id === p.skin)?.color || 0xffffff,
         );
         a.position.lerp(
-          new THREE.Vector3(predicted.x, p.down ? -0.8 : 0, predicted.z),
+          new THREE.Vector3(
+            predicted.x,
+            p.down ? 0 : p.height || 0,
+            predicted.z,
+          ),
           1 - Math.exp(-dt * 18),
         );
         a.rotation.y = p.id === myId ? yaw : p.yaw;
-        a.rotation.z = p.down ? Math.PI / 2 : 0;
-        if (p.dodgeTime > 0)
-          a.rotation.z = -Math.sin((p.dodgeTime / 0.34) * Math.PI) * 0.5;
+        a.rotation.z = 0;
+        a.userData.visual.rotation.set(0, 0, 0);
+        a.userData.visual.position.set(0, 0, 0);
+        a.userData.gun.visible = !p.down;
+        a.userData.badge.visible = !p.down;
+        a.userData.crewOutline.material.color.setHex(
+          p.down ? 0xff606f : 0x82ffce,
+        );
+
         const moving = old.distanceTo(a.position) > 0.005;
         this.assets.animate(
           a,
           dt,
-          moving,
+          moving && !p.down,
           p.reload,
           WEAPONS[p.guns[p.selected].id],
           p.guns[p.selected],
         );
+        if (p.down) {
+          a.userData.visual.rotation.z = Math.PI / 2;
+          a.userData.visual.position.set(0.85, 0.25, 0);
+        } else if (p.dodgeTime > 0) {
+          const angle = -Math.PI * 2 * (1 - p.dodgeTime / 0.34);
+          a.userData.visual.rotation.x = angle;
+          a.userData.visual.position.set(
+            0,
+            1 - Math.cos(angle),
+            -Math.sin(angle),
+          );
+          a.userData.gun.position
+            .sub(new THREE.Vector3(0, 1, 0))
+            .applyAxisAngle(new THREE.Vector3(1, 0, 0), angle)
+            .add(new THREE.Vector3(0, 1, 0));
+          a.userData.gun.rotation.x += angle;
+        }
         if (a.userData.masteryCharm.parent !== a.userData.gun)
           a.userData.gun.add(a.userData.masteryCharm);
       }

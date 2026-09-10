@@ -163,6 +163,7 @@ export function settleBlackjack(g) {
       amount = h.bet * 2.5;
       result = "BLACKJACK";
       reward = "sovereign";
+      awards.push({ reward: "sword", multiplier: 1 });
     } else if (naturalDealer && !natural) result = "DEALER BLACKJACK";
     else if (total === dealer) {
       amount = h.bet;

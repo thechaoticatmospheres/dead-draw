@@ -168,7 +168,7 @@ test("every sound and weapon profile schedules and disconnects all owned nodes",
         JSON.stringify(soundCue("shot", { weapon })),
       ),
     ).size,
-    7,
+    14,
   );
 });
 test("mute stops queued sounds, persists, and focus loss suppresses new voices", () => {
@@ -314,4 +314,19 @@ test("hazards telegraph then land once, and duplicate network events are silent"
   s.event(e, state, "a");
   assert.equal(calls.filter((c) => c.name === "shot").length, 1);
   assert.equal(calls.filter((c) => c.name === "headshot").length, 1);
+});
+
+test("final ten seconds beep once per second and stop in combat", () => {
+  const { s, calls } = observer(),
+    state = scene();
+  state.phase = "break";
+  for (let n = 11; n >= 1; n--) {
+    state.timer = n;
+    s.update(0.033, state, "a", 0);
+    s.update(0.033, state, "a", 0);
+  }
+  assert.equal(calls.filter((c) => c.name === "ready").length, 10);
+  state.phase = "combat";
+  s.update(0.033, state, "a", 0);
+  assert.equal(calls.filter((c) => c.name === "ready").length, 10);
 });

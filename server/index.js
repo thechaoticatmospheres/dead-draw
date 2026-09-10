@@ -183,7 +183,14 @@ setInterval(() => {
     ws.ping();
   }
 }, 30000).unref();
+let lastTick = performance.now(),
+  accumulator = 0;
 setInterval(() => {
+  const now = performance.now();
+  accumulator += Math.min(0.25, (now - lastTick) / 1000);
+  lastTick = now;
+  const steps = Math.floor(accumulator * 30);
+  accumulator -= steps / 30;
   for (const room of rooms.values()) {
     const connected = Object.values(room.players).filter((p) => !p.offline);
     if (!connected.length) {
@@ -195,23 +202,25 @@ setInterval(() => {
     for (const p of Object.values(room.players))
       if (p.offline && Date.now() - p.disconnectedAt > 120000)
         room.removePlayer(p.id);
-    room.update(1 / 30);
+    for (let step = 0; step < steps; step++) room.update(1 / 30);
     let checkpoint = null;
     if (Date.now() - (room.savedAt || 0) > 1500) {
       checkpoint = saves.seal(room);
       if (checkpoint) room.savedAt = Date.now();
     }
-    const snapshot = JSON.stringify({ type: "state", ...room.snapshot() });
     for (const ws of wss.clients)
       if (
         ws.room === room &&
         ws.readyState === WebSocket.OPEN &&
         ws.bufferedAmount < 65536
       ) {
-        ws.send(snapshot);
+        ws.send(
+          JSON.stringify({ type: "state", ...room.snapshot(ws.id, false) }),
+        );
         if (checkpoint)
           ws.send(JSON.stringify({ type: "checkpoint", checkpoint }));
       }
+    room.events.length = 0;
   }
 }, 1000 / 30);
 server.listen(

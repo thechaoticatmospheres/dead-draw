@@ -31,7 +31,7 @@ export class MovementPrediction {
     const f = i.forward || 0,
       r = i.right || 0,
       len = Math.max(1, Math.hypot(f, r)),
-      speed = i.sprint && !i.aim ? 6 : 3.8;
+      speed = 6;
     moveCircle(
       p,
       ((-Math.sin(i.yaw) * f + Math.cos(i.yaw) * r) / len) * speed * dt,

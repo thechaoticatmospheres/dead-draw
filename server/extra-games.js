@@ -43,6 +43,8 @@ export function drawPoker(g, holds) {
           ? "shells"
           : null;
   g.awards = reward ? [{ reward, multiplier: 1 }] : [];
+  if (hand.multiplier >= 6)
+    g.awards.push({ reward: "crossbow", multiplier: 1 });
   g.phase = "playing";
   g.remaining = 1.3;
   return true;

@@ -1949,3 +1949,88 @@ body:has(#casino:not([hidden])) #toast {
     animation: none;
   }
 }
+
+body.shotgun #crosshair {
+  width: 68px;
+  height: 68px;
+  border: 2px solid #fff9;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #0008;
+}
+body.shotgun #crosshair i {
+  display: none;
+}
+#nextRound.urgent {
+  color: #ff8a7f;
+  border-color: #ff8a7f;
+  animation: pulse 1s infinite;
+}
+.wheel-panel {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: #071312df;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  overflow: auto;
+}
+.wheel-panel[hidden] {
+  display: none;
+}
+.wheel-card {
+  position: relative;
+  background: linear-gradient(145deg, #183a36, #151b1d);
+  border: 1px solid #c49d62;
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 700px;
+  box-shadow: 0 30px 100px #000;
+  color: #eadabd;
+}
+.wheel-card h1 {
+  font:
+    36px Georgia,
+    serif;
+  color: #f6d798;
+  letter-spacing: 3px;
+  margin: 14px 0;
+}
+.wheel-card p {
+  line-height: 1.6;
+  color: #acbeb4;
+}
+.wheel-close {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+}
+.wheel-prizes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 22px 0;
+}
+.wheel-prizes span {
+  padding: 10px;
+  border: 1px solid #b899563d;
+  background: #06131177;
+  font-size: 12px;
+}
+#wheelSpin {
+  width: 100%;
+  padding: 16px;
+  border-color: #e4bd6b;
+  color: #f4d68c;
+}
+@media (max-width: 600px) {
+  .wheel-card {
+    padding: 20px;
+  }
+  .wheel-card h1 {
+    font-size: 25px;
+  }
+  .wheel-prizes {
+    gap: 4px;
+  }
+}

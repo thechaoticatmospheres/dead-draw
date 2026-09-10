@@ -7,6 +7,7 @@ import { STATIONS } from "../shared/data.js";
 import { ROOMS } from "../shared/map.js";
 import { giveReward } from "../server/casino.js";
 import { SERVICES } from "../shared/services.js";
+import { WHEEL_PADS } from "../shared/arsenal.js";
 import { ENEMIES } from "../shared/expansion.js";
 const game = new Game("QA2026", () => 0.4);
 const vite = await createServer({
@@ -34,7 +35,63 @@ const server = http.createServer(async (req, res) => {
       res.statusCode = 409;
       return res.end("Join first");
     }
-    if (scenario === "enemies" || scenario === "enemy-combat") {
+    game.timer = 90;
+    if (
+      scenario === "wheel" ||
+      scenario === "countdown" ||
+      scenario === "downed" ||
+      scenario.startsWith("weapon/") ||
+      scenario === "geese"
+    ) {
+      game.phase = "break";
+      game.games = {};
+      game.hazards = [];
+      game.zombies = [];
+      game.openRooms = ROOMS.map((r) => r.id);
+      p.chips = 20000;
+      p.down = false;
+      p.hp = 100;
+      p.x = 0;
+      p.z = 10;
+      p.yaw = 0;
+      p.pitch = 0;
+      paused = false;
+      if (scenario === "wheel") {
+        game.prizeWheel = { room: "atrium", spins: 0, visits: 0 };
+        const pad = WHEEL_PADS[0];
+        p.x = pad.x;
+        p.z = pad.z + 2.3;
+      }
+      if (scenario === "countdown") game.timer = 10;
+      if (scenario.startsWith("weapon/")) {
+        giveReward(p, scenario.slice(7));
+        game.phase = "combat";
+        game.pending = 999;
+        game.spawnTimer = 999;
+      }
+      if (scenario === "downed") {
+        const q =
+          Object.values(game.players).find((q) => q.id !== p.id) ||
+          (game.addPlayer("qc", "Fallen Friend"), game.players.qc);
+        q.down = true;
+        q.hp = 0;
+        q.x = p.x + 0.7;
+        q.z = p.z - 2;
+        q.offline = false;
+        paused = true;
+      }
+      if (scenario === "geese") {
+        game.round = 3;
+        game.startRound();
+        game.pending = 999;
+        game.spawnTimer = 999;
+        game.zombies = [-2, 0, 2].map((x) => ({
+          ...game.makeEnemy({ x, z: 5 }),
+          speed: 0,
+        }));
+        paused = true;
+      }
+    } else if (scenario === "enemies" || scenario === "enemy-combat") {
       game.phase = "combat";
       game.round = 4;
       game.pending = 999;
@@ -260,8 +317,12 @@ wss.on("connection", (ws) => {
 });
 setInterval(() => {
   if (!paused) game.update(1 / 30);
-  const snapshot = JSON.stringify({ type: "state", ...game.snapshot() });
-  for (const ws of wss.clients) if (ws.readyState === 1) ws.send(snapshot);
+  for (const ws of wss.clients)
+    if (ws.readyState === 1)
+      ws.send(
+        JSON.stringify({ type: "state", ...game.snapshot(ws.player, false) }),
+      );
+  game.events.length = 0;
 }, 1000 / 30);
 server.listen(5194, "127.0.0.1", () =>
   console.log("Expansion browser fixture at http://127.0.0.1:5194"),

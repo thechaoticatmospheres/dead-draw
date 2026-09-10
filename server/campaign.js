@@ -218,6 +218,9 @@ export const campaignMethods = {
   },
   busy(player) {
     return (
+      Object.values(this.players).some(
+        (p) => (!player || p.id === player) && p.wheelSpin,
+      ) ||
       Object.values(this.games).some(
         (g) => (!player || g.player === player) && g.phase !== "result",
       ) ||

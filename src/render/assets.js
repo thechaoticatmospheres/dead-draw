@@ -1,3 +1,5 @@
+import { arsenalProp } from "./arsenal-props.js";
+import { SPECIAL_WEAPONS } from "../../shared/arsenal.js";
 import * as T from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
@@ -67,6 +69,9 @@ export class Assets {
     this.eyeMaterial = new T.MeshBasicMaterial({ color: 0xffa54d });
   }
   async load() {
+    for (const id of Object.keys(SPECIAL_WEAPONS))
+      this.models.set("weapon-" + id, { scene: arsenalProp(id) });
+    this.models.set("enemy-goose", { scene: arsenalProp("goose") });
     const loader = new GLTFLoader();
     await Promise.all(
       names.map(async (name) => {
@@ -164,13 +169,14 @@ export class Assets {
       return;
     }
     const type =
-      weapon?.category === "sidearm"
+      weapon?.model ||
+      (weapon?.category === "sidearm"
         ? "pistol"
         : weapon?.category === "automatic"
           ? "smg"
           : weapon?.category === "shells"
             ? "shotgun"
-            : "rifle";
+            : "rifle");
     const attachmentKey = JSON.stringify(gunState?.attachments || {});
     if (d.weaponId !== type || d.attachmentKey !== attachmentKey) {
       d.gun.clear();
@@ -253,6 +259,12 @@ export class Assets {
     d.gun.position
       .copy(root.worldToLocal(hand))
       .add(new T.Vector3(0, 0.13, -0.025));
+    d.swing = Math.max(0, (d.swing || 0) - dt);
+    d.gun.rotation.y = weapon?.melee
+      ? Math.sin((d.swing / 0.25) * Math.PI) * 1.8
+      : 0;
+    const barrels = d.gun.getObjectByName("Barrels");
+    if (barrels) barrels.rotation.z += dt * (d.swing > 0 ? 35 : 2);
     d.gun.rotation.x = reload ? -0.8 : 0;
   }
 }

@@ -43,7 +43,7 @@ test("comps follow real table stakes, upgrades are scoped, capped and rejected d
   g.buy(p, "vitality");
   assert.equal(maxHealth(p), 125);
   assert.equal(p.hp, 125);
-  assert.equal(p.comps, 47);
+  assert.equal(p.comps, 45);
   g.buy(p, "upgrade");
   assert.equal(p.guns[0].level, 1);
   assert.equal(damageMultiplier(p.guns[0]), 1.3);
@@ -231,13 +231,13 @@ test("heavy attacks telegraph before damage and ranged enemies hold their distan
   g.update(0.1);
   assert.ok(spitter.z < 8);
 });
-test("vault hides unpicked outcomes, waits indefinitely, and banks only once", () => {
+test("vault hides unpicked outcomes, allows decisions during the break, and banks only once", () => {
   const [g, p, q] = setup();
   const h = settle(g, p, { unlockVault: true });
   const before = p.chips;
   assert.equal(h.phase, "bonus");
   assert.equal(g.snapshot().games.slots.vaultHidden, undefined);
-  g.update(100);
+  g.update(10);
   assert.equal(h.phase, "bonus");
   g.readyPlayer(p);
   assert.equal(g.phase, "break");

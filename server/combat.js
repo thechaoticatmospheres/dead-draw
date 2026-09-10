@@ -9,7 +9,9 @@ import { clearPath } from "../shared/map.js";
 const distance = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
 export const combatMethods = {
   makeEnemy(spawn) {
-    const kind = enemyType(this.round, this.spawned++),
+    const kind = this.specialRound
+        ? (this.spawned++, "goose")
+        : enemyType(this.round, this.spawned++),
       stats = ENEMIES[kind];
     const hp = Math.ceil(this.difficulty.hp * stats.hp);
     return {
@@ -29,9 +31,10 @@ export const combatMethods = {
     const cost = 35 - (p.perks.dodge || 0) * 10;
     if (
       p.down ||
+      p.height > 0 ||
       p.dodgeTime > 0 ||
       p.stamina < cost ||
-      this.phase !== "combat"
+      !["break", "combat"].includes(this.phase)
     )
       return;
     const f = p.input.forward || 0,
@@ -81,13 +84,15 @@ export const combatMethods = {
   },
   hurt(p, amount) {
     if (p.down || p.dodgeTime > 0 || p.invulnerable > 0) return;
+    amount *= 1 - (p.perks.toughness || 0) * 0.08;
     const absorbed = Math.min(p.armor || 0, amount);
     p.armor = (p.armor || 0) - absorbed;
     p.hp = Math.max(0, p.hp - (amount - absorbed));
     this.event("hurt", { player: p.id });
     if (p.hp <= 0) {
-      if (p.perks.secondWind && !p.secondWindUsed) {
-        p.secondWindUsed = true;
+      if ((p.perks.secondWind && !p.secondWindUsed) || p.reviveTokens > 0) {
+        if (p.perks.secondWind && !p.secondWindUsed) p.secondWindUsed = true;
+        else p.reviveTokens--;
         p.hp = 60;
         p.invulnerable = 3;
         this.event("notice", {
@@ -207,6 +212,14 @@ export const combatMethods = {
   },
   updateTactics(dt, players) {
     for (const p of players) {
+      if (p.down) {
+        p.height = 0;
+        p.jumpVelocity = 0;
+      } else if (p.height > 0 || p.jumpVelocity > 0) {
+        p.jumpVelocity = (p.jumpVelocity || 0) - 18 * dt;
+        p.height = Math.max(0, (p.height || 0) + p.jumpVelocity * dt);
+        if (!p.height) p.jumpVelocity = 0;
+      }
       p.stamina = Math.min(100, p.stamina + dt * (p.dodgeTime > 0 ? 0 : 23));
       p.grenadeCooldown = Math.max(0, p.grenadeCooldown - dt);
       p.invulnerable = Math.max(0, (p.invulnerable || 0) - dt);
@@ -228,20 +241,25 @@ export const combatMethods = {
       h.delay -= dt;
       h.tick = (h.tick || 0) - dt;
       if (h.delay > 0) continue;
-      if (h.kind === "grenade") {
+      if (["grenade", "rocket"].includes(h.kind)) {
         const owner = this.players[h.player];
         if (owner)
           for (const z of [...this.zombies])
             if (distance(z, h) < h.radius && clearPath(h, z, this.openRooms)) {
               z.hp -= h.damage * (1 - distance(z, h) / (h.radius * 2));
               z.stun = 0.8;
-              if (z.hp <= 0) this.killEnemy(z, owner, false, true);
+              if (z.hp <= 0)
+                this.killEnemy(z, owner, false, h.kind === "grenade");
             }
         h.life = 0;
         this.event("explosion", { x: h.x, z: h.z });
       } else if (h.tick <= 0) {
         for (const p of players)
-          if (distance(p, h) < h.radius && clearPath(h, p, this.openRooms))
+          if (
+            !(p.height > 0.35) &&
+            distance(p, h) < h.radius &&
+            clearPath(h, p, this.openRooms)
+          )
             this.hurt(p, h.damage);
         h.tick = 0.65;
       }
@@ -257,7 +275,11 @@ export const combatMethods = {
       );
       if (!p) return item.life > 0;
       if (item.kind === "ammo" || item.kind === "jackpot")
-        for (const gun of p.guns) gun.reserve += WEAPONS[gun.id].mag * 2;
+        for (const gun of p.guns)
+          if (!WEAPONS[gun.id].melee)
+            gun.reserve += Math.ceil(
+              WEAPONS[gun.id].mag * 2 * (1 + (p.perks.scavenger || 0) * 0.25),
+            );
       if (item.kind === "medkit" || item.kind === "jackpot")
         p.hp = Math.min(maxHealth(p), p.hp + 40);
       if (item.kind === "jackpot") {

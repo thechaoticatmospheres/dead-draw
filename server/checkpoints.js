@@ -10,6 +10,8 @@ import { Game } from "./game.js";
 const fields = [
   "serial",
   "jukebox",
+  "timer",
+  "prizeWheel",
   "round",
   "phase",
   "time",
@@ -78,6 +80,7 @@ export class Checkpoints {
         offline: true,
         disconnectedAt: Date.now(),
       };
+    g.timer = Math.max(1, Math.min(90, data.timer ?? 90));
     g.games = {};
     g.crewTables = {};
     return g;

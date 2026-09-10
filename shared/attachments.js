@@ -53,7 +53,8 @@ export const ATTACHMENTS = [
   },
 ];
 export const attachmentFits = (item, weapon) =>
-  !item.categories || item.categories.includes(weapon.category);
+  !weapon.melee &&
+  (!item.categories || item.categories.includes(weapon.category));
 export const opticFor = (p) =>
   ATTACHMENTS.find((a) => a.id === p?.guns?.[p.selected]?.attachments?.optic);
 export function gunStats(base, gun) {

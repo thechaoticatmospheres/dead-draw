@@ -1,4 +1,18 @@
 export const ENEMIES = {
+  goose: {
+    name: "Jackpot Goose",
+    hp: 0.6,
+    speed: 1.8,
+    scale: 1,
+    damage: 12,
+    color: 0xffe1a0,
+    model: "goose",
+    headY: 0.9,
+    bodyY: 0.45,
+    bodyRadius: 0.4,
+    headRadius: 0.24,
+    labelY: 1.4,
+  },
   dealer: {
     name: "Dead Dealer",
     hp: 1.1,
@@ -174,6 +188,54 @@ export const PERKS = [
     room: "crown",
   },
 ];
+for (const perk of PERKS) perk.price = Math.ceil(perk.price * 1.5);
+PERKS.push(
+  {
+    id: "medic",
+    name: "Field Medic",
+    glyph: "+",
+    detail: "40% faster revives per rank.",
+    price: 5,
+    max: 2,
+    room: "atrium",
+  },
+  {
+    id: "scavenger",
+    name: "Scavenger",
+    glyph: "S",
+    detail: "25% more ammo from supplies and pickups per rank.",
+    price: 4,
+    max: 2,
+    room: "arcade",
+  },
+  {
+    id: "toughness",
+    name: "Thick Skin",
+    glyph: "T",
+    detail: "8% less incoming damage per rank.",
+    price: 6,
+    max: 3,
+    room: "dice",
+  },
+  {
+    id: "interest",
+    name: "High Interest",
+    glyph: "$",
+    detail: "15% more wave-clear chips per rank.",
+    price: 5,
+    max: 3,
+    room: "sapphire",
+  },
+  {
+    id: "power",
+    name: "Hot Streak",
+    glyph: "!",
+    detail: "10% more weapon damage per rank.",
+    price: 8,
+    max: 3,
+    room: "ivory",
+  },
+);
 export const SUPPLIES = [
   {
     id: "ammo",

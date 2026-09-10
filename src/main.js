@@ -1,5 +1,7 @@
 import { CrewUI } from "./crew-ui.js";
 import { BackgroundMusic } from "./music.js";
+import { PrizeWheelUI } from "./prize-wheel-ui.js";
+import { nearbyWheel, wheelCost } from "../shared/arsenal.js";
 import { JukeboxUI } from "./jukebox-ui.js";
 import { nearbyService } from "../shared/services.js";
 import { nearbyPower } from "../shared/campaign.js";
@@ -71,6 +73,7 @@ const clubView = new ClubView(send);
 const crewUI = new CrewUI(send),
   prediction = new MovementPrediction();
 const jukeboxUI = new JukeboxUI(music, send);
+const prizeWheelUI = new PrizeWheelUI(send);
 let serviceClick = false;
 let inputSeq = 0,
   latestInput = { yaw: 0 },
@@ -98,6 +101,7 @@ $("careerButton").onclick = () => crewUI.toggle(me(), state, "career");
 function menuRoot() {
   return (
     [
+      "prizeWheelPanel",
       "jukeboxPanel",
       "crewPanel",
       "help",
@@ -113,6 +117,15 @@ function menuRoot() {
   );
 }
 function interact() {
+  if (nearbyWheel(me(), state)) {
+    if (state.phase !== "break") {
+      toast("PRIZE WHEEL CLOSED DURING COMBAT");
+      return;
+    }
+    release();
+    prizeWheelUI.open(me(), state);
+    return;
+  }
   const power = nearbyPower(me(), state);
   if (power) {
     if (state.campaign.power) toast("CASINO POWER IS ALREADY ON");
@@ -187,6 +200,10 @@ const controller = new GamepadInput({
       return;
     }
     if (action === "back") {
+      if (!$("prizeWheelPanel").hidden) {
+        show("prizeWheelPanel", false);
+        return;
+      }
       if (!$("jukeboxPanel").hidden) {
         show("jukeboxPanel", false);
         return;
@@ -274,6 +291,7 @@ function lock() {
     !$("casino").hidden ||
     !$("help").hidden ||
     !$("floorplan").hidden ||
+    !$("prizeWheelPanel").hidden ||
     !$("club").hidden ||
     !["combat", "break"].includes(state.phase)
   )
@@ -513,16 +531,21 @@ function updateHUD() {
   const p = me();
   if (!p) return;
   jukeboxUI.render(p, state);
+  prizeWheelUI.update(p, state);
   updateExpansionHud(p, state, controller.mode === "controller");
   if (!$("club").hidden) clubView.render(p, state);
-  $("location").textContent = "GILDED PALM / " + (roomAt(p)?.name || "FLOOR");
+  $("location").textContent =
+    "GILDED PALM / " +
+    (roomAt(p)?.name || "FLOOR") +
+    " · WHEEL: " +
+    (ROOMS.find((r) => r.id === state.prizeWheel?.room)?.name || "—");
   if (!$("floorplan").hidden) renderMap();
   $("round").textContent = String(state.round).padStart(2, "0");
   $("phase").textContent =
     state.phase === "break"
-      ? `INTERMISSION · TABLES OPEN`
+      ? `INTERMISSION · ${Math.ceil(state.timer)}s · TABLES OPEN`
       : state.phase === "combat"
-        ? `${state.zombies.length + state.pending} GUESTS REMAIN`
+        ? `${state.specialRound ? "MASCOT MELTDOWN · " : ""}${state.zombies.length + state.pending} GUESTS REMAIN`
         : state.phase === "over"
           ? "RUN ENDED"
           : "WAITING FOR THE CREW";
@@ -550,8 +573,9 @@ function updateHUD() {
     (gun.power > 1 ? "GILDED " : "") +
     w.name.toUpperCase() +
     (gun.level ? ` · RANK ${gun.level}` : "");
-  $("ammo").textContent = gun.ammo;
-  $("reserve").textContent = "/ " + gun.reserve;
+  document.body.classList.toggle("shotgun", w.category === "shells");
+  $("ammo").textContent = w.melee ? "∞" : gun.ammo;
+  $("reserve").textContent = w.melee ? "NO AMMO NEEDED" : "/ " + gun.reserve;
   $("reload").textContent = p.reload
     ? `RELOADING ${p.reload.toFixed(1)}s`
     : p.guns.length > 1
@@ -587,6 +611,11 @@ function updateHUD() {
         ? "OPEN THE OTHER WING TO CONNECT THIS ROUTE"
         : `E · OPEN ${r.name} / ${r.cost} CHIPS · WHOLE CREW`;
   }
+  if (nearbyWheel(p, state) && !downed)
+    prompt =
+      state.phase === "break"
+        ? `E · GRAND PRIZE WHEEL / ${wheelCost(state.prizeWheel)} CHIPS`
+        : "PRIZE WHEEL CLOSED · FINISH THE ROUND";
   if (nearbyPower(p, state) && !downed)
     prompt = state.campaign.power
       ? "CASINO POWER · ONLINE"
@@ -612,29 +641,13 @@ function updateHUD() {
       );
   $("prompt").style.display = prompt && !station ? "block" : "none";
   show("intermission", state.phase === "break");
-  const activeGames =
-    Object.values(state.games).some((g) => g.phase !== "result") ||
-    Object.values(state.crewTables || {}).some(
-      (t) => t.phase !== "result" && t.seats.some((s) => s.cost),
-    );
-  const ready = state.players.filter((p) => p.ready).length;
-  $("nextRound").disabled =
-    activeGames || p.down || state.players.some((p) => p.down && !p.offline);
-  $("nextRound").textContent = p.ready
-    ? "CANCEL READY"
-    : state.players.length === 1
-      ? "START NEXT ROUND ↗"
-      : "READY FOR NEXT ROUND ↗";
-  $("intermissionStatus").textContent = activeGames
-    ? "Finish active casino games to continue"
-    : state.players.some((p) => p.down)
-      ? "Revive your crew before continuing"
-      : state.players.length === 1
-        ? "Gamble as long as you like."
-        : ready +
-          " / " +
-          state.players.length +
-          " READY · Everyone must be ready";
+  const seconds = Math.max(0, Math.ceil(state.timer || 0));
+  $("nextRound").disabled = true;
+  $("nextRound").textContent =
+    `NEXT WAVE · ${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+  $("nextRound").classList.toggle("countdown-urgent", seconds <= 10);
+  $("intermissionStatus").textContent =
+    "90-second break · Games settle automatically at the bell";
   $("difficulty").textContent =
     state.players.length +
     " PLAYER" +
@@ -644,11 +657,9 @@ function updateHUD() {
   $("hint").textContent =
     controller.mode === "controller"
       ? "LS MOVE · RS LOOK · LT AIM · RT FIRE · A USE · X RELOAD · Y WEAPON · LB REVIVE"
-      : "WASD MOVE · SHIFT SPRINT · RMB / V AIM · LMB FIRE · E INTERACT · U SURVIVOR’S CLUB";
+      : "WASD MOVE · SHIFT ROLL · SPACE JUMP · RMB / V AIM · LMB FIRE · E INTERACT · U SURVIVOR’S CLUB";
   document.querySelector(".ready-shortcut").textContent =
-    controller.mode === "controller"
-      ? "D-PAD ↓ TO READY · MENU FOR CONTROLS"
-      : "N TO READY · ESC FOR MOUSE";
+    "AUTOMATIC NEXT WAVE · REVIVE YOUR CREW";
   if (state.phase !== lastPhase) {
     if (state.phase === "combat") {
       show("jukeboxPanel", false);
@@ -733,9 +744,7 @@ function toggleClub() {
 $("clubButton").onclick = toggleClub;
 $("closeClub").onclick = toggleClub;
 $("closeMap").onclick = toggleMap;
-$("nextRound").onclick = () => {
-  send({ type: "nextRound" });
-};
+$("nextRound").onclick = () => {};
 $("enter").onclick = () => join(false);
 $("start").onclick = () => {
   send({ type: "start" });
@@ -775,6 +784,7 @@ addEventListener("keydown", (e) => {
   controller.useKeyboard();
   if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) return;
   if (e.code === "Escape") {
+    show("prizeWheelPanel", false);
     $("crewPanel").hidden = true;
     if (station) closeCasino();
     show("help", false);
@@ -808,7 +818,6 @@ addEventListener("keydown", (e) => {
     !menuRoot() &&
     !e.repeat
   ) {
-    send({ type: "nextRound" });
     return;
   }
   if (me() && !menuRoot() && !e.repeat) {
@@ -828,9 +837,13 @@ addEventListener("keydown", (e) => {
       interact();
       return;
     }
+    if (["ShiftLeft", "ShiftRight"].includes(e.code) && !e.repeat) {
+      send({ type: "dodge" });
+      return;
+    }
     if (e.code === "Space") {
       e.preventDefault();
-      send({ type: "dodge" });
+      send({ type: "jump" });
       return;
     }
     if (e.code === "KeyG") {
@@ -922,10 +935,7 @@ function readInput() {
       !me()?.down &&
       (controller.mode === "controller" ? controller.input.aim : aim),
     shoot: controller.mode === "controller" ? controller.input.shoot : shoot,
-    sprint:
-      controller.mode === "controller"
-        ? controller.input.sprint
-        : keys.has("ShiftLeft") || keys.has("ShiftRight"),
+    sprint: false,
     revive:
       controller.mode === "controller"
         ? controller.input.revive
