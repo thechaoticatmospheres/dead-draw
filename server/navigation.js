@@ -9,19 +9,33 @@ const point = (i) => ({
 const cell = (p) =>
   Math.max(0, Math.min(WIDTH - 1, Math.floor(p.x - BOUNDS.minX))) +
   WIDTH * Math.max(0, Math.min(HEIGHT - 1, Math.floor(p.z - BOUNDS.minZ)));
+const points = Array.from({ length: WIDTH * HEIGHT }, (_, i) => point(i));
+const neighbors = points.map((_, i) => {
+  const x = i % WIDTH,
+    z = Math.floor(i / WIDTH);
+  return [
+    x > 0 ? i - 1 : -1,
+    x < WIDTH - 1 ? i + 1 : -1,
+    z > 0 ? i - WIDTH : -1,
+    z < HEIGHT - 1 ? i + WIDTH : -1,
+  ].filter((n) => n >= 0);
+});
 export class Navigation {
   constructor() {
     this.key = "";
     this.dist = new Int16Array(WIDTH * HEIGHT);
     this.walk = new Uint8Array(WIDTH * HEIGHT);
+    this.queue = new Int16Array(WIDTH * HEIGHT);
+    this.seedKey = null;
   }
   build(players, open) {
     const key = open.slice().sort().join();
     if (key !== this.key) {
       this.key = key;
+      this.seedKey = null;
       const walls = barriers(open);
       for (let i = 0; i < this.walk.length; i++) {
-        const p = point(i);
+        const p = points[i];
         this.walk[i] =
           open.includes(roomAt(p)?.id) &&
           !walls.some((o) => circleRect(p, 0.46, o)) &&
@@ -30,15 +44,14 @@ export class Navigation {
             : 0;
       }
     }
-    this.dist.fill(-1);
-    const queue = [];
+    const seeds = [];
     for (const p of players) {
       let index = cell(p);
       if (!this.walk[index]) {
         let nearest = Infinity;
         for (let i = 0; i < this.walk.length; i++)
           if (this.walk[i]) {
-            const q = point(i),
+            const q = points[i],
               d = Math.hypot(p.x - q.x, p.z - q.z);
             if (d < nearest) {
               nearest = d;
@@ -46,29 +59,32 @@ export class Navigation {
             }
           }
       }
-      if (this.walk[index] && this.dist[index] === -1) {
-        this.dist[index] = 0;
-        queue.push(index);
-      }
+      if (this.walk[index] && !seeds.includes(index)) seeds.push(index);
     }
-    for (let n = 0; n < queue.length; n++) {
+    const seedKey = seeds
+      .slice()
+      .sort((a, b) => a - b)
+      .join();
+    if (seedKey === this.seedKey) return;
+    this.seedKey = seedKey;
+    this.dist.fill(-1);
+    const queue = this.queue;
+    let length = 0;
+    for (const index of seeds) {
+      this.dist[index] = 0;
+      queue[length++] = index;
+    }
+    for (let n = 0; n < length; n++) {
       const index = queue[n];
       for (const next of this.neighbors(index))
         if (this.walk[next] && this.dist[next] === -1) {
           this.dist[next] = this.dist[index] + 1;
-          queue.push(next);
+          queue[length++] = next;
         }
     }
   }
   neighbors(i) {
-    const x = i % WIDTH,
-      z = Math.floor(i / WIDTH);
-    return [
-      x > 0 ? i - 1 : -1,
-      x < WIDTH - 1 ? i + 1 : -1,
-      z > 0 ? i - WIDTH : -1,
-      z < HEIGHT - 1 ? i + WIDTH : -1,
-    ].filter((n) => n >= 0);
+    return neighbors[i];
   }
   target(p) {
     const i = cell(p);
@@ -77,7 +93,7 @@ export class Navigation {
       let d = Infinity;
       for (let j = 0; j < this.dist.length; j++)
         if (this.dist[j] >= 0) {
-          const q = point(j),
+          const q = points[j],
             n = Math.hypot(q.x - p.x, q.z - p.z);
           if (n < d) {
             d = n;

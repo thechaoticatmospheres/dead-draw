@@ -15,6 +15,8 @@ const vite = await createServer({
   appType: "spa",
 });
 let paused = false;
+let performanceBots = [];
+let performanceStress = false;
 const server = http.createServer(async (req, res) => {
   if (req.url === "/__qa" && req.method === "GET") {
     res.setHeader("Content-Type", "application/json");
@@ -36,6 +38,44 @@ const server = http.createServer(async (req, res) => {
       return res.end("Join first");
     }
     game.timer = 90;
+    if (scenario === "performance" || scenario === "performance-stop") {
+      performanceStress = scenario === "performance";
+      for (const id of performanceBots) game.removePlayer(id);
+      performanceBots = [];
+      game.games = {};
+      game.crewTables = {};
+      game.zombies = [];
+      game.hazards = [];
+      game.openRooms = ROOMS.map((r) => r.id);
+      p.x = 0;
+      p.z = 13;
+      p.yaw = 0;
+      p.down = false;
+      p.hp = 100;
+      p.invulnerable = 1e6;
+      game.phase = "break";
+      paused = false;
+      if (performanceStress) {
+        ["minigun", "flamethrower", "rpg"].forEach((weapon, i) => {
+          const id = "perf" + i;
+          if (!game.addPlayer(id, "Performance " + weapon)) return;
+          const bot = game.players[id];
+          performanceBots.push(id);
+          giveReward(bot, weapon);
+          bot.x = -3 + i * 3;
+          bot.z = 9;
+          bot.yaw = 0;
+          bot.invulnerable = 1e6;
+          bot.perks.autoReload = 1;
+          bot.guns[bot.selected].reserve = 100000;
+        });
+        game.round = 19;
+        game.startRound();
+        game.pending = 999;
+        game.spawnTimer = 999;
+      }
+      return res.end("ok");
+    }
     if (
       scenario === "wheel" ||
       scenario === "countdown" ||
@@ -316,6 +356,20 @@ wss.on("connection", (ws) => {
   });
 });
 setInterval(() => {
+  if (performanceStress) {
+    for (const id of performanceBots) {
+      const bot = game.players[id];
+      if (!bot) continue;
+      game.action(id, {
+        type: "input",
+        input: { shoot: true, yaw: 0, pitch: 0 },
+      });
+    }
+    while (game.zombies.length < game.difficulty.cap)
+      game.zombies.push(
+        game.makeEnemy({ x: Math.random() * 10 - 5, z: 2 + Math.random() * 3 }),
+      );
+  }
   if (!paused) game.update(1 / 30);
   for (const ws of wss.clients)
     if (ws.readyState === 1)

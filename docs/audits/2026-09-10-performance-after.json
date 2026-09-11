@@ -1,0 +1,83 @@
+{
+  "date": "2026-09-11T03:21:49.234Z",
+  "node": "v22.19.0",
+  "cpu": "Intel(R) Core(TM) i7-14700KF",
+  "conditions": "300 warmup + 1200 measured ticks; stationary invulnerable players, normal enemy caps, no player fire. Stocked cases have all rooms, weapons and perks. Local synthetic results, not hosting capacity.",
+  "baselineSimulationParity": "6000 ticks matched the selected baseline exactly",
+  "cases": [
+    {
+      "name": "solo-break",
+      "players": 1,
+      "enemies": 0,
+      "update": {
+        "meanMs": 0.01118633333333321,
+        "p95Ms": 0.019099999999980355
+      },
+      "encodeAllClients": {
+        "meanMs": 0.022791499999999885,
+        "p95Ms": 0.03809999999998581
+      },
+      "compactBytes": 193.84583333333333,
+      "legacyBytes": 1299.3216666666667,
+      "reductionPercent": 85.08099739222902,
+      "compactRoomMbps": 0.046523
+    },
+    {
+      "name": "four-stocked-break",
+      "players": 4,
+      "enemies": 0,
+      "update": {
+        "meanMs": 0.027675500000000568,
+        "p95Ms": 0.03770000000008622
+      },
+      "encodeAllClients": {
+        "meanMs": 0.10337758333333422,
+        "p95Ms": 0.13840000000004693
+      },
+      "compactBytes": 394.385,
+      "legacyBytes": 9087.934166666666,
+      "reductionPercent": 95.6603448840271,
+      "compactRoomMbps": 0.3786096
+    },
+    {
+      "name": "solo-wave10",
+      "players": 1,
+      "enemies": 32,
+      "update": {
+        "meanMs": 0.3548601666666633,
+        "p95Ms": 0.5291999999999462
+      },
+      "encodeAllClients": {
+        "meanMs": 0.1307486666666635,
+        "p95Ms": 0.17020000000002256
+      },
+      "compactBytes": 4156.915,
+      "legacyBytes": 8810.088333333333,
+      "reductionPercent": 52.816420872057094,
+      "compactRoomMbps": 0.9976596
+    },
+    {
+      "name": "four-stocked-wave20",
+      "players": 4,
+      "enemies": 36,
+      "update": {
+        "meanMs": 0.28536658333333964,
+        "p95Ms": 0.46270000000004075
+      },
+      "encodeAllClients": {
+        "meanMs": 0.2954036666666688,
+        "p95Ms": 0.3806000000004133
+      },
+      "compactBytes": 4968.760833333334,
+      "legacyBytes": 17401.050833333335,
+      "reductionPercent": 71.44562773292283,
+      "compactRoomMbps": 4.7700104
+    }
+  ],
+  "models": {
+    "files": 30,
+    "originalBytes": 5931024,
+    "compressedBytes": 2708021,
+    "reductionPercent": 54.34142569647332
+  }
+}

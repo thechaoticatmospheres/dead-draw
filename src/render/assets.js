@@ -3,6 +3,9 @@ import { SPECIAL_WEAPONS } from "../../shared/arsenal.js";
 import * as T from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { clone } from "three/addons/utils/SkeletonUtils.js";
+import { batchRigid, freezeLocalMatrices } from "./static-batch.js";
+import { modelBytes } from "./model-bytes.js";
+const rigidModels = new Set(["chandelier", "column", "chair", "cocktail"]);
 const names = [
   "survivor",
   "survivor-female",
@@ -35,17 +38,26 @@ const names = [
   "enemy-wheelchair",
   "enemy-crawler",
 ];
+const ikOrigin = new T.Vector3(),
+  ikDirection = new T.Vector3(),
+  ikTarget = new T.Vector3(),
+  ikRotation = new T.Quaternion(),
+  ikWorld = new T.Quaternion(),
+  ikParent = new T.Quaternion(),
+  armTarget = new T.Vector3(),
+  gunHand = new T.Vector3(),
+  gunOffset = new T.Vector3(0, 0.13, -0.025);
 function aimBone(bone, child, target) {
   if (!bone || !child) return;
-  const origin = bone.getWorldPosition(new T.Vector3()),
-    direction = child.getWorldPosition(new T.Vector3()).sub(origin).normalize();
-  const rotation = new T.Quaternion().setFromUnitVectors(
+  const origin = bone.getWorldPosition(ikOrigin),
+    direction = child.getWorldPosition(ikDirection).sub(origin).normalize();
+  const rotation = ikRotation.setFromUnitVectors(
     direction,
-    target.clone().sub(origin).normalize(),
+    ikTarget.copy(target).sub(origin).normalize(),
   );
-  const world = rotation.multiply(bone.getWorldQuaternion(new T.Quaternion()));
+  const world = rotation.multiply(bone.getWorldQuaternion(ikWorld));
   bone.quaternion.copy(
-    bone.parent.getWorldQuaternion(new T.Quaternion()).invert().multiply(world),
+    bone.parent.getWorldQuaternion(ikParent).invert().multiply(world),
   );
   bone.updateMatrixWorld(true);
 }
@@ -54,17 +66,18 @@ function poseArm(root, side, elbow, hand) {
   aimBone(
     bones[side + "Arm"],
     bones[side + "ForeArm"],
-    root.localToWorld(new T.Vector3(...elbow)),
+    root.localToWorld(armTarget.set(...elbow)),
   );
   aimBone(
     bones[side + "ForeArm"],
     bones[side + "Hand"],
-    root.localToWorld(new T.Vector3(...hand)),
+    root.localToWorld(armTarget.set(...hand)),
   );
 }
 export class Assets {
   constructor() {
     this.models = new Map();
+    this.downloads = { compressed: 0, original: 0 };
     this.eyeGeometry = new T.SphereGeometry(0.02, 6, 4);
     this.eyeMaterial = new T.MeshBasicMaterial({ color: 0xffa54d });
   }
@@ -75,9 +88,30 @@ export class Assets {
     const loader = new GLTFLoader();
     await Promise.all(
       names.map(async (name) => {
-        const g = await loader.loadAsync(
-          `${import.meta.env.BASE_URL}assets/models/${name}.glb`,
-        );
+        const version =
+          typeof __MODEL_REVISIONS__ === "undefined"
+            ? ""
+            : __MODEL_REVISIONS__[name];
+        const base = `${import.meta.env.BASE_URL}assets/models/${name}.glb`;
+        const url = `${base}?v=${version}`;
+        let g;
+        if (
+          import.meta.env.PROD &&
+          typeof DecompressionStream !== "undefined"
+        ) {
+          try {
+            const response = await fetch(`${base}.gz?v=${version}`);
+            const bytes = await modelBytes(response);
+            g = await loader.parseAsync(bytes, "");
+            this.downloads.compressed++;
+          } catch {
+            /* Original GLBs remain a retry/fallback for older browsers and deployments. */
+          }
+        }
+        if (!g) {
+          g = await loader.loadAsync(url);
+          this.downloads.original++;
+        }
         g.scene.traverse((o) => {
           if (o.isMesh) {
             o.castShadow = true;
@@ -91,12 +125,17 @@ export class Assets {
             }
           }
         });
+        if (rigidModels.has(name)) {
+          batchRigid(g.scene, true);
+          freezeLocalMatrices(g.scene);
+        }
         this.models.set(name, g);
       }),
     );
   }
   prop(name) {
     const obj = this.models.get(name).scene.clone(true);
+    obj.matrixAutoUpdate = true;
     obj.userData.shared = true;
     return obj;
   }
@@ -177,7 +216,11 @@ export class Assets {
           : weapon?.category === "shells"
             ? "shotgun"
             : "rifle");
-    const attachmentKey = JSON.stringify(gunState?.attachments || {});
+    if (d.attachmentSource !== gunState?.attachments) {
+      d.attachmentSource = gunState?.attachments;
+      d.nextAttachmentKey = JSON.stringify(gunState?.attachments || {});
+    }
+    const attachmentKey = d.nextAttachmentKey || "{}";
     if (d.weaponId !== type || d.attachmentKey !== attachmentKey) {
       d.gun.clear();
       d.gun.add(this.prop(type));
@@ -255,10 +298,8 @@ export class Assets {
       [-0.3, 1.06, -0.1],
       [0.17, 1.18, reload ? -0.15 : -0.58],
     );
-    const hand = d.bones.RightHand.getWorldPosition(new T.Vector3());
-    d.gun.position
-      .copy(root.worldToLocal(hand))
-      .add(new T.Vector3(0, 0.13, -0.025));
+    const hand = d.bones.RightHand.getWorldPosition(gunHand);
+    d.gun.position.copy(root.worldToLocal(hand)).add(gunOffset);
     d.swing = Math.max(0, (d.swing || 0) - dt);
     d.gun.rotation.y = weapon?.melee
       ? Math.sin((d.swing / 0.25) * Math.PI) * 1.8

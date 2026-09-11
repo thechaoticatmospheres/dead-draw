@@ -65,16 +65,17 @@ export class CrewUI {
       spectator.textContent =
         "DOWNED · WATCHING YOUR CREW · [ / ] CHANGE SURVIVOR";
     if (state?.summary) {
-      recordRun(state.summary, id);
       if (this.lastRun !== state.summary.id) {
+        recordRun(state.summary, id);
         this.lastRun = state.summary.id;
         this.send(cosmeticMessage());
       }
     }
     if (!document.querySelector("#crewPanel").hidden) this.render(p, state);
-    if (state?.summary) {
+    if (state?.summary && this.renderedSummary !== state.summary.id) {
       const s = state.summary.players.find((p) => p.id === id);
       if (s) {
+        this.renderedSummary = state.summary.id;
         const el =
           document.querySelector("#runSummary") ||
           document.createElement("div");

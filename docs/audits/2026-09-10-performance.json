@@ -1,0 +1,914 @@
+{
+  "timestamp": "2026-09-11T02:02:03.76Z",
+  "node": "v22.19.0",
+  "cpu": "Intel(R) Core(TM) i7-14700KF",
+  "platform": "win32",
+  "commit": "3ef031173fcef7fe185cff935f7e1fe65f511cd4",
+  "notes": [
+    "Local synthetic benchmark, not Render capacity or browser frame timing.",
+    "300 warmup steps + 1200 measured steps at dt=1/30. No shooting, invulnerable stationary players.",
+    "Stocked cases use all rooms, all weapons and max perks; server cap unchanged.",
+    "Network estimates exclude framing/TLS. No active casino hands or player gunfire; enemy attack hazards can occur."
+  ],
+  "obstacles": 44,
+  "cases": [
+    {
+      "name": "solo-break",
+      "team": 1,
+      "enemies": 0,
+      "update": {
+        "meanMs": 0.0090245000000001,
+        "p50Ms": 0.0075999999999964984,
+        "p95Ms": 0.012199999999999989,
+        "maxMs": 0.14629999999999654
+      },
+      "encodeAllClients": {
+        "meanMs": 0.007878416666666457,
+        "p50Ms": 0.0058000000000006935,
+        "p95Ms": 0.010699999999999932,
+        "maxMs": 0.25309999999999633
+      },
+      "parseOneClient": {
+        "meanMs": 0.005686166666666684,
+        "p50Ms": 0.004899999999999238,
+        "p95Ms": 0.007699999999999818,
+        "maxMs": 0.10420000000000584
+      },
+      "meanSnapshotBytes": 1308.3216666666667,
+      "estimatedPayloadKBpsPerClient30Hz": 39.24965,
+      "estimatedPayloadMbpsRoom30Hz": 0.31399720000000003,
+      "fieldBytes": [
+        [
+          "players",
+          580
+        ],
+        [
+          "campaign",
+          154
+        ],
+        [
+          "difficulty",
+          67
+        ],
+        [
+          "jukebox",
+          66
+        ],
+        [
+          "prizeWheel",
+          38
+        ],
+        [
+          "runId",
+          21
+        ],
+        [
+          "timer",
+          17
+        ],
+        [
+          "time",
+          17
+        ],
+        [
+          "openRooms",
+          10
+        ],
+        [
+          "code",
+          7
+        ],
+        [
+          "phase",
+          7
+        ],
+        [
+          "specialRound",
+          5
+        ],
+        [
+          "summary",
+          4
+        ],
+        [
+          "contract",
+          4
+        ],
+        [
+          "jackpot",
+          3
+        ],
+        [
+          "crewTables",
+          2
+        ],
+        [
+          "history",
+          2
+        ],
+        [
+          "hazards",
+          2
+        ],
+        [
+          "pickups",
+          2
+        ],
+        [
+          "zombies",
+          2
+        ],
+        [
+          "chips",
+          2
+        ],
+        [
+          "games",
+          2
+        ],
+        [
+          "events",
+          2
+        ],
+        [
+          "round",
+          1
+        ],
+        [
+          "pending",
+          1
+        ]
+      ]
+    },
+    {
+      "name": "four-stocked-break",
+      "team": 4,
+      "enemies": 0,
+      "update": {
+        "meanMs": 0.018724999999999846,
+        "p50Ms": 0.015700000000009595,
+        "p95Ms": 0.028800000000018144,
+        "maxMs": 0.2038000000000011
+      },
+      "encodeAllClients": {
+        "meanMs": 0.09583133333333321,
+        "p50Ms": 0.08749999999997726,
+        "p95Ms": 0.14229999999999166,
+        "maxMs": 0.7674999999999841
+      },
+      "parseOneClient": {
+        "meanMs": 0.02840616666666687,
+        "p50Ms": 0.026799999999980173,
+        "p95Ms": 0.039500000000003865,
+        "maxMs": 0.10419999999999163
+      },
+      "meanSnapshotBytes": 9105.934166666666,
+      "estimatedPayloadKBpsPerClient30Hz": 273.178025,
+      "estimatedPayloadMbpsRoom30Hz": 8.7416968,
+      "fieldBytes": [
+        [
+          "players",
+          8281
+        ],
+        [
+          "campaign",
+          154
+        ],
+        [
+          "openRooms",
+          107
+        ],
+        [
+          "difficulty",
+          67
+        ],
+        [
+          "jukebox",
+          66
+        ],
+        [
+          "prizeWheel",
+          38
+        ],
+        [
+          "runId",
+          21
+        ],
+        [
+          "timer",
+          17
+        ],
+        [
+          "time",
+          17
+        ],
+        [
+          "code",
+          7
+        ],
+        [
+          "phase",
+          7
+        ],
+        [
+          "specialRound",
+          5
+        ],
+        [
+          "summary",
+          4
+        ],
+        [
+          "contract",
+          4
+        ],
+        [
+          "jackpot",
+          3
+        ],
+        [
+          "crewTables",
+          2
+        ],
+        [
+          "history",
+          2
+        ],
+        [
+          "hazards",
+          2
+        ],
+        [
+          "pickups",
+          2
+        ],
+        [
+          "zombies",
+          2
+        ],
+        [
+          "chips",
+          2
+        ],
+        [
+          "games",
+          2
+        ],
+        [
+          "events",
+          2
+        ],
+        [
+          "round",
+          1
+        ],
+        [
+          "pending",
+          1
+        ]
+      ]
+    },
+    {
+      "name": "solo-wave10-cap",
+      "team": 1,
+      "enemies": 32,
+      "update": {
+        "meanMs": 0.28772666666666763,
+        "p50Ms": 0.268100000000004,
+        "p95Ms": 0.40430000000003474,
+        "maxMs": 1.1295000000000073
+      },
+      "encodeAllClients": {
+        "meanMs": 0.044467249999999105,
+        "p50Ms": 0.04079999999999018,
+        "p95Ms": 0.06099999999997863,
+        "maxMs": 0.2524999999999977
+      },
+      "parseOneClient": {
+        "meanMs": 0.037834916666668,
+        "p50Ms": 0.035499999999956344,
+        "p95Ms": 0.04870000000005348,
+        "maxMs": 0.17489999999997963
+      },
+      "meanSnapshotBytes": 8819.088333333333,
+      "estimatedPayloadKBpsPerClient30Hz": 264.57265,
+      "estimatedPayloadMbpsRoom30Hz": 2.1165812,
+      "fieldBytes": [
+        [
+          "zombies",
+          6393
+        ],
+        [
+          "hazards",
+          897
+        ],
+        [
+          "players",
+          580
+        ],
+        [
+          "campaign",
+          154
+        ],
+        [
+          "contract",
+          121
+        ],
+        [
+          "difficulty",
+          81
+        ],
+        [
+          "jukebox",
+          66
+        ],
+        [
+          "prizeWheel",
+          38
+        ],
+        [
+          "runId",
+          21
+        ],
+        [
+          "time",
+          17
+        ],
+        [
+          "openRooms",
+          10
+        ],
+        [
+          "phase",
+          8
+        ],
+        [
+          "code",
+          7
+        ],
+        [
+          "specialRound",
+          5
+        ],
+        [
+          "summary",
+          4
+        ],
+        [
+          "jackpot",
+          3
+        ],
+        [
+          "crewTables",
+          2
+        ],
+        [
+          "round",
+          2
+        ],
+        [
+          "timer",
+          2
+        ],
+        [
+          "history",
+          2
+        ],
+        [
+          "pickups",
+          2
+        ],
+        [
+          "chips",
+          2
+        ],
+        [
+          "games",
+          2
+        ],
+        [
+          "events",
+          2
+        ],
+        [
+          "pending",
+          1
+        ]
+      ]
+    },
+    {
+      "name": "four-stocked-wave20-cap",
+      "team": 4,
+      "enemies": 36,
+      "update": {
+        "meanMs": 0.22153866666666525,
+        "p50Ms": 0.20790000000010878,
+        "p95Ms": 0.39210000000002765,
+        "maxMs": 0.8208999999999378
+      },
+      "encodeAllClients": {
+        "meanMs": 0.22933000000000126,
+        "p50Ms": 0.21810000000004948,
+        "p95Ms": 0.29539999999997235,
+        "maxMs": 0.5851000000000113
+      },
+      "parseOneClient": {
+        "meanMs": 0.0657753333333299,
+        "p50Ms": 0.0625,
+        "p95Ms": 0.07920000000001437,
+        "maxMs": 0.2560000000000855
+      },
+      "meanSnapshotBytes": 17419.050833333335,
+      "estimatedPayloadKBpsPerClient30Hz": 522.5715250000001,
+      "estimatedPayloadMbpsRoom30Hz": 16.7222888,
+      "fieldBytes": [
+        [
+          "players",
+          8281
+        ],
+        [
+          "zombies",
+          7170
+        ],
+        [
+          "hazards",
+          1039
+        ],
+        [
+          "campaign",
+          154
+        ],
+        [
+          "contract",
+          136
+        ],
+        [
+          "openRooms",
+          107
+        ],
+        [
+          "difficulty",
+          69
+        ],
+        [
+          "jukebox",
+          66
+        ],
+        [
+          "prizeWheel",
+          38
+        ],
+        [
+          "runId",
+          21
+        ],
+        [
+          "time",
+          17
+        ],
+        [
+          "phase",
+          8
+        ],
+        [
+          "code",
+          7
+        ],
+        [
+          "specialRound",
+          5
+        ],
+        [
+          "summary",
+          4
+        ],
+        [
+          "jackpot",
+          3
+        ],
+        [
+          "crewTables",
+          2
+        ],
+        [
+          "round",
+          2
+        ],
+        [
+          "timer",
+          2
+        ],
+        [
+          "history",
+          2
+        ],
+        [
+          "pickups",
+          2
+        ],
+        [
+          "chips",
+          2
+        ],
+        [
+          "games",
+          2
+        ],
+        [
+          "events",
+          2
+        ],
+        [
+          "pending",
+          1
+        ]
+      ]
+    }
+  ],
+  "checkpoint": {
+    "meanMs": 0.08509666666666742,
+    "p50Ms": 0.07170000000019172,
+    "p95Ms": 0.13409999999998945,
+    "maxMs": 0.968900000000076,
+    "tokenBytes": 1304
+  },
+  "glbs": [
+    {
+      "file": "chandelier.glb",
+      "bytes": 56884,
+      "gzipBytes": 24242,
+      "meshes": 49,
+      "primitives": 49,
+      "materials": 2,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_materials_emissive_strength",
+        "KHR_mesh_quantization"
+      ]
+    },
+    {
+      "file": "roulette.glb",
+      "bytes": 660340,
+      "gzipBytes": 274902,
+      "meshes": 21,
+      "primitives": 21,
+      "materials": 11,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_mesh_quantization"
+      ]
+    },
+    {
+      "file": "baccarat.glb",
+      "bytes": 650496,
+      "gzipBytes": 288396,
+      "meshes": 14,
+      "primitives": 14,
+      "materials": 12,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_mesh_quantization"
+      ]
+    },
+    {
+      "file": "blackjack.glb",
+      "bytes": 653156,
+      "gzipBytes": 290489,
+      "meshes": 14,
+      "primitives": 14,
+      "materials": 12,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_mesh_quantization"
+      ]
+    },
+    {
+      "file": "craps.glb",
+      "bytes": 653316,
+      "gzipBytes": 276546,
+      "meshes": 12,
+      "primitives": 12,
+      "materials": 10,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_mesh_quantization"
+      ]
+    },
+    {
+      "file": "slots.glb",
+      "bytes": 176864,
+      "gzipBytes": 86263,
+      "meshes": 9,
+      "primitives": 9,
+      "materials": 8,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_materials_emissive_strength",
+        "KHR_mesh_quantization"
+      ]
+    },
+    {
+      "file": "cashier.glb",
+      "bytes": 87072,
+      "gzipBytes": 11723,
+      "meshes": 8,
+      "primitives": 8,
+      "materials": 8,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_materials_emissive_strength"
+      ]
+    },
+    {
+      "file": "jukebox.glb",
+      "bytes": 77136,
+      "gzipBytes": 18907,
+      "meshes": 7,
+      "primitives": 7,
+      "materials": 7,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_materials_emissive_strength"
+      ]
+    },
+    {
+      "file": "cocktail.glb",
+      "bytes": 204528,
+      "gzipBytes": 90861,
+      "meshes": 6,
+      "primitives": 6,
+      "materials": 6,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_mesh_quantization"
+      ]
+    },
+    {
+      "file": "enemy-wheelchair.glb",
+      "bytes": 152324,
+      "gzipBytes": 26245,
+      "meshes": 6,
+      "primitives": 6,
+      "materials": 1,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_mesh_quantization"
+      ]
+    },
+    {
+      "file": "hilo.glb",
+      "bytes": 22640,
+      "gzipBytes": 3944,
+      "meshes": 6,
+      "primitives": 6,
+      "materials": 6,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_materials_emissive_strength"
+      ]
+    },
+    {
+      "file": "poker.glb",
+      "bytes": 170520,
+      "gzipBytes": 92946,
+      "meshes": 6,
+      "primitives": 6,
+      "materials": 6,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_materials_emissive_strength",
+        "KHR_mesh_quantization"
+      ]
+    },
+    {
+      "file": "enemy-crawler.glb",
+      "bytes": 31700,
+      "gzipBytes": 8814,
+      "meshes": 5,
+      "primitives": 5,
+      "materials": 1,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_mesh_quantization"
+      ]
+    },
+    {
+      "file": "enemy-dealer.glb",
+      "bytes": 49164,
+      "gzipBytes": 13587,
+      "meshes": 5,
+      "primitives": 5,
+      "materials": 1,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_mesh_quantization"
+      ]
+    },
+    {
+      "file": "enemy-security.glb",
+      "bytes": 36132,
+      "gzipBytes": 9715,
+      "meshes": 5,
+      "primitives": 5,
+      "materials": 1,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_mesh_quantization"
+      ]
+    },
+    {
+      "file": "keno.glb",
+      "bytes": 85176,
+      "gzipBytes": 12676,
+      "meshes": 5,
+      "primitives": 5,
+      "materials": 5,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_materials_emissive_strength"
+      ]
+    },
+    {
+      "file": "letitride.glb",
+      "bytes": 75424,
+      "gzipBytes": 11943,
+      "meshes": 5,
+      "primitives": 5,
+      "materials": 5,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_materials_emissive_strength"
+      ]
+    },
+    {
+      "file": "sicbo.glb",
+      "bytes": 101896,
+      "gzipBytes": 16210,
+      "meshes": 5,
+      "primitives": 5,
+      "materials": 5,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_materials_emissive_strength"
+      ]
+    },
+    {
+      "file": "threecard.glb",
+      "bytes": 71224,
+      "gzipBytes": 11469,
+      "meshes": 5,
+      "primitives": 5,
+      "materials": 5,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_materials_emissive_strength"
+      ]
+    },
+    {
+      "file": "war.glb",
+      "bytes": 66068,
+      "gzipBytes": 10166,
+      "meshes": 5,
+      "primitives": 5,
+      "materials": 5,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_materials_emissive_strength"
+      ]
+    },
+    {
+      "file": "shotgun.glb",
+      "bytes": 37740,
+      "gzipBytes": 13117,
+      "meshes": 4,
+      "primitives": 4,
+      "materials": 4,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_mesh_quantization"
+      ]
+    },
+    {
+      "file": "chair.glb",
+      "bytes": 45776,
+      "gzipBytes": 21122,
+      "meshes": 3,
+      "primitives": 3,
+      "materials": 3,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_mesh_quantization"
+      ]
+    },
+    {
+      "file": "pistol.glb",
+      "bytes": 26508,
+      "gzipBytes": 9865,
+      "meshes": 3,
+      "primitives": 3,
+      "materials": 3,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_mesh_quantization"
+      ]
+    },
+    {
+      "file": "rifle.glb",
+      "bytes": 42192,
+      "gzipBytes": 16776,
+      "meshes": 3,
+      "primitives": 3,
+      "materials": 3,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_mesh_quantization"
+      ]
+    },
+    {
+      "file": "smg.glb",
+      "bytes": 42192,
+      "gzipBytes": 16776,
+      "meshes": 3,
+      "primitives": 3,
+      "materials": 3,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_mesh_quantization"
+      ]
+    },
+    {
+      "file": "column.glb",
+      "bytes": 80140,
+      "gzipBytes": 35184,
+      "meshes": 2,
+      "primitives": 2,
+      "materials": 2,
+      "animationChannels": 0,
+      "extensions": [
+        "KHR_mesh_quantization"
+      ]
+    },
+    {
+      "file": "survivor-female.glb",
+      "bytes": 375132,
+      "gzipBytes": 237727,
+      "meshes": 1,
+      "primitives": 1,
+      "materials": 1,
+      "animationChannels": 414,
+      "extensions": [
+        "KHR_mesh_quantization"
+      ]
+    },
+    {
+      "file": "survivor.glb",
+      "bytes": 370532,
+      "gzipBytes": 231985,
+      "meshes": 1,
+      "primitives": 1,
+      "materials": 1,
+      "animationChannels": 414,
+      "extensions": [
+        "KHR_mesh_quantization"
+      ]
+    },
+    {
+      "file": "zombie-alt.glb",
+      "bytes": 373412,
+      "gzipBytes": 234458,
+      "meshes": 1,
+      "primitives": 1,
+      "materials": 1,
+      "animationChannels": 414,
+      "extensions": [
+        "KHR_mesh_quantization"
+      ]
+    },
+    {
+      "file": "zombie.glb",
+      "bytes": 455340,
+      "gzipBytes": 315992,
+      "meshes": 1,
+      "primitives": 1,
+      "materials": 1,
+      "animationChannels": 414,
+      "extensions": [
+        "KHR_mesh_quantization"
+      ]
+    }
+  ],
+  "bundles": [
+    {
+      "file": "index-Ble0Hw-4.js",
+      "bytes": 776246,
+      "gzipBytes": 216481,
+      "brotliBytes": 178230
+    },
+    {
+      "file": "index-BX1ZEM2F.css",
+      "bytes": 49986,
+      "gzipBytes": 12343,
+      "brotliBytes": 10958
+    }
+  ]
+}

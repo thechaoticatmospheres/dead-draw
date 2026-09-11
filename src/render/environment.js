@@ -14,6 +14,7 @@ import { COVER } from "../../shared/campaign.js";
 import { WHEEL_PADS } from "../../shared/arsenal.js";
 import { SERVICES } from "../../shared/services.js";
 import { surfaces, label } from "./surfaces.js";
+import { batchRigid, freezeLocalMatrices } from "./static-batch.js";
 function box(root, w, h, d, x, y, z, m) {
   const o = new T.Mesh(new T.BoxGeometry(w, h, d), m);
   o.position.set(x, y, z);
@@ -221,6 +222,14 @@ export class CasinoEnvironment {
           m.warm,
         );
       }
+      batchRigid(root);
+      batchRigid(shutter);
+      // Only rigid leaves are frozen: the shutter keeps its independent lift transform.
+      for (const o of [...root.children, ...shutter.children])
+        if (o.isMesh) {
+          o.updateMatrix();
+          o.matrixAutoUpdate = false;
+        }
       root.userData.shutter = shutter;
       this.doors[door.id] = root;
     }
@@ -251,6 +260,9 @@ export class CasinoEnvironment {
       box(root, 0.06, 0.06, 0.03, 0.68, 1.28, 0.16, m.warm);
     }
     batch(g);
+    batchRigid(this.ceiling);
+    freezeLocalMatrices(g);
+    freezeLocalMatrices(this.ceiling);
   }
   install(assets) {
     this.assets = assets;

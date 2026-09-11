@@ -1,3 +1,4 @@
+import { textValue, styleValue } from "./dom-values.js";
 import {
   PERKS,
   SUPPLIES,
@@ -109,37 +110,54 @@ export function updateExpansionHud(p, state, controller) {
     c = state.contract;
   $("contractHud").hidden = state.phase !== "combat" || !c;
   if (c) {
-    $("contractTitle").textContent = c.complete
-      ? "CONTRACT COMPLETE"
-      : c.title.toUpperCase();
-    $("contractText").textContent = `${c.detail} · ${c.progress}/${c.goal}`;
-    $("contractProgress").style.width =
-      Math.min(100, (c.progress / c.goal) * 100) + "%";
+    textValue(
+      $("contractTitle"),
+      c.complete ? "CONTRACT COMPLETE" : c.title.toUpperCase(),
+    );
+    textValue($("contractText"), `${c.detail} · ${c.progress}/${c.goal}`);
+    styleValue(
+      $("contractProgress"),
+      "width",
+      Math.min(100, (c.progress / c.goal) * 100) + "%",
+    );
   }
   $("tactics").hidden = !["combat", "break"].includes(state.phase);
-  $("staminaBar").style.width = p.stamina + "%";
-  $("dodgeLabel").textContent = `${controller ? "B" : "SHIFT"} ROLL`;
-  $("grenadeLabel").textContent =
-    `${controller ? "RS CLICK" : "G"} GRENADE · ${p.grenades}`;
-  $("comboHud").textContent =
+  styleValue($("staminaBar"), "width", p.stamina + "%");
+  textValue($("dodgeLabel"), `${controller ? "B" : "SHIFT"} ROLL`);
+  textValue(
+    $("grenadeLabel"),
+    `${controller ? "RS CLICK" : "G"} GRENADE · ${p.grenades}`,
+  );
+  textValue(
+    $("comboHud"),
     p.combo >= 2
       ? `${p.combo}× STREAK${p.combo >= 3 ? ` · +${Math.floor(p.combo / 3) * 2} CHIPS / KILL` : ""}`
-      : "";
+      : "",
+  );
   const boss = state.zombies.find((z) => z.kind === "boss");
   $("bossHud").hidden = !boss;
   if (boss) {
-    $("bossHealth").style.width =
-      Math.max(0, (boss.hp / boss.maxHp) * 100) + "%";
-    $("bossState").textContent =
+    styleValue(
+      $("bossHealth"),
+      "width",
+      Math.max(0, (boss.hp / boss.maxHp) * 100) + "%",
+    );
+    textValue(
+      $("bossState"),
       boss.hp < boss.maxHp / 2
         ? "ENRAGED · KEEP MOVING"
-        : "DODGE THE GOLD MARKERS";
+        : "DODGE THE GOLD MARKERS",
+    );
   }
   $("clubButton").hidden = state.phase !== "break";
-  $("clubButton").textContent =
-    `SURVIVOR’S CLUB · ${controller ? "D-PAD →" : "U"} · ${p.comps} COMPS`;
-  $("wavePreview").textContent =
+  textValue(
+    $("clubButton"),
+    `SURVIVOR’S CLUB · ${controller ? "D-PAD →" : "U"} · ${p.comps} COMPS`,
+  );
+  textValue(
+    $("wavePreview"),
     (state.round + 1) % 5 === 0
       ? "NEXT: THE HIGH ROLLER · BOSS WAVE"
-      : `NEXT: WAVE ${state.round + 1}${state.round >= 2 ? " · SPITTERS ACTIVE" : state.round >= 1 ? " · RUNNERS + PIT BOSSES" : " · FIRST CALL"}`;
+      : `NEXT: WAVE ${state.round + 1}${state.round >= 2 ? " · SPITTERS ACTIVE" : state.round >= 1 ? " · RUNNERS + PIT BOSSES" : " · FIRST CALL"}`,
+  );
 }

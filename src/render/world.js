@@ -1,4 +1,6 @@
 import { PrizeWheelScene } from "./prize-wheel.js";
+import { EffectPool, ChipBatch } from "./effect-pool.js";
+import { RenderMetrics } from "./metrics.js";
 import { CampaignScene } from "./campaign.js";
 import { ServiceScene } from "./services.js";
 import { casinoEnemy, animateCasinoEnemy } from "./casino-enemies.js";
@@ -58,8 +60,14 @@ export class World {
       100,
     );
     this.actors = new Map();
-    this.chipMeshes = new Map();
-    this.effects = [];
+    this.effectPool = new EffectPool(this.scene);
+    this.chipBatch = new ChipBatch(this.scene);
+    this.scratchPosition = new THREE.Vector3();
+    this.previousPosition = new THREE.Vector3();
+    this.rollOrigin = new THREE.Vector3(0, 1, 0);
+    this.rollAxis = new THREE.Vector3(1, 0, 0);
+    this.scopeElement = document.getElementById("scopeView");
+    this.scopeLabel = this.scopeElement.querySelector(".scope-label");
     this.encounters = new Encounters(this.scene);
     this.stations = {};
     this.doors = {};
@@ -91,6 +99,10 @@ export class World {
     this.composer.addPass(new OutputPass());
     this.quality = "high";
     this.renderer.info.autoReset = false;
+    this.metrics = new RenderMetrics(
+      this.renderer,
+      new URLSearchParams(location.search).has("profile"),
+    );
     this.build();
     this.resize();
     addEventListener("resize", () => this.resize());
@@ -186,6 +198,8 @@ export class World {
       this.serviceScene = new ServiceScene(this.scene, this.assets);
       this.prizeWheelScene = new PrizeWheelScene(this.scene);
       this.loaded = true;
+      this.renderer.domElement.dataset.compressedModels =
+        this.assets.downloads.compressed;
     });
   }
   actor(id, zombie = false, x = 0, z = 0, kind = "walker") {
@@ -210,20 +224,7 @@ export class World {
     if (e.type === "dodge") this.particles(e.x, 0.3, e.z, 0x92d0b7, 7, 0.35);
     if (e.type === "shot") {
       for (const end of e.ends || [e.end]) {
-        const geo = new THREE.BufferGeometry().setFromPoints([
-          new THREE.Vector3(e.x, e.y, e.z),
-          new THREE.Vector3(end.x, end.y, end.z),
-        ]);
-        const line = new THREE.Line(
-          geo,
-          new THREE.LineBasicMaterial({
-            color: WEAPONS[e.weapon]?.color || 0xffda8e,
-            transparent: true,
-            opacity: 0.8,
-          }),
-        );
-        this.scene.add(line);
-        this.effects.push({ mesh: line, life: 0.07, max: 0.07 });
+        this.effectPool.tracer(e, end, WEAPONS[e.weapon]?.color || 0xffda8e);
       }
       this.particles(
         e.x,
@@ -266,25 +267,11 @@ export class World {
   }
   particles(x, y, z, color, count, life) {
     for (let i = 0; i < count; i++) {
-      const mesh = new THREE.Mesh(
-        new THREE.BoxGeometry(0.06, 0.06, 0.06),
-        new THREE.MeshBasicMaterial({ color, transparent: true }),
-      );
-      mesh.position.set(x, y, z);
-      this.scene.add(mesh);
-      this.effects.push({
-        mesh,
-        life,
-        max: life,
-        v: new THREE.Vector3(
-          (Math.random() - 0.5) * 4,
-          Math.random() * 3,
-          (Math.random() - 0.5) * 4,
-        ),
-      });
+      this.effectPool.particle(x, y, z, color, life);
     }
   }
   update(dt, state, myId, yaw, pitch, aim) {
+    this.metrics.begin();
     this.renderer.info.reset();
     this.hurtShake = (this.hurtShake || 0) * Math.exp(-dt * 14);
     this.clock += dt;
@@ -300,7 +287,7 @@ export class World {
       for (const p of state.players) {
         ids.add(p.id);
         const a = this.actors.get(p.id) || this.actor(p.id, false, p.x, p.z);
-        const old = a.position.clone();
+        const old = this.previousPosition.copy(a.position);
         const predicted =
           p.id === this.localId && this.predicted ? this.predicted : p;
         a.visible = !p.offline;
@@ -337,6 +324,7 @@ export class World {
           charm.position.set(0.08, -0.1, 0.03);
           a.userData.gun.add(charm);
           a.userData.masteryCharm = charm;
+          a.userData.disposables = [marker, badge, charm];
         }
         if (!a.userData.reviveLabel) {
           a.userData.reviveLabel = this.encounters.label(
@@ -357,7 +345,7 @@ export class World {
           COSMETICS.find((c) => c.id === p.skin)?.color || 0xffffff,
         );
         a.position.lerp(
-          new THREE.Vector3(
+          this.scratchPosition.set(
             predicted.x,
             p.down ? 0 : p.height || 0,
             predicted.z,
@@ -395,9 +383,9 @@ export class World {
             -Math.sin(angle),
           );
           a.userData.gun.position
-            .sub(new THREE.Vector3(0, 1, 0))
-            .applyAxisAngle(new THREE.Vector3(1, 0, 0), angle)
-            .add(new THREE.Vector3(0, 1, 0));
+            .sub(this.rollOrigin)
+            .applyAxisAngle(this.rollAxis, angle)
+            .add(this.rollOrigin);
           a.userData.gun.rotation.x += angle;
         }
         if (a.userData.masteryCharm.parent !== a.userData.gun)
@@ -407,16 +395,22 @@ export class World {
         const id = "z" + z.id;
         ids.add(id);
         const a = this.actors.get(id) || this.actor(id, true, z.x, z.z, z.kind);
-        const before = a.position.clone();
-        a.position.lerp(new THREE.Vector3(z.x, 0, z.z), 1 - Math.exp(-dt * 16));
-        const target = state.players
-          .filter((p) => !p.down)
-          .sort(
-            (p, q) =>
-              Math.hypot(p.x - z.x, p.z - z.z) -
-              Math.hypot(q.x - z.x, q.z - z.z),
-          )[0];
-        if (target)
+        const before = this.previousPosition.copy(a.position);
+        a.position.lerp(
+          this.scratchPosition.set(z.x, 0, z.z),
+          1 - Math.exp(-dt * 16),
+        );
+        const target =
+          z.yaw === undefined
+            ? state.players
+                .filter((p) => !p.down)
+                .sort(
+                  (p, q) =>
+                    Math.hypot(p.x - z.x, p.z - z.z) -
+                    Math.hypot(q.x - z.x, q.z - z.z),
+                )[0]
+            : null;
+        if (z.yaw !== undefined || target)
           a.rotation.y = z.yaw ?? Math.atan2(z.x - target.x, z.z - target.z);
         a.userData.runRate =
           z.kind === "runner" ? 1.1 : z.kind === "boss" ? 0.3 : 0.45;
@@ -432,29 +426,7 @@ export class World {
           this.dispose(a);
           this.actors.delete(id);
         }
-      const chipIds = new Set();
-      for (const c of state.chips) {
-        chipIds.add(c.id);
-        let mesh = this.chipMeshes.get(c.id);
-        if (!mesh) {
-          mesh = this.cylinder(
-            0.13,
-            0.045,
-            c.x,
-            0.18,
-            c.z,
-            c.value === 5 ? 0xe9707a : 0xf6edcf,
-          );
-          this.chipMeshes.set(c.id, mesh);
-        }
-        mesh.position.set(c.x, 0.2 + Math.sin(t * 5 + c.id) * 0.08, c.z);
-        mesh.rotation.y = t * 2;
-      }
-      for (const [id, m] of this.chipMeshes)
-        if (!chipIds.has(id)) {
-          this.dispose(m);
-          this.chipMeshes.delete(id);
-        }
+      this.chipBatch.update(state.chips, t);
       const p = state.players.find((p) => p.id === myId);
       if (p) {
         const a = this.actors.get(myId),
@@ -482,13 +454,14 @@ export class World {
           WEAPONS[p.guns[p.selected].id],
           p.guns[p.selected],
         ).recoil;
-        const scope = document.getElementById("scopeView");
-        scope.hidden = !optic;
-        scope.className = optic?.id || "";
-        scope.querySelector(".scope-label").textContent = optic
-          ? optic.name.toUpperCase()
-          : "";
-        document.body.classList.toggle("scoped", !!optic);
+        const scopeId = optic?.id || "";
+        if (this.scopeId !== scopeId) {
+          this.scopeId = scopeId;
+          this.scopeElement.hidden = !optic;
+          this.scopeElement.className = scopeId;
+          this.scopeLabel.textContent = optic ? optic.name.toUpperCase() : "";
+          document.body.classList.toggle("scoped", !!optic);
+        }
         if (a.userData.gun) {
           a.userData.gun.position.z += this.recoil * 1.8;
           a.userData.gun.rotation.x -= this.recoil * 2;
@@ -498,39 +471,28 @@ export class World {
           : aim
             ? 48
             : 60;
-        this.camera.fov += (fov - this.camera.fov) * Math.min(1, dt * 12);
-        this.camera.updateProjectionMatrix();
+        const nextFov =
+          this.camera.fov + (fov - this.camera.fov) * Math.min(1, dt * 12);
+        if (nextFov !== this.camera.fov) {
+          this.camera.fov = nextFov;
+          this.camera.updateProjectionMatrix();
+        }
       }
     } else {
       this.camera.position.set(11 + Math.sin(t * 0.08) * 2, 7.8, 15);
       this.camera.lookAt(-2, 1, -3);
     }
-    this.effects = this.effects.filter((e) => {
-      e.life -= dt;
-      if (e.life <= 0) {
-        this.dispose(e.mesh);
-        return false;
-      }
-      if (e.v) {
-        e.mesh.position.addScaledVector(e.v, dt);
-        e.v.y -= dt * 5;
-      }
-      e.mesh.material.opacity = e.life / e.max;
-      return true;
-    });
+    this.effectPool.update(dt);
     if (this.quality === "high") this.composer.render();
     else this.renderer.render(this.scene, this.camera);
-    this.renderer.domElement.dataset.graphics = this.loaded
-      ? "ready"
-      : "loading";
-    this.renderer.domElement.dataset.drawCalls =
-      this.renderer.info.render.calls;
-    this.renderer.domElement.dataset.triangles =
-      this.renderer.info.render.triangles;
+    this.metrics.end(this.loaded, this.effectPool);
   }
   dispose(obj) {
     if (obj.userData.shared) {
-      for (const o of obj.userData.disposables || []) {
+      for (const o of [
+        ...(obj.userData.disposables || []),
+        ...(obj.userData.attachmentMeshes || []),
+      ]) {
         o.geometry.dispose();
         o.material.dispose();
       }

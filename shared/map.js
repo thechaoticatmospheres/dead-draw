@@ -233,11 +233,29 @@ export const roomAt = (p) =>
   );
 export const doorOpen = (d, open = ["atrium"]) =>
   open.includes(d.from) && open.includes(d.to);
-export const barriers = (open = ["atrium"]) => [
-  ...WALLS,
-  ...OUTER_WALLS,
-  ...DOORS.filter((d) => !doorOpen(d, open)).map((d) => ({ ...d, h: 3.8 })),
-];
+const barrierCache = new Map();
+export const barriers = (open = ["atrium"]) => {
+  const key = ROOMS.reduce(
+    (mask, room, i) => mask | (open.includes(room.id) ? 1 << i : 0),
+    0,
+  );
+  if (!barrierCache.has(key)) {
+    if (barrierCache.size >= 64)
+      barrierCache.delete(barrierCache.keys().next().value);
+    barrierCache.set(
+      key,
+      Object.freeze([
+        ...WALLS,
+        ...OUTER_WALLS,
+        ...DOORS.filter((d) => !doorOpen(d, open)).map((d) => ({
+          ...d,
+          h: 3.8,
+        })),
+      ]),
+    );
+  }
+  return barrierCache.get(key);
+};
 export function circleRect(p, r, o) {
   const x = Math.max(o.x - o.w / 2, Math.min(o.x + o.w / 2, p.x)),
     z = Math.max(o.z - o.d / 2, Math.min(o.z + o.d / 2, p.z));

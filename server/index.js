@@ -5,6 +5,11 @@ import { WebSocketServer, WebSocket } from "ws";
 import { fileURLToPath } from "node:url";
 import { createProductionHandler, allowGameSocket } from "./production.js";
 import { Game } from "./game.js";
+import {
+  StateEncoder,
+  STATE_PROTOCOL,
+  prepareStateFrame,
+} from "../shared/state-stream.js";
 const port = Number(process.env.PORT || 5188);
 const production = process.env.NODE_ENV === "production";
 const inviteToken = process.env.SHARE_TOKEN || "";
@@ -55,6 +60,8 @@ const wss = new WebSocketServer({
     : {}),
 });
 const rooms = new Map();
+const roomClients = new WeakMap();
+const roomFrames = new WeakMap();
 const saves = new Checkpoints(checkpointSecret());
 wss.on("connection", (ws) => {
   ws.alive = true;
@@ -121,9 +128,10 @@ wss.on("connection", (ws) => {
           rooms.set(code, room);
         }
         if (room.players[ws.id]) {
-          for (const other of wss.clients)
+          for (const other of roomClients.get(room) || [])
             if (other !== ws && other.id === ws.id && other.room === room) {
               other.superseded = true;
+              roomClients.get(room).delete(other);
               other.close();
             }
           Object.assign(room.players[ws.id], {
@@ -142,6 +150,11 @@ wss.on("connection", (ws) => {
           return;
         }
         ws.room = room;
+        if (!roomClients.has(room)) roomClients.set(room, new Set());
+        roomClients.get(room).add(ws);
+        ws.encoder =
+          msg.protocol === STATE_PROTOCOL ? new StateEncoder() : null;
+        ws.pendingEvents = [];
         ws.send(
           JSON.stringify({
             type: "welcome",
@@ -150,7 +163,11 @@ wss.on("connection", (ws) => {
             resumeToken: token,
           }),
         );
-      } else if (ws.room) {
+      } else if (ws.room && !ws.superseded) {
+        if (msg.type === "resync") {
+          ws.encoder?.reset();
+          return;
+        }
         if (msg.type === "leave") {
           ws.room.removePlayer(ws.id);
           ws.superseded = true;
@@ -163,6 +180,7 @@ wss.on("connection", (ws) => {
   });
   ws.on("close", () => {
     clearInterval(limit);
+    if (ws.room) roomClients.get(ws.room)?.delete(ws);
     if (ws.room && !ws.superseded && ws.room.players[ws.id]) {
       Object.assign(ws.room.players[ws.id], {
         offline: true,
@@ -208,18 +226,45 @@ setInterval(() => {
       checkpoint = saves.seal(room);
       if (checkpoint) room.savedAt = Date.now();
     }
-    for (const ws of wss.clients)
-      if (
-        ws.room === room &&
-        ws.readyState === WebSocket.OPEN &&
-        ws.bufferedAmount < 65536
-      ) {
-        ws.send(
-          JSON.stringify({ type: "state", ...room.snapshot(ws.id, false) }),
-        );
-        if (checkpoint)
-          ws.send(JSON.stringify({ type: "checkpoint", checkpoint }));
+    const common = room.snapshot(undefined, false);
+    const compactClients = [...(roomClients.get(room) || [])].some(
+      (ws) => ws.encoder && !ws.superseded,
+    );
+    const frame = compactClients
+      ? prepareStateFrame(common, roomFrames.get(room))
+      : null;
+    if (frame) roomFrames.set(room, frame);
+    for (const ws of roomClients.get(room) || []) {
+      if (ws.readyState !== WebSocket.OPEN || ws.superseded) continue;
+      ws.pendingEvents.push(...room.events);
+      if (checkpoint) ws.pendingCheckpoint = checkpoint;
+      // Queue transient results/effects instead of losing them when a socket is congested.
+      if (ws.pendingEvents.length > 4096) {
+        ws.close(1013, "Reconnect to catch up");
+        continue;
       }
+      if (ws.bufferedAmount >= 65536) continue;
+      const snapshot = room.snapshot(ws.id, false, common);
+      ws.send(
+        ws.encoder
+          ? ws.encoder.encode(snapshot, ws.pendingEvents, frame)
+          : JSON.stringify({
+              type: "state",
+              ...snapshot,
+              events: ws.pendingEvents,
+            }),
+      );
+      ws.pendingEvents = [];
+      if (ws.pendingCheckpoint) {
+        ws.send(
+          JSON.stringify({
+            type: "checkpoint",
+            checkpoint: ws.pendingCheckpoint,
+          }),
+        );
+        ws.pendingCheckpoint = null;
+      }
+    }
     room.events.length = 0;
   }
 }, 1000 / 30);

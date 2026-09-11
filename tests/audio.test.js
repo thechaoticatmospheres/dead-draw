@@ -290,6 +290,33 @@ test("casino reveals and vault outcomes sound once and never use hidden outcomes
   assert.equal(calls.filter((c) => c.name === "alarm").length, 1);
   assert.equal(calls.filter((c) => c.name === "bank").length, 0);
 });
+
+test("extra render frames retain casino motor cadence without re-observing snapshot transitions", () => {
+  const { s, calls } = observer(),
+    state = scene();
+  state.games.slots = {
+    startedAt: 1,
+    player: "a",
+    phase: "playing",
+    reelStops: [null, null, null],
+  };
+  s.update(0.016, state, "a", 0, "slots");
+  const players = s.players,
+    hazards = s.hazards,
+    games = s.games;
+  for (let i = 0; i < 10; i++)
+    s.update(0.016, state, "a", 0, "slots", { newSnapshot: false });
+  assert.equal(s.players, players);
+  assert.equal(s.hazards, hazards);
+  assert.equal(s.games, games);
+  assert.equal(calls.filter((c) => c.name === "slotMotor").length, 11);
+  const next = structuredClone(state);
+  next.games.slots.reelStops = [1, null, null];
+  s.update(0.016, next, "a", 0, "slots");
+  for (let i = 0; i < 10; i++)
+    s.update(0.016, next, "a", 0, "slots", { newSnapshot: false });
+  assert.equal(calls.filter((c) => c.name === "reelStop").length, 1);
+});
 test("hazards telegraph then land once, and duplicate network events are silent", () => {
   const { s, calls } = observer(),
     state = scene();

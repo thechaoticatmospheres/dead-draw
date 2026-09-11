@@ -1,5 +1,6 @@
 import { WebSocket } from "ws";
 import assert from "node:assert/strict";
+import { StateDecoder, STATE_PROTOCOL } from "../shared/state-stream.js";
 const clients = [];
 async function until(check, label, timeout = 8000) {
   const deadline = Date.now() + timeout;
@@ -9,20 +10,26 @@ async function until(check, label, timeout = 8000) {
     await new Promise((resolve) => setTimeout(resolve, 50));
   }
 }
-async function join(code = "") {
+async function join(code = "", protocol = STATE_PROTOCOL) {
   return new Promise((resolve, reject) => {
     const ws = new WebSocket(
       process.env.TEST_GAME_URL || "ws://127.0.0.1:5188/game",
       process.env.TEST_ORIGIN ? { origin: process.env.TEST_ORIGIN } : {},
     );
-    const client = { ws, messages: [] };
+    const client = { ws, messages: [], wireTypes: new Set() },
+      decoder = new StateDecoder();
     clients.push(client);
     const timeout = setTimeout(() => reject(new Error("join timed out")), 5000);
     ws.on("open", () =>
-      ws.send(JSON.stringify({ type: "join", code, name: "Network test" })),
+      ws.send(
+        JSON.stringify({ type: "join", code, name: "Network test", protocol }),
+      ),
     );
     ws.on("message", (raw) => {
-      const m = JSON.parse(raw);
+      const wire = JSON.parse(raw);
+      client.wireTypes.add(wire.type);
+      const m = decoder.decode(wire);
+      assert.ok(m, "Ordered WebSocket frames always decode without gaps");
       client.messages.push(m);
       if (m.type === "state") client.state = m;
       if (m.type === "welcome" || m.type === "error") {
@@ -37,7 +44,7 @@ async function join(code = "") {
 try {
   const host = await join(),
     code = host.welcome.code;
-  const guests = await Promise.all([join(code), join(code), join(code)]);
+  const guests = await Promise.all([join(code, 0), join(code), join(code)]);
   const rejected = await join(code);
   assert.equal(rejected.welcome.type, "error");
   assert.match(rejected.welcome.message, /full/);
@@ -69,6 +76,15 @@ try {
     (c) => c.state.players.find((p) => p.id === id).z,
   );
   assert.ok(Math.max(...positions) - Math.min(...positions) < 0.3);
+  assert.ok(
+    host.wireTypes.has("patch-v2"),
+    "Modern client negotiates compact state updates",
+  );
+  assert.ok(
+    guests[0].wireTypes.has("state"),
+    "Old clients retain legacy full snapshots",
+  );
+  assert.ok(!guests[0].wireTypes.has("patch-v2"));
   const remaining = host.state.timer;
   for (const c of [host, ...guests])
     c.ws.send(JSON.stringify({ type: "nextRound" }));

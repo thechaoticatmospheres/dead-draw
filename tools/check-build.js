@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile, readdir, stat } from "node:fs/promises";
 import { resolve, join } from "node:path";
+import { gunzipSync } from "node:zlib";
 const root = resolve("dist");
 const html = await readFile(join(root, "index.html"), "utf8");
 const links = [...html.matchAll(/(?:src|href)="([^"?#]+\.(?:js|css))"/g)].map(
@@ -42,6 +43,12 @@ for (const name of [
 }
 for (const model of models) {
   const data = await readFile(join(root, "assets/models", model));
+  const compressed = await readFile(join(root, "assets/models", model + ".gz"));
+  assert.deepEqual(
+    gunzipSync(compressed),
+    data,
+    "Lossless model download: " + model,
+  );
   assert.equal(data.subarray(0, 4).toString(), "glTF", model);
   assert.equal(data.readUInt32LE(8), data.length, model);
 }

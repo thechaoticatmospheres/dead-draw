@@ -106,3 +106,9 @@ New systems: `shared/arsenal.js`, `server/arsenal.js`, `server/prize-wheel.js`, 
 ### Auto Reload (0.7.1)
 
 Buy Auto Reload for **6 comps** in the starting-room Survivor’s Club. Empty weapons reload automatically using reserve ammo and normal reload time; Quick Hands and Speed Loader bonuses apply. The perk lasts for the run and is included in checkpoints.
+
+### Performance update (0.7.2)
+
+Static prop batching, reusable combat effects, compact multiplayer snapshots, cached navigation, change-only HUD/audio bookkeeping and losslessly compressed models reduce repeated work without changing gameplay or graphics settings. Older clients and existing saves remain compatible. See [implementation and measurements](docs/PERFORMANCE-UPDATE.md).
+
+Run `node tools/performance-report.js` for repeatable synthetic measurements. Add `?profile=1` to a local game URL for bounded CPU/GPU and resource diagnostics on the canvas. Normal deployment still tests and builds every push to main, then updates GitHub Pages; deploy the same commit to the existing Render service for server changes.

@@ -23,8 +23,19 @@ import { GamepadInput } from "./gamepad.js";
 import { ClubView, updateExpansionHud } from "./club-ui.js";
 import { maxHealth } from "../shared/expansion.js";
 import { gameSocketURL } from "./connection.js";
-const $ = (id) => document.getElementById(id),
+import { StateDecoder, STATE_PROTOCOL } from "../shared/state-stream.js";
+import { textValue, styleValue } from "./dom-values.js";
+const nodes = new Map();
+const $ = (id) => {
+    let node = nodes.get(id);
+    if (!node?.isConnected) {
+      node = document.getElementById(id);
+      nodes.set(id, node);
+    }
+    return node;
+  },
   show = (id, value = true) => ($(id).hidden = !value);
+const setText = (id, value) => textValue($(id), value);
 const audio = new Audio();
 const soundscape = new Soundscape(audio);
 bindAudioSettings(audio);
@@ -45,8 +56,10 @@ let world;
 try {
   world = new World($("world"));
 } catch (e) {
-  $("connection").textContent =
-    "WebGL could not start. Enable hardware acceleration and reload.";
+  setText(
+    "connection",
+    "WebGL could not start. Enable hardware acceleration and reload.",
+  );
   $("enter").disabled = true;
   throw e;
 }
@@ -82,9 +95,14 @@ let inputSeq = 0,
 try {
   session = JSON.parse(localStorage.getItem("dead-draw-session") || "{}");
 } catch {}
+let savedSessionJSON = null;
 const saveSession = () => {
   try {
-    localStorage.setItem("dead-draw-session", JSON.stringify(session));
+    const json = JSON.stringify(session);
+    if (json !== savedSessionJSON) {
+      localStorage.setItem("dead-draw-session", json);
+      savedSessionJSON = json;
+    }
   } catch {}
 };
 $("enter").insertAdjacentHTML(
@@ -179,10 +197,12 @@ const controller = new GamepadInput({
   mode: (value) => {
     release();
     document.body.dataset.input = value;
-    $("controllerStatus").textContent =
+    setText(
+      "controllerStatus",
       value === "controller"
         ? "CONTROLLER ACTIVE · STANDARD LAYOUT"
-        : "KEYBOARD + MOUSE · PRESS A CONTROLLER BUTTON TO CONNECT";
+        : "KEYBOARD + MOUSE · PRESS A CONTROLLER BUTTON TO CONNECT",
+    );
   },
   action: (action) => {
     if (me()?.down && ["switch", "club"].includes(action)) {
@@ -231,14 +251,14 @@ const controller = new GamepadInput({
   },
 });
 $("enter").disabled = true;
-$("connection").textContent = "PREPARING THE GILDED PALM…";
+setText("connection", "PREPARING THE GILDED PALM…");
 world.ready
   .then(() => {
     $("enter").disabled = false;
-    $("connection").textContent = "THE FLOOR IS READY";
+    setText("connection", "THE FLOOR IS READY");
   })
   .catch((error) => {
-    $("connection").textContent = "Could not load 3D assets. Reload to retry.";
+    setText("connection", "Could not load 3D assets. Reload to retry.");
     console.error(error);
   });
 try {
@@ -268,13 +288,13 @@ for (const [id, key] of [
 }
 $("graphicsQuality").onchange = (e) => world.setQuality(e.target.value);
 function toast(text) {
-  $("toast").textContent = text;
+  setText("toast", text);
   $("toast").style.opacity = 1;
   clearTimeout(toastTimeout);
   toastTimeout = setTimeout(() => ($("toast").style.opacity = 0), 4000);
 }
 function announce(text) {
-  $("announcement").textContent = text;
+  setText("announcement", text);
   $("announcement").style.opacity = 1;
   clearTimeout(noticeTimeout);
   noticeTimeout = setTimeout(() => ($("announcement").style.opacity = 0), 3200);
@@ -316,8 +336,10 @@ function join(resume = false) {
     return;
   connectingSince ||= Date.now();
   let rejected = false;
+  const decoder = new StateDecoder();
+  let resyncRequested = false;
   $("enter").disabled = true;
-  $("connection").textContent = "CONNECTING TO THE FLOOR…";
+  setText("connection", "CONNECTING TO THE FLOOR…");
   audio.start();
   try {
     socket = new WebSocket(
@@ -326,13 +348,15 @@ function join(resume = false) {
   } catch (error) {
     connectingSince = 0;
     $("enter").disabled = false;
-    $("connection").textContent = error.message;
+    setText("connection", error.message);
     return;
   }
   const connectionTimer = setTimeout(() => {
     if (socket.readyState === WebSocket.CONNECTING)
-      $("connection").textContent =
-        "WAKING THE GAME SERVER… FIRST CONNECTION MAY TAKE A MINUTE.";
+      setText(
+        "connection",
+        "WAKING THE GAME SERVER… FIRST CONNECTION MAY TAKE A MINUTE.",
+      );
   }, 5000);
   const deadline = setTimeout(
     () => socket.close(),
@@ -341,17 +365,26 @@ function join(resume = false) {
   socket.onopen = () =>
     send({
       type: "join",
+      protocol: STATE_PROTOCOL,
       name: $("name").value,
       code: resume ? session.code || "" : $("code").value.trim(),
       resumeToken: session.token,
       checkpoint: resume ? session.checkpoint : undefined,
     });
   socket.onmessage = (e) => {
-    const msg = JSON.parse(e.data);
+    const msg = decoder.decode(JSON.parse(e.data));
+    if (!msg) {
+      if (decoder.needsResync && !resyncRequested) {
+        send({ type: "resync" });
+        resyncRequested = true;
+      }
+      return;
+    }
+    if (msg.type === "state") resyncRequested = false;
     if (msg.type === "error") {
       rejected = true;
       toast(msg.message);
-      $("connection").textContent = msg.message;
+      setText("connection", msg.message);
       $("enter").disabled = false;
       socket.close();
       return;
@@ -376,8 +409,8 @@ function join(resume = false) {
       myId = msg.id;
       show("welcome", false);
       show("hud");
-      $("room").textContent = `ROOM ${msg.code}`;
-      $("lobbyCode").textContent = msg.code;
+      setText("room", `ROOM ${msg.code}`);
+      setText("lobbyCode", msg.code);
     }
     if (msg.type === "state") {
       state = msg;
@@ -395,8 +428,7 @@ function join(resume = false) {
     clearTimeout(connectionTimer);
     clearTimeout(deadline);
     if (!myId && !rejected && Date.now() - connectingSince < 90000) {
-      $("connection").textContent =
-        "WAKING THE GAME SERVER… RETRYING CONNECTION.";
+      setText("connection", "WAKING THE GAME SERVER… RETRYING CONNECTION.");
       setTimeout(() => join(resume), 2000);
       return;
     }
@@ -413,8 +445,10 @@ function join(resume = false) {
       $("help").querySelector("h2").textContent = "Connection lost";
     } else {
       connectingSince = 0;
-      $("connection").textContent =
-        "Server unavailable. Select Enter the casino to retry.";
+      setText(
+        "connection",
+        "Server unavailable. Select Enter the casino to retry.",
+      );
     }
   };
   socket.onerror = () => {
@@ -495,9 +529,15 @@ function toggleMap() {
   show("floorplan");
   renderMap();
 }
+let mapKey = "";
 function renderMap() {
-  const current = roomAt(me())?.id,
-    order = [...ROOMS].sort((a, b) => a.z - b.z || a.x - b.x).map((r) => r.id);
+  const current = roomAt(me())?.id;
+  const key = current + ":" + state.openRooms.join(",");
+  if (key === mapKey) return;
+  mapKey = key;
+  const order = [...ROOMS]
+    .sort((a, b) => a.z - b.z || a.x - b.x)
+    .map((r) => r.id);
   $("floorRooms").innerHTML = order
     .map((id) => {
       const r = ROOMS.find((r) => r.id === id),
@@ -534,53 +574,73 @@ function updateHUD() {
   prizeWheelUI.update(p, state);
   updateExpansionHud(p, state, controller.mode === "controller");
   if (!$("club").hidden) clubView.render(p, state);
-  $("location").textContent =
+  setText(
+    "location",
     "GILDED PALM / " +
-    (roomAt(p)?.name || "FLOOR") +
-    " · WHEEL: " +
-    (ROOMS.find((r) => r.id === state.prizeWheel?.room)?.name || "—");
+      (roomAt(p)?.name || "FLOOR") +
+      " · WHEEL: " +
+      (ROOMS.find((r) => r.id === state.prizeWheel?.room)?.name || "—"),
+  );
   if (!$("floorplan").hidden) renderMap();
-  $("round").textContent = String(state.round).padStart(2, "0");
-  $("phase").textContent =
+  setText("round", String(state.round).padStart(2, "0"));
+  setText(
+    "phase",
     state.phase === "break"
       ? `INTERMISSION · ${Math.ceil(state.timer)}s · TABLES OPEN`
       : state.phase === "combat"
         ? `${state.specialRound ? "MASCOT MELTDOWN · " : ""}${state.zombies.length + state.pending} GUESTS REMAIN`
         : state.phase === "over"
           ? "RUN ENDED"
-          : "WAITING FOR THE CREW";
-  $("team").textContent = state.players
-    .filter((p) => p.id !== myId)
-    .map(
-      (p) =>
-        `${p.down ? "✚" : "●"} ${p.name} · ${p.down ? "DOWN" : p.ready ? "READY" : p.hp + " HP"}`,
-    )
-    .join(" / ");
-  $("health").textContent = p.hp;
-  $("healthbar").style.width = Math.min(100, (p.hp / maxHealth(p)) * 100) + "%";
-  $("status").textContent = p.down
-    ? `REVIVING ${Math.min(100, Math.round((p.revive / 3) * 100))}%`
-    : p.invulnerable > 0
-      ? `SECOND WIND · ${p.invulnerable.toFixed(1)}s`
-      : p.armor > 0
-        ? `ARMOR ${p.armor}`
-        : "STILL BREATHING";
+          : "WAITING FOR THE CREW",
+  );
+  setText(
+    "team",
+    state.players
+      .filter((p) => p.id !== myId)
+      .map(
+        (p) =>
+          `${p.down ? "✚" : "●"} ${p.name} · ${p.down ? "DOWN" : p.ready ? "READY" : p.hp + " HP"}`,
+      )
+      .join(" / "),
+  );
+  setText("health", p.hp);
+  styleValue(
+    $("healthbar"),
+    "width",
+    Math.min(100, (p.hp / maxHealth(p)) * 100) + "%",
+  );
+  setText(
+    "status",
+    p.down
+      ? `REVIVING ${Math.min(100, Math.round((p.revive / 3) * 100))}%`
+      : p.invulnerable > 0
+        ? `SECOND WIND · ${p.invulnerable.toFixed(1)}s`
+        : p.armor > 0
+          ? `ARMOR ${p.armor}`
+          : "STILL BREATHING",
+  );
   document.body.classList.toggle("down", p.down);
-  $("chips").innerHTML = `◉ ${p.chips} <small>CHIPS</small>`;
+  const chipLabel = `◉ ${p.chips} <small>CHIPS</small>`;
+  if ($("chips").innerHTML !== chipLabel) $("chips").innerHTML = chipLabel;
   const gun = p.guns[p.selected],
     w = WEAPONS[gun.id];
-  $("weaponName").textContent =
+  setText(
+    "weaponName",
     (gun.power > 1 ? "GILDED " : "") +
-    w.name.toUpperCase() +
-    (gun.level ? ` · RANK ${gun.level}` : "");
+      w.name.toUpperCase() +
+      (gun.level ? ` · RANK ${gun.level}` : ""),
+  );
   document.body.classList.toggle("shotgun", w.category === "shells");
-  $("ammo").textContent = w.melee ? "∞" : gun.ammo;
-  $("reserve").textContent = w.melee ? "NO AMMO NEEDED" : "/ " + gun.reserve;
-  $("reload").textContent = p.reload
-    ? `RELOADING ${p.reload.toFixed(1)}s`
-    : p.guns.length > 1
-      ? "R RELOAD · Q SWITCH"
-      : "R RELOAD";
+  setText("ammo", w.melee ? "∞" : gun.ammo);
+  setText("reserve", w.melee ? "NO AMMO NEEDED" : "/ " + gun.reserve);
+  setText(
+    "reload",
+    p.reload
+      ? `RELOADING ${p.reload.toFixed(1)}s`
+      : p.guns.length > 1
+        ? "R RELOAD · Q SWITCH"
+        : "R RELOAD",
+  );
   const s = nearby(),
     downed = state.players.find(
       (q) => q.down && q.id !== myId && Math.hypot(q.x - p.x, q.z - p.z) < 2.3,
@@ -630,34 +690,45 @@ function updateHUD() {
     ["combat", "break"].includes(state.phase)
   )
     prompt = prompt || "CLICK THE FLOOR TO AIM · ? FOR CONTROLS";
-  $("prompt").textContent = prompt;
+  setText("prompt", prompt);
   if (controller.mode === "controller")
-    $("prompt").textContent = prompt
-      .replaceAll("E ·", "A ·")
-      .replaceAll("HOLD F", "HOLD LB")
-      .replace(
-        "CLICK THE FLOOR TO AIM · ? FOR CONTROLS",
-        "RS LOOK · MENU FOR CONTROLS",
-      );
+    setText(
+      "prompt",
+      prompt
+        .replaceAll("E ·", "A ·")
+        .replaceAll("HOLD F", "HOLD LB")
+        .replace(
+          "CLICK THE FLOOR TO AIM · ? FOR CONTROLS",
+          "RS LOOK · MENU FOR CONTROLS",
+        ),
+    );
   $("prompt").style.display = prompt && !station ? "block" : "none";
   show("intermission", state.phase === "break");
   const seconds = Math.max(0, Math.ceil(state.timer || 0));
   $("nextRound").disabled = true;
-  $("nextRound").textContent =
-    `NEXT WAVE · ${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+  setText(
+    "nextRound",
+    `NEXT WAVE · ${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`,
+  );
   $("nextRound").classList.toggle("countdown-urgent", seconds <= 10);
-  $("intermissionStatus").textContent =
-    "90-second break · Games settle automatically at the bell";
-  $("difficulty").textContent =
+  setText(
+    "intermissionStatus",
+    "90-second break · Games settle automatically at the bell",
+  );
+  setText(
+    "difficulty",
     state.players.length +
-    " PLAYER" +
-    (state.players.length > 1 ? "S" : "") +
-    " · " +
-    (state.players.length > 1 ? "CO-OP DIFFICULTY" : "SOLO DIFFICULTY");
-  $("hint").textContent =
+      " PLAYER" +
+      (state.players.length > 1 ? "S" : "") +
+      " · " +
+      (state.players.length > 1 ? "CO-OP DIFFICULTY" : "SOLO DIFFICULTY"),
+  );
+  setText(
+    "hint",
     controller.mode === "controller"
       ? "LS MOVE · RS LOOK · LT AIM · RT FIRE · A USE · X RELOAD · Y WEAPON · LB REVIVE"
-      : "WASD MOVE · SHIFT ROLL · SPACE JUMP · RMB / V AIM · LMB FIRE · E INTERACT · U SURVIVOR’S CLUB";
+      : "WASD MOVE · SHIFT ROLL · SPACE JUMP · RMB / V AIM · LMB FIRE · E INTERACT · U SURVIVOR’S CLUB",
+  );
   document.querySelector(".ready-shortcut").textContent =
     "AUTOMATIC NEXT WAVE · REVIVE YOUR CREW";
   if (state.phase !== lastPhase) {
@@ -683,8 +754,10 @@ function updateHUD() {
       release();
       show("casino", false);
       station = null;
-      $("runStats").textContent =
-        `Round ${state.round} · ${p.kills} kills · ${p.headshots} headshots · Best streak ${p.bestCombo}× · Casino net ${p.casinoNet >= 0 ? "+" : ""}${p.casinoNet} chips.`;
+      setText(
+        "runStats",
+        `Round ${state.round} · ${p.kills} kills · ${p.headshots} headshots · Best streak ${p.bestCombo}× · Casino net ${p.casinoNet >= 0 ? "+" : ""}${p.casinoNet} chips.`,
+      );
     }
     lastPhase = state.phase;
   }
@@ -706,8 +779,9 @@ function openCasino() {
   casinoView.invalidate();
   release();
   show("casino");
-  $("casinoTitle").textContent = s.name;
-  $("casinoCategory").textContent =
+  setText("casinoTitle", s.name);
+  setText(
+    "casinoCategory",
     {
       poker: "SHOTGUNS / FIVE-CARD DRAW",
       craps: "ARMOR / PASS & DON’T PASS",
@@ -715,7 +789,8 @@ function openCasino() {
       slots: "SIDEARMS / THREE-REEL CLASSIC",
       roulette: "AUTOMATICS / EUROPEAN ROULETTE",
       blackjack: "RIFLES / BLACKJACK 3:2",
-    }[s.id] || s.category;
+    }[s.id] || s.category,
+  );
   renderCasino();
   $("casino").scrollTop = 0;
 }
@@ -949,6 +1024,7 @@ setInterval(() => {
   prediction.sent(inputSeq, latestInput);
   send({ type: "input", input: latestInput });
 }, 1000 / 30);
+let lastSoundState = null;
 function frame(now) {
   const dt = Math.min((now - lastFrame) / 1000, 0.05);
   lastFrame = now;
@@ -988,9 +1064,11 @@ function frame(now) {
   casinoView.animate(state);
   music.update(state);
   soundscape.update(dt, state, myId, yaw, station?.id, {
+    newSnapshot: state !== lastSoundState,
     trigger: controller.mode === "controller" ? controller.input.shoot : shoot,
     menu: !!menuRoot(),
   });
+  lastSoundState = state;
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);

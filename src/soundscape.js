@@ -106,7 +106,7 @@ export class Soundscape {
     myId,
     yaw,
     table = null,
-    { trigger = false, menu = false } = {},
+    { trigger = false, menu = false, newSnapshot = true } = {},
   ) {
     this.clock += dt;
     this.yaw = yaw;
@@ -148,46 +148,54 @@ export class Soundscape {
       ["combat", "break"].includes(state.phase)
     )
       a.play("empty");
-    const currentPlayers = new Map();
-    for (const player of state.players) {
-      const old = this.players.get(player.id),
-        own = player.id === myId,
-        source = own ? null : player;
-      if (old) {
-        const d = distance(old, player),
-          step = (this.steps.get(player.id) || 0) + (d < 1.5 ? d : 0);
-        if (d > 0.002 && step > 1.35 && !player.down && player.dodgeTime <= 0) {
-          this.spatial("step", source, state, {
-            hard: ["atrium", "crown"].includes(roomAt(player)?.id),
-            gain: own ? 1 : 0.7,
-          });
-          this.steps.set(player.id, 0);
-        } else this.steps.set(player.id, step);
-        if (!old.reload && player.reload) this.spatial("reload", source, state);
-        if (
-          old.reload &&
-          !player.reload &&
-          !player.down &&
-          player.guns[player.selected].ammo > old.guns[old.selected].ammo
-        )
-          this.spatial("reloadEnd", source, state);
-        if (old.selected !== player.selected)
-          this.spatial("switch", source, state);
-        if (!old.down && player.down)
-          this.spatial("down", source, state, { gain: own ? 1 : 0.7 });
-        if (
-          (old.down && !player.down) ||
-          (!old.invulnerable && player.invulnerable)
-        )
-          this.spatial("revive", source, state);
-        if (!old.ready && player.ready)
-          a.play("ready", { gain: own ? 1 : 0.5 });
+    if (newSnapshot) {
+      const currentPlayers = new Map();
+      for (const player of state.players) {
+        const old = this.players.get(player.id),
+          own = player.id === myId,
+          source = own ? null : player;
+        if (old) {
+          const d = distance(old, player),
+            step = (this.steps.get(player.id) || 0) + (d < 1.5 ? d : 0);
+          if (
+            d > 0.002 &&
+            step > 1.35 &&
+            !player.down &&
+            player.dodgeTime <= 0
+          ) {
+            this.spatial("step", source, state, {
+              hard: ["atrium", "crown"].includes(roomAt(player)?.id),
+              gain: own ? 1 : 0.7,
+            });
+            this.steps.set(player.id, 0);
+          } else this.steps.set(player.id, step);
+          if (!old.reload && player.reload)
+            this.spatial("reload", source, state);
+          if (
+            old.reload &&
+            !player.reload &&
+            !player.down &&
+            player.guns[player.selected].ammo > old.guns[old.selected].ammo
+          )
+            this.spatial("reloadEnd", source, state);
+          if (old.selected !== player.selected)
+            this.spatial("switch", source, state);
+          if (!old.down && player.down)
+            this.spatial("down", source, state, { gain: own ? 1 : 0.7 });
+          if (
+            (old.down && !player.down) ||
+            (!old.invulnerable && player.invulnerable)
+          )
+            this.spatial("revive", source, state);
+          if (!old.ready && player.ready)
+            a.play("ready", { gain: own ? 1 : 0.5 });
+        }
+        currentPlayers.set(player.id, player);
       }
-      currentPlayers.set(player.id, player);
+      this.players = currentPlayers;
+      for (const id of this.steps.keys())
+        if (!currentPlayers.has(id)) this.steps.delete(id);
     }
-    this.players = currentPlayers;
-    for (const id of this.steps.keys())
-      if (!currentPlayers.has(id)) this.steps.delete(id);
     const boss = state.zombies.find((z) => z.kind === "boss");
     if (boss && boss.id !== this.bossId) {
       this.spatial("boss", boss, state);
@@ -202,32 +210,38 @@ export class Soundscape {
       if (z) this.spatial("enemy", z, state, { kind: z.kind });
       this.growlAt = this.clock + 1.2 + Math.random() * 0.9;
     }
-    const hazards = new Map();
-    for (const h of state.hazards || []) {
-      const old = this.hazards.get(h.id);
-      if (h.kind !== "grenade") {
-        if (old === undefined && h.delay > 0)
-          this.spatial(h.kind === "slam" ? "warnSlam" : "warnAcid", h, state);
-        if ((old === undefined || old > 0) && h.delay <= 0)
-          this.spatial(h.kind === "slam" ? "slam" : "acid", h, state);
+    if (newSnapshot) {
+      const hazards = new Map();
+      for (const h of state.hazards || []) {
+        const old = this.hazards.get(h.id);
+        if (h.kind !== "grenade") {
+          if (old === undefined && h.delay > 0)
+            this.spatial(h.kind === "slam" ? "warnSlam" : "warnAcid", h, state);
+          if ((old === undefined || old > 0) && h.delay <= 0)
+            this.spatial(h.kind === "slam" ? "slam" : "acid", h, state);
+        }
+        hazards.set(h.id, h.delay);
       }
-      hazards.set(h.id, h.delay);
+      this.hazards = hazards;
     }
-    this.hazards = hazards;
-    const games = new Map();
-    const tables = { ...state.games };
-    for (const [id, t] of Object.entries(state.crewTables || {}))
-      tables[id] = {
-        ...t,
-        player: "crew",
-        phase: id === "roulette" && t.phase === "rolling" ? "playing" : t.phase,
-        duration: 5,
-        remaining: 2,
-        hands: t.seats.flatMap((s) => s.hand?.hands || []),
-        playerCards: t.baccarat?.playerCards,
-        bankerCards: t.baccarat?.bankerCards,
-      };
-    for (const [id, g] of Object.entries(tables)) {
+    if (newSnapshot || !this.tableEntries) {
+      const tables = { ...state.games };
+      for (const [id, t] of Object.entries(state.crewTables || {}))
+        tables[id] = {
+          ...t,
+          player: "crew",
+          phase:
+            id === "roulette" && t.phase === "rolling" ? "playing" : t.phase,
+          duration: 5,
+          remaining: 2,
+          hands: t.seats.flatMap((s) => s.hand?.hands || []),
+          playerCards: t.baccarat?.playerCards,
+          bankerCards: t.baccarat?.bankerCards,
+        };
+      this.tableEntries = Object.entries(tables);
+    }
+    const games = newSnapshot ? new Map() : this.games;
+    for (const [id, g] of this.tableEntries) {
       const previous = this.games.get(id),
         key = g.startedAt + ":" + g.player;
       const old = previous?.key === key ? previous : null;
@@ -239,6 +253,19 @@ export class Soundscape {
           key: name + ":" + id,
           ...extra,
         });
+      // Motors and wheel ticks retain their frame-driven cadence; transitions are observed once.
+      if (
+        id === "slots" &&
+        g.phase === "playing" &&
+        (g.reelStops || []).filter((s) => s !== null).length < 3
+      )
+        play("slotMotor");
+      if (id === "roulette" && g.phase === "playing")
+        play("rouletteTick", {
+          cooldown:
+            0.06 + Math.max(0, 1 - (g.remaining || 0) / g.duration) * 0.19,
+        });
+      if (!newSnapshot) continue;
       const visible = cards(g),
         reels = (g.reelStops || []).filter((s) => s !== null).length,
         picks = g.vault?.picks.length || 0;
@@ -258,15 +285,9 @@ export class Soundscape {
       if (visible && visible !== old?.cards)
         play("card", { delay: old ? 0 : 0.14 });
       if (id === "slots") {
-        if (g.phase === "playing" && reels < 3) play("slotMotor");
         if (old && reels > old.reels) play("reelStop");
       }
       if (id === "roulette") {
-        if (g.phase === "playing")
-          play("rouletteTick", {
-            cooldown:
-              0.06 + Math.max(0, 1 - (g.remaining || 0) / g.duration) * 0.19,
-          });
         if (old?.phase === "playing" && g.phase !== "playing")
           play("rouletteDrop");
       }

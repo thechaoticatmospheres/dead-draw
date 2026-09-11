@@ -962,44 +962,51 @@ export class Game {
       return this.phase === "break" || c.age < 100;
     });
   }
-  snapshot(playerId = Object.keys(this.players)[0], consumeEvents = true) {
+  snapshot(
+    playerId = Object.keys(this.players)[0],
+    consumeEvents = true,
+    common = null,
+  ) {
     return {
-      code: this.code,
-      prizeWheel: { ...this.prizeWheel },
-      specialRound: !!this.specialRound,
-      jukebox: { ...this.jukebox },
-      campaign: this.campaign,
-      summary: this.summary,
-      runId: this.runId,
-      crewTables: this.publicCrewTables?.() || {},
-      phase: this.phase,
-      round: this.round,
-      timer: this.timer,
-      time: this.time,
-      difficulty: this.difficulty,
-      history: this.history,
-      openRooms: [...this.openRooms],
-      pending: this.pending,
-      hazards: this.hazards,
-      pickups: this.pickups,
-      contract: this.contract,
-      jackpot: this.jackpot,
-      players: Object.values(this.players).map(
-        ({ input, inputAt, wheelSpin, ...p }) => ({
-          ...p,
-          ...(wheelSpin
-            ? {
-                wheelSpin: {
-                  remaining: wheelSpin.remaining,
-                  total: wheelSpin.total,
-                  cost: wheelSpin.cost,
-                },
-              }
-            : {}),
-        }),
-      ),
-      zombies: this.zombies,
-      chips: this.chips,
+      ...(common || {
+        code: this.code,
+        prizeWheel: { ...this.prizeWheel },
+        specialRound: !!this.specialRound,
+        jukebox: { ...this.jukebox },
+        campaign: this.campaign,
+        summary: this.summary,
+        runId: this.runId,
+        crewTables: this.publicCrewTables?.() || {},
+        phase: this.phase,
+        round: this.round,
+        timer: this.timer,
+        time: this.time,
+        difficulty: this.difficulty,
+        history: this.history,
+        openRooms: [...this.openRooms],
+        pending: this.pending,
+        hazards: this.hazards,
+        pickups: this.pickups,
+        contract: this.contract,
+        jackpot: this.jackpot,
+        players: Object.values(this.players).map(
+          ({ input, inputAt, wheelSpin, ...p }) => ({
+            ...p,
+            ...(wheelSpin
+              ? {
+                  wheelSpin: {
+                    remaining: wheelSpin.remaining,
+                    total: wheelSpin.total,
+                    cost: wheelSpin.cost,
+                  },
+                }
+              : {}),
+          }),
+        ),
+        zombies: this.zombies,
+        chips: this.chips,
+        events: consumeEvents ? this.events.splice(0) : [...this.events],
+      }),
       games: Object.fromEntries(
         Object.values(this.games)
           .filter((g) => g.player === playerId)
@@ -1084,7 +1091,6 @@ export class Game {
             ];
           }),
       ),
-      events: consumeEvents ? this.events.splice(0) : [...this.events],
     };
   }
 }

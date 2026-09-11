@@ -43,7 +43,7 @@ export class BackgroundMusic {
   unlock() {
     this.unlocked = true;
     this.blocked = false;
-    this.play();
+    if (this.media.paused) this.play();
   }
   retry() {
     this.error = "";
@@ -90,7 +90,7 @@ export class BackgroundMusic {
     this.state = state;
     const j = state?.jukebox;
     if (!j) {
-      this.media.pause();
+      if (!this.media.paused) this.media.pause();
       return;
     }
     if (this.track !== j.track) {
@@ -103,10 +103,11 @@ export class BackgroundMusic {
       this.revision = j.revision;
       this.seek();
     }
-    this.media.volume =
+    const volume =
       this.volume *
       this.audio.settings.master ** 2 *
       (state.phase === "combat" ? 0.42 : 1);
+    if (this.media.volume !== volume) this.media.volume = volume;
     if (
       !j.playing ||
       !this.audio.active ||
@@ -114,10 +115,10 @@ export class BackgroundMusic {
       !this.volume ||
       !this.audio.settings.master
     ) {
-      this.media.pause();
+      if (!this.media.paused) this.media.pause();
       return;
     }
-    this.play();
+    if (this.media.paused) this.play();
   }
   dispose() {
     this.media.pause();
