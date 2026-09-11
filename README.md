@@ -109,7 +109,7 @@ Buy Auto Reload for **6 comps** in the starting-room Survivor’s Club. Empty we
 
 ### Room testing controls
 
-During a run, press **Numpad 8, 8, 2, 2, 4, 6, 4, 6** (up, up, down, down, left, right, left, right). Num Lock can be on or off; complete each step within four seconds. ESC closes the panel. Only the current room host (first connected survivor; transfers when that survivor disconnects) can apply changes. This is a room testing feature, not an account administrator login or server-management interface.
+During a run, press **arrow keys ↑ ↑ ↓ ↓ ← → ← →** or **Numpad 8, 8, 2, 2, 4, 6, 4, 6** (up, up, down, down, left, right, left, right). Num Lock can be on or off; complete each step within four seconds. ESC closes the panel. Only the current room host (first connected survivor; transfers when that survivor disconnects) can apply changes. This is a room testing feature, not an account administrator login or server-management interface.
 
 Controls grant your survivor chips/comps, heal/revive and refill ammo, start waves 1–100, or return to a 90-second intermission. Active wagers settle through the normal settlement code when switching waves. Changes mark the run as testing, notify the crew, and exclude it from local career records. The testing flag survives checkpoints and clears on a fresh run. Server validation bounds every numeric command; the keypad sequence itself is not an authorization secret.
 
@@ -122,3 +122,5 @@ Jump presentation uses the same smoothed height for the survivor and camera, wit
 Static prop batching, reusable combat effects, compact multiplayer snapshots, cached navigation, change-only HUD/audio bookkeeping and losslessly compressed models reduce repeated work without changing gameplay or graphics settings. Older clients and existing saves remain compatible. See [implementation and measurements](docs/PERFORMANCE-UPDATE.md).
 
 Run `node tools/performance-report.js` for repeatable synthetic measurements. Add `?profile=1` to a local game URL for bounded CPU/GPU and resource diagnostics on the canvas. Normal deployment still tests and builds every push to main, then updates GitHub Pages; deploy the same commit to the existing Render service for server changes.
+
+E never opens a menu: it directly operates doors, repairs, campaign terminals, the prize wheel, and jukebox play/pause. Use B near a casino table, wheel, cashier or jukebox to open its screen; U and existing service clicks remain available. Controller A retains access to casino/service screens.

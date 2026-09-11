@@ -153,8 +153,7 @@ function interact() {
     return;
   const target = nearbyCampaignTarget(me(), state);
   if (target && target.id !== "power" && !nearbyWheel(me(), state)) {
-    release();
-    crewUI.toggle(me(), state, "interactions");
+    send({ type: "crew", choice: target.id, entrance: target.entrance });
     return;
   }
   if (nearbyWheel(me(), state)) {
@@ -162,8 +161,7 @@ function interact() {
       toast("PRIZE WHEEL CLOSED DURING COMBAT");
       return;
     }
-    release();
-    prizeWheelUI.open(me(), state);
+    send({ type: "prizeWheel" });
     return;
   }
   const power = nearbyPower(me(), state);
@@ -176,13 +174,25 @@ function interact() {
   }
   const service = preferredService();
   if (service) {
+    if (service.id === "cashier") toast("B / U · SURVIVOR’S CLUB");
+    else
+      send({ type: "music", choice: state.jukebox.playing ? "pause" : "play" });
+    return;
+  }
+  if (nearby()) toast("B · PLAY THIS TABLE");
+}
+function browseNearby() {
+  if (nearbyWheel(me(), state)) {
+    release();
+    prizeWheelUI.open(me(), state);
+    return;
+  }
+  const service = preferredService();
+  if (service) {
     useService(service);
     return;
   }
-  if (!nearby()) {
-    release();
-    crewUI.toggle(me(), state, "interactions");
-  } else openCasino();
+  openCasino();
 }
 function preferredService() {
   const p = me(),
@@ -267,8 +277,11 @@ const controller = new GamepadInput({
       show("help");
       return;
     }
-    if (action === "interact") interact();
-    else if (action === "club") toggleClub();
+    if (action === "interact") {
+      if (nearbyWheel(me(), state) || preferredService() || nearby())
+        browseNearby();
+      else interact();
+    } else if (action === "club") toggleClub();
     else if (action === "map") toggleMap();
     else send({ type: action });
   },
@@ -675,7 +688,7 @@ function updateHUD() {
       ? `HOLD E / F · REVIVE ${downed.name}`
       : s
         ? state.phase === "break"
-          ? `E · ${s.type.toUpperCase()} / ${s.cost}+ CHIPS`
+          ? `B · ${s.type.toUpperCase()} / ${s.cost}+ CHIPS`
           : "CASINO CLOSED · FINISH THE ROUND"
         : "";
   const door = nearDoor();
@@ -684,9 +697,9 @@ function updateHUD() {
     prompt =
       service.id === "cashier"
         ? state.phase === "break"
-          ? "E · SURVIVOR’S CLUB · OR CLICK · U SHORTCUT"
+          ? "B / U · SURVIVOR’S CLUB · OR CLICK"
           : "CASHIER CLOSED · U BETWEEN ROUNDS"
-        : "E · GOLDEN HOUR JUKEBOX · OR CLICK";
+        : "E · PLAY / PAUSE MUSIC · B / CLICK · JUKEBOX";
   if (door && !p.down && !downed) {
     const r = ROOMS.find((r) => r.id === door.to);
     prompt = door.shortcut
@@ -698,7 +711,7 @@ function updateHUD() {
   if (nearbyWheel(p, state) && !downed)
     prompt =
       state.phase === "break"
-        ? `E · GRAND PRIZE WHEEL / ${wheelCost(state.prizeWheel)} CHIPS`
+        ? `E · SPIN WHEEL / ${wheelCost(state.prizeWheel)} CHIPS · B · WHEEL SCREEN`
         : "PRIZE WHEEL CLOSED · FINISH THE ROUND";
   if (nearbyPower(p, state) && !downed)
     prompt = state.campaign.power
@@ -738,6 +751,7 @@ function updateHUD() {
       "prompt",
       prompt
         .replaceAll("E ·", "A ·")
+        .replaceAll("B ·", "A ·")
         .replaceAll("HOLD E / F", "HOLD LB")
         .replace(
           "CLICK THE FLOOR TO AIM · ? FOR CONTROLS",
@@ -946,6 +960,10 @@ addEventListener("keydown", (e) => {
     return;
   }
   if (me() && !menuRoot() && !e.repeat) {
+    if (e.code === "KeyB") {
+      browseNearby();
+      return;
+    }
     if (e.code === "KeyC") {
       send({ type: "crew", choice: "shove" });
       return;

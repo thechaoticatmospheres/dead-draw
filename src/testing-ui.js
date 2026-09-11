@@ -17,7 +17,14 @@ export class TestingCode {
       "Numpad4",
       "Numpad6",
     ];
-    this.keys.push(event.code);
+    this.keys.push(
+      {
+        ArrowUp: "Numpad8",
+        ArrowDown: "Numpad2",
+        ArrowLeft: "Numpad4",
+        ArrowRight: "Numpad6",
+      }[event.code] || event.code,
+    );
     while (this.keys.length && !this.keys.every((v, i) => v === sequence[i]))
       this.keys.shift();
     if (this.keys.length !== sequence.length) return false;
@@ -29,7 +36,7 @@ export class TestingUI {
   constructor(send) {
     document.body.insertAdjacentHTML(
       "beforeend",
-      `<section id="testingPanel" class="crew-panel" hidden><button id="closeTesting">✕</button><span class="eyebrow">ROOM HOST · DEVELOPMENT TOOLS</span><h2>Admin / testing</h2><p id="testingStatus"></p><p class="table-note">Changes affect this room immediately and mark the run as testing. Test runs do not earn career records. The keypad sequence opens this menu; it is not an account password.</p><fieldset id="testingControls"><h3>YOUR SURVIVOR</h3><label>Amount <input id="testingAmount" type="number" min="1" max="100000" step="1" value="1000"></label><div class="choice-row"><button data-test-action="chips">GIVE CHIPS</button><button data-test-action="comps">GIVE COMPS</button><button data-test-action="restore">HEAL / REVIVE + AMMO</button></div><h3>ROUND CONTROL</h3><label>Wave <input id="testingWave" type="number" min="1" max="100" step="1" value="1"></label><div class="choice-row"><button data-test-action="wave">START SELECTED WAVE</button><button data-test-action="break">RETURN TO INTERMISSION</button></div></fieldset><p class="table-note">NUMPAD 8 8 2 2 4 6 4 6 · ESC TO CLOSE</p></section>`,
+      `<section id="testingPanel" class="crew-panel" hidden><button id="closeTesting">✕</button><span class="eyebrow">ROOM HOST · DEVELOPMENT TOOLS</span><h2>Admin / testing</h2><p id="testingStatus"></p><p class="table-note">Changes affect this room immediately and mark the run as testing. Test runs do not earn career records. The keypad sequence opens this menu; it is not an account password.</p><fieldset id="testingControls"><h3>YOUR SURVIVOR</h3><label>Amount <input id="testingAmount" type="number" min="1" max="100000" step="1" value="1000"></label><div class="choice-row"><button data-test-action="chips">GIVE CHIPS</button><button data-test-action="comps">GIVE COMPS</button><button data-test-action="restore">HEAL / REVIVE + AMMO</button></div><h3>ROUND CONTROL</h3><label>Wave <input id="testingWave" type="number" min="1" max="100" step="1" value="1"></label><div class="choice-row"><button data-test-action="wave">START SELECTED WAVE</button><button data-test-action="break">RETURN TO INTERMISSION</button></div></fieldset><p class="table-note">↑ ↑ ↓ ↓ ← → ← → · ARROWS OR NUMPAD · ESC TO CLOSE</p></section>`,
     );
     this.root = document.querySelector("#testingPanel");
     this.status = document.querySelector("#testingStatus");

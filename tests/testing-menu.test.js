@@ -94,7 +94,7 @@ test("testing switches waves, clears combat, restores players and persists its f
   g.restart();
   assert.equal(g.testing, false);
 });
-test("keypad code accepts both num-lock modes and rejects arrows, repeats and stale sequences", () => {
+test("admin code accepts arrow keys and both num-lock modes, rejecting repeats and stale sequences", () => {
   const code = new TestingCode(),
     seq = [8, 8, 2, 2, 4, 6, 4, 6];
   assert.equal(
@@ -113,6 +113,25 @@ test("keypad code accepts both num-lock modes and rejects arrows, repeats and st
     assert.equal(code.accept({ code: `Numpad${n}`, repeat: true }, 300), false);
   for (const n of seq)
     assert.equal(code.accept({ code: "ArrowUp" }, 400), false);
+  const arrows = new TestingCode();
+  assert.equal(
+    seq
+      .map((n) =>
+        arrows.accept(
+          {
+            code: {
+              8: "ArrowUp",
+              2: "ArrowDown",
+              4: "ArrowLeft",
+              6: "ArrowRight",
+            }[n],
+          },
+          450,
+        ),
+      )
+      .at(-1),
+    true,
+  );
   code.accept({ code: "Numpad8" }, 500);
   code.accept({ code: "Numpad8" }, 600);
   for (const n of seq.slice(2))
