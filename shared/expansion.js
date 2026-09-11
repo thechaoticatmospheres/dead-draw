@@ -191,6 +191,16 @@ export const PERKS = [
 for (const perk of PERKS) perk.price = Math.ceil(perk.price * 1.5);
 PERKS.push(
   {
+    id: "autoReload",
+    name: "Auto Reload",
+    glyph: "↻",
+    detail:
+      "Automatically reload your equipped weapon when empty. Uses reserve ammo and your normal reload time.",
+    price: 6,
+    max: 1,
+    room: "atrium",
+  },
+  {
     id: "medic",
     name: "Field Medic",
     glyph: "+",

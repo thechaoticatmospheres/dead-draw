@@ -231,7 +231,7 @@ test("mascot waves replace regular roster and give bonus ammo while boss waves r
   assert.equal(g.makeEnemy({ x: 0, z: 5 }).kind, "boss");
 });
 test("new comp ranks affect damage, protection, ammo and revival", () => {
-  assert.equal(PERKS.length, 11);
+  assert.equal(PERKS.length, 12);
   assert.ok(PERKS.find((p) => p.id === "vitality").price > 3);
   const g = setup(),
     p = g.players.a,

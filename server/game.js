@@ -782,6 +782,8 @@ export class Game {
         (p.guns[p.selected].id !== "minigun" || p.spinUp > 0.35)
       )
         this.shoot(p);
+      if (p.perks.autoReload && !p.dodgeTime && p.guns[p.selected].ammo === 0)
+        this.action(p.id, { type: "reload" });
     }
     for (const g of Object.values(this.games)) {
       const id = g.station;

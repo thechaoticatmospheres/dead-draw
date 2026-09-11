@@ -102,3 +102,7 @@ Generate the four GLBs with `node tools/author-enemies.js`. Animation lives in `
 - Eleven Club perks, higher comp prices, and new healing, ammo, protection, income and damage ranks.
 
 New systems: `shared/arsenal.js`, `server/arsenal.js`, `server/prize-wheel.js`, `src/prize-wheel-ui.js`, `src/render/arsenal-props.js`, `src/render/prize-wheel.js`. Procedural models ship inside the normal build without extra downloads. The real-socket integration test includes a full 90-second countdown.
+
+### Auto Reload (0.7.1)
+
+Buy Auto Reload for **6 comps** in the starting-room Survivor’s Club. Empty weapons reload automatically using reserve ammo and normal reload time; Quick Hands and Speed Loader bonuses apply. The perk lasts for the run and is included in checkpoints.
