@@ -91,7 +91,7 @@ export class PrizeWheelScene {
       ({ p, m }) => (m.visible = !!state?.openRooms?.includes(p.room)),
     );
     const pad = WHEEL_PADS.find((p) => p.room === state?.prizeWheel?.room);
-    this.root.visible = !!pad;
+    this.root.visible = !!pad && state.openRooms.includes(pad.room);
     if (!pad) return;
     this.root.position.set(pad.x, 0, pad.z);
     const p = state.players.find((p) => p.id === myId),

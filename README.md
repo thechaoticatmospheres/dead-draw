@@ -97,15 +97,21 @@ Generate the four GLBs with `node tools/author-enemies.js`. Animation lives in `
 - Private concurrent casino games, 90-second breaks, visible countdown and final-ten-second audio. Pending hands settle once at the bell; new wagers close at seven seconds.
 - Space jumps, Shift rolls, and ordinary movement runs at the former sprint speed. Controller: B rolls; LS click or D-pad down jumps (LT + LS still shoves). Downed teammates remain visibly on the floor with a revive label.
 - Seven original weapon types: Velvet Saber and Pit Boss Crossbow also drop from natural blackjack and flush-or-better poker. RPG, flamethrower, minigun, piercing railgun and chain-lightning Tesla weapon are wheel-exclusive.
-- The Grand Prize Wheel starts in the atrium, relocates among unlocked rooms after three completed spins, and awards only weapons or rare supplies. Spins cost 500 chips, rising by 100 to a 1,500 cap; multiple survivors can spin independently.
+- The Grand Prize Wheel spawns and relocates among the first seven unlockable rooms (Emerald through Ivory), never the atrium. Its chosen room may still be locked. It moves after three completed spins and awards only weapons or rare supplies. Spins cost 500 chips, rising by 100 to a 1,500 cap; multiple survivors can spin independently.
 - Mascot Meltdown waves feature angry jackpot geese every fourth wave, except fifth-wave bosses. Clear them for 75 bonus chips and extra ammunition.
 - Eleven Club perks, higher comp prices, and new healing, ammo, protection, income and damage ranks.
 
-New systems: `shared/arsenal.js`, `server/arsenal.js`, `server/prize-wheel.js`, `src/prize-wheel-ui.js`, `src/render/arsenal-props.js`, `src/render/prize-wheel.js`. Procedural models ship inside the normal build without extra downloads. The real-socket integration test includes a full 90-second countdown.
+New systems: `shared/arsenal.js`, `server/arsenal.js`, `server/prize-wheel.js`, `src/prize-wheel-ui.js`, `src/render/arsenal-props.js`, `src/render/prize-wheel.js`. Procedural models ship inside the normal build without extra downloads. Tests cover the 90-second deadline and unanimous ready voting over real sockets.
 
 ### Auto Reload (0.7.1)
 
 Buy Auto Reload for **6 comps** in the starting-room Survivor’s Club. Empty weapons reload automatically using reserve ammo and normal reload time; Quick Hands and Speed Loader bonuses apply. The perk lasts for the run and is included in checkpoints.
+
+### Room testing controls
+
+During a run, press **Numpad 8, 8, 2, 2, 4, 6, 4, 6** (up, up, down, down, left, right, left, right). Num Lock can be on or off; complete each step within four seconds. ESC closes the panel. Only the current room host (first connected survivor; transfers when that survivor disconnects) can apply changes. This is a room testing feature, not an account administrator login or server-management interface.
+
+Controls grant your survivor chips/comps, heal/revive and refill ammo, start waves 1–100, or return to a 90-second intermission. Active wagers settle through the normal settlement code when switching waves. Changes mark the run as testing, notify the crew, and exclude it from local career records. The testing flag survives checkpoints and clears on a fresh run. Server validation bounds every numeric command; the keypad sequence itself is not an authorization secret.
 
 ### Performance update (0.7.2)
 

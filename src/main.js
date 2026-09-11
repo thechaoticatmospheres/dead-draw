@@ -1,4 +1,5 @@
 import { CrewUI } from "./crew-ui.js";
+import { TestingCode, TestingUI } from "./testing-ui.js";
 import { BackgroundMusic } from "./music.js";
 import { PrizeWheelUI } from "./prize-wheel-ui.js";
 import { nearbyWheel, wheelCost } from "../shared/arsenal.js";
@@ -87,6 +88,8 @@ const crewUI = new CrewUI(send),
   prediction = new MovementPrediction();
 const jukeboxUI = new JukeboxUI(music, send);
 const prizeWheelUI = new PrizeWheelUI(send);
+const testingUI = new TestingUI(send),
+  testingCode = new TestingCode();
 let serviceClick = false;
 let inputSeq = 0,
   latestInput = { yaw: 0 },
@@ -119,6 +122,7 @@ $("careerButton").onclick = () => crewUI.toggle(me(), state, "career");
 function menuRoot() {
   return (
     [
+      "testingPanel",
       "prizeWheelPanel",
       "jukeboxPanel",
       "crewPanel",
@@ -431,6 +435,7 @@ function join(resume = false) {
       state = msg;
       if (me()) prediction.reconcile(me(), state.openRooms);
       crewUI.update(me(), state, myId);
+      testingUI.update(me(), state);
       if (state.phase === "over") {
         delete session.checkpoint;
         saveSession();
@@ -878,8 +883,15 @@ $("resume").onclick = () => {
 };
 addEventListener("keydown", (e) => {
   controller.useKeyboard();
-  if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) return;
+  if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName) && e.code !== "Escape") return;
+  if (me() && testingCode.accept(e)) {
+    e.preventDefault();
+    release();
+    testingUI.toggle(me(), state);
+    return;
+  }
   if (e.code === "Escape") {
+    show("testingPanel", false);
     show("prizeWheelPanel", false);
     $("crewPanel").hidden = true;
     if (station) closeCasino();

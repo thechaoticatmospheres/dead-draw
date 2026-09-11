@@ -97,7 +97,8 @@ test("deadline settles a committed hand, rejects late wagers and ignores readine
 });
 test("prize wheel charges once, conceals results, rewards all players and relocates only after spins finish", () => {
   const g = setup();
-  const pad = WHEEL_PADS.find((p) => p.room === "atrium");
+  const originalRoom = g.prizeWheel.room;
+  const pad = WHEEL_PADS.find((p) => p.room === originalRoom);
   for (const p of Object.values(g.players)) {
     p.x = pad.x;
     p.z = pad.z + 2;
@@ -120,7 +121,7 @@ test("prize wheel charges once, conceals results, rewards all players and reloca
       p.guns.some((w) => w.id === "minigun"),
     ),
   );
-  assert.notEqual(g.prizeWheel.room, "atrium");
+  assert.notEqual(g.prizeWheel.room, originalRoom);
   const guns = g.players.a.guns.length;
   g.updatePrizeWheel(5);
   assert.equal(g.players.a.guns.length, guns);

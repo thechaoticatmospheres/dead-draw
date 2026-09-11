@@ -292,6 +292,7 @@ export const campaignMethods = {
   finishRun() {
     if (this.summary) return;
     this.summary = {
+      testing: !!this.testing,
       id: this.runId,
       round: this.round,
       clearedRound: this.campaign.extracted

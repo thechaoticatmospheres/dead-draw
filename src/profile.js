@@ -33,7 +33,7 @@ export function readProfile() {
   }
 }
 export function recordRun(summary, id) {
-  if (!summary) return;
+  if (!summary || summary.testing) return;
   const p = readProfile(),
     s = summary.players.find((p) => p.id === id);
   if (!s || p.runs.includes(summary.id)) return;

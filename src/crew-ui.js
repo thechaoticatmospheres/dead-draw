@@ -58,7 +58,10 @@ export class CrewUI {
     objective.hidden =
       !p || state?.phase === "lobby" || state?.phase === "over";
     if (!objective.hidden)
-      objective.textContent = "♠ " + objectiveText(state.campaign);
+      objective.textContent =
+        (state.testing ? "TESTING RUN · " : "") +
+        "♠ " +
+        objectiveText(state.campaign);
     const spectator = document.querySelector("#spectatorHud");
     spectator.hidden = !p?.down;
     if (p?.down)

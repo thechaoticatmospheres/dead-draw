@@ -1,11 +1,17 @@
-import { WHEEL_PRIZES, nearbyWheel, wheelCost } from "../shared/arsenal.js";
+import {
+  WHEEL_PRIZES,
+  WHEEL_ROOMS,
+  newPrizeWheel,
+  nearbyWheel,
+  wheelCost,
+} from "../shared/arsenal.js";
 import { WEAPONS } from "../shared/data.js";
 import { ROOMS } from "../shared/map.js";
 import { giveReward } from "./casino.js";
 export const prizeWheelMethods = {
   movePrizeWheel() {
-    const choices = this.openRooms.filter((r) => r !== this.prizeWheel?.room);
-    this.prizeWheel ||= { room: "atrium", spins: 0, visits: 0 };
+    const choices = WHEEL_ROOMS.filter((r) => r !== this.prizeWheel?.room);
+    this.prizeWheel ||= newPrizeWheel(this.rng);
     if (choices.length)
       this.prizeWheel.room = choices[Math.floor(this.rng() * choices.length)];
     this.prizeWheel.visits = 0;

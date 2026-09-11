@@ -7,8 +7,10 @@ import {
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { deflateSync, inflateSync } from "node:zlib";
 import { Game } from "./game.js";
+import { WHEEL_ROOMS, newPrizeWheel } from "../shared/arsenal.js";
 const fields = [
   "serial",
+  "testing",
   "jukebox",
   "timer",
   "prizeWheel",
@@ -83,6 +85,11 @@ export class Checkpoints {
     g.timer = Math.max(1, Math.min(90, data.timer ?? 90));
     g.games = {};
     g.crewTables = {};
+    if (!WHEEL_ROOMS.includes(g.prizeWheel?.room))
+      g.prizeWheel = {
+        ...newPrizeWheel(g.rng),
+        spins: g.prizeWheel?.spins || 0,
+      };
     return g;
   }
 }

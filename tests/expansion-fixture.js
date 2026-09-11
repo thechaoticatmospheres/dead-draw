@@ -97,7 +97,7 @@ const server = http.createServer(async (req, res) => {
       p.pitch = 0;
       paused = false;
       if (scenario === "wheel") {
-        game.prizeWheel = { room: "atrium", spins: 0, visits: 0 };
+        game.prizeWheel = { room: WHEEL_PADS[0].room, spins: 0, visits: 0 };
         const pad = WHEEL_PADS[0];
         p.x = pad.x;
         p.z = pad.z + 2.3;

@@ -100,13 +100,21 @@ export const WHEEL_PRIZES = [
   { id: "goldVest", label: "GOLDEN VEST · 150 armor", kind: "special" },
   { id: "extraLife", label: "SECOND CHANCE · Revive token", kind: "special" },
 ];
-export const WHEEL_PADS = ROOMS.map((r) => ({
-  room: r.id,
-  x: r.x + 5,
-  z: r.z + 1,
-  r: 1,
-  h: 0.5,
-}));
+export const WHEEL_ROOMS = ROOMS.slice(1, 8).map((r) => r.id);
+export const newPrizeWheel = (rng = Math.random) => ({
+  room: WHEEL_ROOMS[Math.floor(rng() * WHEEL_ROOMS.length)],
+  spins: 0,
+  visits: 0,
+});
+export const WHEEL_PADS = ROOMS.filter((r) => WHEEL_ROOMS.includes(r.id)).map(
+  (r) => ({
+    room: r.id,
+    x: r.x + 5,
+    z: r.z + 1,
+    r: 1,
+    h: 0.5,
+  }),
+);
 export const wheelCost = (w) => Math.min(1500, 500 + 100 * (w?.spins || 0));
 export function nearbyWheel(p, state) {
   const w = state?.prizeWheel,

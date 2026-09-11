@@ -1,4 +1,6 @@
 import { arsenalMethods } from "./arsenal.js";
+import { newPrizeWheel } from "../shared/arsenal.js";
+import { testingMethods } from "./testing.js";
 import { crewTableMethods } from "./crew-tables.js";
 import { intermissionMethods, BREAK_SECONDS } from "./intermissions.js";
 import { prizeWheelMethods } from "./prize-wheel.js";
@@ -92,7 +94,7 @@ export class Game {
     this.spawned = 0;
     this.jackpot = 250;
     this.jukebox = newJukebox();
-    this.prizeWheel = { room: "atrium", spins: 0, visits: 0 };
+    this.prizeWheel = newPrizeWheel(this.rng);
     this.contract = null;
   }
   event(type, data = {}) {
@@ -188,6 +190,7 @@ export class Game {
       );
       return;
     }
+    if (msg.type === "testing") return this.testingAction(p, msg);
     if (p.down || !["combat", "break"].includes(this.phase)) return;
     if (msg.type === "music") return this.controlMusic(p, msg);
     if (msg.type === "prizeWheel") return this.spinPrizeWheel(p);
@@ -376,7 +379,8 @@ export class Game {
       });
   }
   restart() {
-    this.prizeWheel = { room: "atrium", spins: 0, visits: 0 };
+    this.prizeWheel = newPrizeWheel(this.rng);
+    this.testing = false;
     this.specialRound = false;
     this.campaign = newCampaign();
     this.runId = this.code + "-" + Date.now();
@@ -986,6 +990,8 @@ export class Game {
       ...(common || {
         code: this.code,
         prizeWheel: { ...this.prizeWheel },
+        testing: !!this.testing,
+        testingHost: this.testingHost(),
         specialRound: !!this.specialRound,
         jukebox: { ...this.jukebox },
         campaign: this.campaign,
@@ -1120,5 +1126,6 @@ Object.assign(
   highStakesMethods,
   intermissionMethods,
   prizeWheelMethods,
+  testingMethods,
   arsenalMethods,
 );
