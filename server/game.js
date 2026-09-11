@@ -237,6 +237,7 @@ export class Game {
       return;
     }
     if (msg.type === "nextRound") {
+      this.readyPlayer(p);
       return;
     }
     if (msg.type === "collect" && this.phase === "break") {
@@ -311,7 +312,21 @@ export class Game {
     }
     this.difficulty = next;
   }
-  readyPlayer() {} // Compatibility with old saves/tools; waves use the clock.
+  readyPlayer(p) {
+    if (this.phase !== "break" || p.down || p.offline) return;
+    if (this.busy(p.id)) {
+      this.event("notice", {
+        text: "Finish your casino hand before readying up.",
+      });
+      return;
+    }
+    p.ready = !p.ready;
+    const crew = Object.values(this.players).filter(
+      (v) => !v.offline && !v.down,
+    );
+    if (crew.length && crew.every((v) => v.ready && !this.busy(v.id)))
+      this.startRound();
+  }
   startRound() {
     this.finishIntermissionGames();
     this.updatePrizeWheel(0, true);

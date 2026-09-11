@@ -4,7 +4,7 @@ import { PrizeWheelUI } from "./prize-wheel-ui.js";
 import { nearbyWheel, wheelCost } from "../shared/arsenal.js";
 import { JukeboxUI } from "./jukebox-ui.js";
 import { nearbyService } from "../shared/services.js";
-import { nearbyPower } from "../shared/campaign.js";
+import { nearbyPower, nearbyCampaignTarget } from "../shared/campaign.js";
 import { cosmeticMessage } from "./profile.js";
 import { MovementPrediction } from "./prediction.js";
 import "./crew.css";
@@ -135,6 +135,19 @@ function menuRoot() {
   );
 }
 function interact() {
+  if (
+    state?.players.some(
+      (v) =>
+        v.id !== myId && v.down && Math.hypot(v.x - me().x, v.z - me().z) < 2.5,
+    )
+  )
+    return;
+  const target = nearbyCampaignTarget(me(), state);
+  if (target && target.id !== "power") {
+    release();
+    crewUI.toggle(me(), state, "interactions");
+    return;
+  }
   if (nearbyWheel(me(), state)) {
     if (state.phase !== "break") {
       toast("PRIZE WHEEL CLOSED DURING COMBAT");
@@ -158,8 +171,10 @@ function interact() {
     return;
   }
   const d = nearDoor();
-  if (d) send({ type: "unlock", door: d.id });
-  else openCasino();
+  if (d || !nearby()) {
+    release();
+    crewUI.toggle(me(), state, "interactions");
+  } else openCasino();
 }
 function preferredService() {
   const p = me(),
@@ -648,7 +663,7 @@ function updateHUD() {
   let prompt = p.down
     ? "DOWNED · Your crew can hold F to revive you"
     : downed
-      ? `HOLD F · REVIVE ${downed.name}`
+      ? `HOLD E / F · REVIVE ${downed.name}`
       : s
         ? state.phase === "break"
           ? `E · ${s.type.toUpperCase()} / ${s.cost}+ CHIPS`
@@ -682,6 +697,11 @@ function updateHUD() {
       : state.phase === "break"
         ? "E · RESTORE POWER · 150 CHIPS"
         : "POWER TERMINAL · USE BETWEEN ROUNDS";
+  const campaignTarget = nearbyCampaignTarget(p, state);
+  if (campaignTarget && campaignTarget.id !== "power" && !downed)
+    prompt = `E · ${campaignTarget.name.toUpperCase()}${campaignTarget.cost ? " / " + campaignTarget.cost + " CHIPS" : ""}`;
+  else if (door && !p.down && !downed && !nearbyPower(p, state))
+    prompt += " · OPEN / CONTRIBUTE";
   if (
     document.pointerLockElement !== $("world") &&
     controller.mode !== "controller" &&
@@ -696,7 +716,7 @@ function updateHUD() {
       "prompt",
       prompt
         .replaceAll("E ·", "A ·")
-        .replaceAll("HOLD F", "HOLD LB")
+        .replaceAll("HOLD E / F", "HOLD LB")
         .replace(
           "CLICK THE FLOOR TO AIM · ? FOR CONTROLS",
           "RS LOOK · MENU FOR CONTROLS",
@@ -705,15 +725,15 @@ function updateHUD() {
   $("prompt").style.display = prompt && !station ? "block" : "none";
   show("intermission", state.phase === "break");
   const seconds = Math.max(0, Math.ceil(state.timer || 0));
-  $("nextRound").disabled = true;
+  $("nextRound").disabled = !!p.down;
   setText(
     "nextRound",
-    `NEXT WAVE · ${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`,
+    `${p.ready ? "CANCEL READY" : "READY UP"} · N · ${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`,
   );
   $("nextRound").classList.toggle("countdown-urgent", seconds <= 10);
   setText(
     "intermissionStatus",
-    "90-second break · Games settle automatically at the bell",
+    `${state.players.filter((v) => !v.offline && !v.down && v.ready).length}/${state.players.filter((v) => !v.offline && !v.down).length} READY · All ready skips the wait · Finish your hand first`,
   );
   setText(
     "difficulty",
@@ -730,9 +750,10 @@ function updateHUD() {
       : "WASD MOVE · SHIFT ROLL · SPACE JUMP · RMB / V AIM · LMB FIRE · E INTERACT · U SURVIVOR’S CLUB",
   );
   document.querySelector(".ready-shortcut").textContent =
-    "AUTOMATIC NEXT WAVE · REVIVE YOUR CREW";
+    "N TO READY / CANCEL · WAVE STILL STARTS AT THE BELL";
   if (state.phase !== lastPhase) {
     if (state.phase === "combat") {
+      show("crewPanel", false);
       show("jukeboxPanel", false);
       show("club", false);
       station = null;
@@ -819,7 +840,7 @@ function toggleClub() {
 $("clubButton").onclick = toggleClub;
 $("closeClub").onclick = toggleClub;
 $("closeMap").onclick = toggleMap;
-$("nextRound").onclick = () => {};
+$("nextRound").onclick = () => send({ type: "nextRound" });
 $("enter").onclick = () => join(false);
 $("start").onclick = () => {
   send({ type: "start" });
@@ -887,12 +908,8 @@ addEventListener("keydown", (e) => {
     toggleClub();
     return;
   }
-  if (
-    e.code === "KeyN" &&
-    state?.phase === "break" &&
-    !menuRoot() &&
-    !e.repeat
-  ) {
+  if (e.code === "KeyN" && state?.phase === "break" && !e.repeat) {
+    send({ type: "nextRound" });
     return;
   }
   if (me() && !menuRoot() && !e.repeat) {
@@ -1014,7 +1031,7 @@ function readInput() {
     revive:
       controller.mode === "controller"
         ? controller.input.revive
-        : keys.has("KeyF"),
+        : keys.has("KeyF") || keys.has("KeyE"),
   };
 }
 setInterval(() => {

@@ -86,18 +86,18 @@ try {
   );
   assert.ok(!guests[0].wireTypes.has("patch-v2"));
   const remaining = host.state.timer;
-  for (const c of [host, ...guests])
-    c.ws.send(JSON.stringify({ type: "nextRound" }));
+  host.ws.send(JSON.stringify({ type: "nextRound" }));
   await until(
     () => host.state.timer < remaining - 0.2,
-    "timer continues without readiness",
+    "timer continues while only one player is ready",
   );
   assert.equal(host.state.phase, "break");
-  assert.ok(host.state.players.every((p) => !p.ready));
+  assert.equal(host.state.players.filter((p) => p.ready).length, 1);
+  for (const c of guests) c.ws.send(JSON.stringify({ type: "nextRound" }));
   await until(
     () => [host, ...guests].every((c) => c.state.phase === "combat"),
-    "automatic combat start",
-    95000,
+    "unanimous ready skips the remaining break",
+    5000,
   );
   for (const c of [host, ...guests]) {
     assert.equal(c.state.phase, "combat");

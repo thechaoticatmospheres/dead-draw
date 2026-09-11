@@ -1,4 +1,30 @@
-import { clearPath, roomAt } from "./map.js";
+import { clearPath, roomAt, ROOM_SPAWNS } from "./map.js";
+export function nearbyCampaignTarget(p, state) {
+  if (!p || p.down || p.offline || !state?.campaign) return null;
+  return (
+    [
+      ...DEVICES,
+      ...ROOM_SPAWNS.map((v, entrance) => ({
+        ...v,
+        id: "repair",
+        entrance,
+        name: "Repair entrance",
+        cost: 10,
+      })),
+    ]
+      .filter(
+        (v) =>
+          state.openRooms.includes(v.room) &&
+          roomAt(p)?.id === v.room &&
+          Math.hypot(p.x - v.x, p.z - v.z) <= 3 &&
+          clearPath(p, v, state.openRooms),
+      )
+      .sort(
+        (a, b) =>
+          Math.hypot(p.x - a.x, p.z - a.z) - Math.hypot(p.x - b.x, p.z - b.z),
+      )[0] || null
+  );
+}
 export function nearbyPower(p, state) {
   const d = DEVICES[0];
   return p &&

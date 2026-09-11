@@ -136,7 +136,6 @@ test("active wager does not prevent escaping the table", () => {
 test("90-second intermissions automatically start and combat rejects gambling", () => {
   const g = game(),
     p = g.players.a;
-  g.action("a", { type: "nextRound" });
   assert.equal(g.phase, "break");
   g.update(89);
   assert.equal(g.phase, "break");

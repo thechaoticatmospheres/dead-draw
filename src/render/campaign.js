@@ -72,7 +72,7 @@ export class CampaignScene {
         d.name.toUpperCase(),
         d.id === "power"
           ? "E / A · RESTORE POWER · 150 CHIPS"
-          : "T · CREW & OBJECTIVES",
+          : "E · INTERACT",
         "#e7c482",
         2.1,
         0.5,

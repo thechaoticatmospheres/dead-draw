@@ -87,6 +87,12 @@ export class CrewUI {
     }
   }
   render(p, state) {
+    document.querySelector("#crewPanel h2").textContent =
+      this.tab === "interactions"
+        ? "Nearby interactions · E"
+        : "Your crew. Your story.";
+    document.querySelector("#crewPanel nav").hidden =
+      this.tab === "interactions";
     this.p = p;
     this.state = state;
     const profile = readProfile();
@@ -149,6 +155,17 @@ export class CrewUI {
       const c = state.campaign,
         near = (o) => Math.hypot(p.x - o.x, p.z - o.z) < 3;
       html = `<div class="crew-objective"><b>${objectiveText(c)}</b><p>${c.power ? "✓" : "○"} Power · ${c.keys}/2 boss keys · ${c.archive ? "✓" : "○"} Vault code · ${c.defeated ? "✓" : "○"} House defeated</p><p>Restore power in Sapphire, defeat bosses on waves 5 and 10, and find the Neon archive. Challenge the House in Eclipse, then vote to extract at the atrium. Endless play remains available.</p></div><div class="choice-row">${action("PING MY LOCATION", "ping")}${action("REQUEST AMMO", "ammoRequest")}${action("EMERGENCY SHOVE · 20 STAMINA", "shove", "", state.phase !== "combat")}</div><h3>CREW</h3><div class="crew-seats">${state.players.map((v) => `<article><b>${esc(v.name)} ${v.id === p.id ? "(YOU)" : ""}</b><p>${v.offline ? "RECONNECTING" : v.down ? "DOWNED" : v.ready ? "READY" : "ACTIVE"} · ${Math.ceil(v.hp)} HP · ${v.chips} ◉</p><small>${ROOMS.find((r) => r.id === roomAt(v)?.id)?.name || ""}</small>${v.id !== p.id ? action("SHARE ONE MAGAZINE", "shareAmmo", `data-target="${v.id}"`, !near(v)) : ""}</article>`).join("")}</div><h3>NEARBY INTERACTIONS</h3>`;
+      if (this.tab === "interactions")
+        html = `<p class="table-note">Use the nearby controls below. ESC returns to the floor.</p><div class="choice-row">${action("PING MY LOCATION", "ping")}${action("REQUEST AMMO", "ammoRequest")}${action("EMERGENCY SHOVE · 20 STAMINA", "shove", "", state.phase !== "combat")}</div>${state.players
+          .filter((v) => v.id !== p.id && !v.offline && near(v))
+          .map((v) =>
+            action(
+              `SHARE ONE MAGAZINE · ${esc(v.name)}`,
+              "shareAmmo",
+              `data-target="${v.id}"`,
+            ),
+          )
+          .join("")}<h3>NEARBY CONTROLS</h3>`;
       let count = 0;
       for (const d of DEVICES)
         if (state.openRooms.includes(d.room) && near(d)) {
@@ -171,7 +188,7 @@ export class CrewUI {
           );
         }
       for (const [i, o] of ROOM_SPAWNS.entries())
-        if (near(o)) {
+        if (state.openRooms.includes(o.room) && near(o)) {
           count++;
           html += action(
             `REPAIR ENTRANCE · ${c.barricades[i] || 0}/3 BOARDS · 10 ◉`,
@@ -190,6 +207,12 @@ export class CrewUI {
           count++;
           const room = ROOMS.find((r) => r.id === d.to);
           html += action(
+            `OPEN ${room.name} · ${room.cost} ◉`,
+            "unlock",
+            `data-door="${d.id}"`,
+            state.phase !== "break" || p.down || p.chips < room.cost,
+          );
+          html += action(
             `CONTRIBUTE 50 ◉ · ${room.name} · ${c.donations[room.id] || 0}/${room.cost}`,
             "donate",
             `data-door="${d.id}"`,
@@ -198,7 +221,7 @@ export class CrewUI {
         }
       if (!count)
         html +=
-          '<p class="table-note">Walk up to a shutter, service entrance, or marked control terminal, then open this panel.</p>';
+          '<p class="table-note">Walk up to a shutter, service entrance, teammate or marked control terminal and press E.</p>';
       html += `<h3>ACTIVE PINGS</h3>${c.pings.map((v) => `<p>${esc(state.players.find((p) => p.id === v.player)?.name || "Crew")}: ${v.label} · ${ROOMS.find((r) => r.id === v.room)?.name || ""}</p>`).join("") || '<p class="table-note">No active pings.</p>'}`;
     }
     const root = document.querySelector("#crewContents");
@@ -207,7 +230,7 @@ export class CrewUI {
       (b) =>
         (b.onclick = () => {
           this.send({
-            type: "crew",
+            type: b.dataset.crewAction === "unlock" ? "unlock" : "crew",
             choice: b.dataset.crewAction,
             target: b.dataset.target,
             door: b.dataset.door,

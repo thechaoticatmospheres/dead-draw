@@ -109,6 +109,8 @@ Buy Auto Reload for **6 comps** in the starting-room Survivor’s Club. Empty we
 
 ### Performance update (0.7.2)
 
+Nearby campaign controls, repairs, door purchases/contributions and ammo sharing are accessible with **E / controller A**; T remains optional for crew/career information. Hold **E or F** to revive. During intermission, **N** (or the Ready Up button) toggles your ready vote. All connected, standing survivors ready skips the remaining wait; finish active casino hands first. Otherwise the 90-second deadline still starts the wave automatically.
+
 Static prop batching, reusable combat effects, compact multiplayer snapshots, cached navigation, change-only HUD/audio bookkeeping and losslessly compressed models reduce repeated work without changing gameplay or graphics settings. Older clients and existing saves remain compatible. See [implementation and measurements](docs/PERFORMANCE-UPDATE.md).
 
 Run `node tools/performance-report.js` for repeatable synthetic measurements. Add `?profile=1` to a local game URL for bounded CPU/GPU and resource diagnostics on the canvas. Normal deployment still tests and builds every push to main, then updates GitHub Pages; deploy the same commit to the existing Render service for server changes.
