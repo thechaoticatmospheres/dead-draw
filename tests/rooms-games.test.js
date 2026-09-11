@@ -28,7 +28,7 @@ function game() {
   g.restart();
   return g;
 }
-test("door purchase requires proximity, prerequisite room and sufficient chips; opens once for everyone", () => {
+test("door purchase requires proximity, pools contributions and opens once for everyone", () => {
   const g = game();
   g.addPlayer("b", "B");
   const p = g.players.a;
@@ -39,24 +39,25 @@ test("door purchase requires proximity, prerequisite room and sufficient chips; 
   p.z = 9;
   p.chips = 74;
   g.action("a", { type: "unlock", door: "emerald" });
-  assert.equal(p.chips, 74);
+  assert.equal(p.chips, 0);
+  assert.equal(g.campaign.donations.emerald, 74);
   p.chips = 1000;
   g.action("a", { type: "unlock", door: "emerald" });
-  assert.equal(p.chips, 925);
+  assert.equal(p.chips, 999);
   assert.equal(g.players.b.chips, 25);
   assert.ok(g.snapshot().openRooms.includes("emerald"));
   g.action("a", { type: "unlock", door: "emerald" });
-  assert.equal(p.chips, 925);
+  assert.equal(p.chips, 999);
   p.x = -14;
   p.z = 1.5;
   g.action("a", { type: "unlock", door: "arcade" });
   assert.ok(g.openRooms.includes("arcade"));
-  assert.equal(p.chips, 725);
+  assert.equal(p.chips, 799);
   p.x = -10;
   p.z = -9;
   g.action("a", { type: "unlock", door: "crown-west" });
   assert.ok(g.openRooms.includes("crown"));
-  assert.equal(p.chips, 375);
+  assert.equal(p.chips, 449);
   assert.ok(
     doorOpen(
       DOORS.find((d) => d.id === "shortcut"),

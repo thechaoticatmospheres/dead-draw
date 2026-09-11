@@ -115,7 +115,9 @@ Controls grant your survivor chips/comps, heal/revive and refill ammo, start wav
 
 ### Performance update (0.7.2)
 
-Nearby campaign controls, repairs, door purchases/contributions and ammo sharing are accessible with **E / controller A**; T remains optional for crew/career information. Hold **E or F** to revive. During intermission, **N** (or the Ready Up button) toggles your ready vote. All connected, standing survivors ready skips the remaining wait; finish active casino hands first. Otherwise the 90-second deadline still starts the wave automatically.
+Nearby campaign controls, repairs and ammo sharing are accessible with **E / controller A**; T remains optional for crew/career information. At a door, E directly pays the remaining price or deposits all your available chips. Contributions pool for the crew, and the last payer keeps any excess. Doors work during combat too. Hold **E or F** to revive. During intermission, **N** (or the Ready Up button) toggles your ready vote. All connected, standing survivors ready skips the remaining wait; finish active casino hands first. Otherwise the 90-second deadline still starts the wave automatically.
+
+Jump presentation uses the same smoothed height for the survivor and camera, without triggering running animation from vertical movement. The prize-wheel menu has a labelled rotating disc and pointer, segment ticks and a smooth slowdown to the server-selected result; the in-world wheel uses the same animation. The committed result is revealed during the final 1.5 seconds for landing animation; payout odds and prices are unchanged.
 
 Static prop batching, reusable combat effects, compact multiplayer snapshots, cached navigation, change-only HUD/audio bookkeeping and losslessly compressed models reduce repeated work without changing gameplay or graphics settings. Older clients and existing saves remain compatible. See [implementation and measurements](docs/PERFORMANCE-UPDATE.md).
 

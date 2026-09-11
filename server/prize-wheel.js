@@ -34,6 +34,7 @@ export const prizeWheelMethods = {
     if (p.chips < cost) return;
     p.chips -= cost;
     p.wheelSpin = {
+      id: ++this.serial,
       remaining: 5,
       total: 5,
       cost,

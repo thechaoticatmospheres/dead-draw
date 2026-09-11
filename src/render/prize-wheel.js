@@ -1,8 +1,10 @@
 import * as T from "three";
 import { WHEEL_PADS, WHEEL_PRIZES } from "../../shared/arsenal.js";
 import { label } from "./surfaces.js";
+import { WheelMotion } from "../wheel-motion.js";
 export class PrizeWheelScene {
   constructor(scene) {
+    this.motion = new WheelMotion(WHEEL_PRIZES.length);
     this.pads = WHEEL_PADS.map((p) => {
       const m = new T.Mesh(
         new T.CylinderGeometry(1, 1, 0.24, 32),
@@ -96,14 +98,6 @@ export class PrizeWheelScene {
     this.root.position.set(pad.x, 0, pad.z);
     const p = state.players.find((p) => p.id === myId),
       spin = p?.wheelSpin;
-    if (spin) {
-      this.disc.rotation.z -= dt * (2 + spin.remaining * 3);
-      this.wasSpinning = true;
-    } else if (this.wasSpinning && p?.lastWheel) {
-      this.disc.rotation.z =
-        Math.PI / 2 +
-        ((p.lastWheel.prize + 0.5) * Math.PI * 2) / WHEEL_PRIZES.length;
-      this.wasSpinning = false;
-    }
+    this.disc.rotation.z = -this.motion.update(dt, spin, p?.lastWheel);
   }
 }

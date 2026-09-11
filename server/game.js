@@ -271,6 +271,8 @@ export class Game {
     const door = DOORS.find((d) => d.id === id);
     if (
       !door ||
+      !["break", "combat"].includes(this.phase) ||
+      this.busy(p.id) ||
       door.shortcut ||
       p.down ||
       doorOpen(door, this.openRooms) ||
@@ -281,14 +283,20 @@ export class Game {
     )
       return;
     const room = ROOMS.find((r) => r.id === door.to);
-    if (p.chips < room.cost - (this.campaign.donations[room.id] || 0)) {
+    const remaining = room.cost - (this.campaign.donations[room.id] || 0);
+    const contribution = Math.min(p.chips, remaining);
+    if (contribution <= 0) return;
+    p.chips -= contribution;
+    this.campaign.donations[room.id] =
+      (this.campaign.donations[room.id] || 0) + contribution;
+    this.clearReady();
+    if (contribution < remaining) {
       this.event("notice", {
         player: p.id,
-        text: room.name + " requires " + room.cost + " chips.",
+        text: `${p.name} contributed ${contribution} chips to ${room.name} · ${remaining - contribution} remaining.`,
       });
       return;
     }
-    p.chips -= room.cost - (this.campaign.donations[room.id] || 0);
     this.openRooms.push(room.id);
     this.clearReady();
     this.nav.key = "";
@@ -1019,6 +1027,10 @@ export class Game {
                     remaining: wheelSpin.remaining,
                     total: wheelSpin.total,
                     cost: wheelSpin.cost,
+                    id: wheelSpin.id,
+                    ...(wheelSpin.remaining <= 1.5
+                      ? { landingPrize: wheelSpin.prize }
+                      : {}),
                   },
                 }
               : {}),

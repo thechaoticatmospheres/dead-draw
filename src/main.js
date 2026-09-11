@@ -87,7 +87,7 @@ const clubView = new ClubView(send);
 const crewUI = new CrewUI(send),
   prediction = new MovementPrediction();
 const jukeboxUI = new JukeboxUI(music, send);
-const prizeWheelUI = new PrizeWheelUI(send);
+const prizeWheelUI = new PrizeWheelUI(send, audio);
 const testingUI = new TestingUI(send),
   testingCode = new TestingCode();
 let serviceClick = false;
@@ -139,6 +139,11 @@ function menuRoot() {
   );
 }
 function interact() {
+  const door = nearDoor();
+  if (door) {
+    send({ type: "unlock", door: door.id });
+    return;
+  }
   if (
     state?.players.some(
       (v) =>
@@ -147,7 +152,7 @@ function interact() {
   )
     return;
   const target = nearbyCampaignTarget(me(), state);
-  if (target && target.id !== "power") {
+  if (target && target.id !== "power" && !nearbyWheel(me(), state)) {
     release();
     crewUI.toggle(me(), state, "interactions");
     return;
@@ -174,8 +179,7 @@ function interact() {
     useService(service);
     return;
   }
-  const d = nearDoor();
-  if (d || !nearby()) {
+  if (!nearby()) {
     release();
     crewUI.toggle(me(), state, "interactions");
   } else openCasino();
@@ -703,10 +707,23 @@ function updateHUD() {
         ? "E · RESTORE POWER · 150 CHIPS"
         : "POWER TERMINAL · USE BETWEEN ROUNDS";
   const campaignTarget = nearbyCampaignTarget(p, state);
-  if (campaignTarget && campaignTarget.id !== "power" && !downed)
+  if (
+    campaignTarget &&
+    campaignTarget.id !== "power" &&
+    !downed &&
+    !nearbyWheel(p, state)
+  )
     prompt = `E · ${campaignTarget.name.toUpperCase()}${campaignTarget.cost ? " / " + campaignTarget.cost + " CHIPS" : ""}`;
   else if (door && !p.down && !downed && !nearbyPower(p, state))
     prompt += " · OPEN / CONTRIBUTE";
+  if (door && !p.down && !downed && !door.shortcut) {
+    const room = ROOMS.find((r) => r.id === door.to),
+      remaining = Math.max(
+        0,
+        room.cost - (state.campaign.donations[room.id] || 0),
+      );
+    prompt = `E · ${p.chips >= remaining ? "OPEN" : "CONTRIBUTE " + Math.min(p.chips, remaining) + " CHIPS TO"} ${room.name} · ${remaining} CHIPS REMAINING`;
+  }
   if (
     document.pointerLockElement !== $("world") &&
     controller.mode !== "controller" &&
@@ -883,7 +900,11 @@ $("resume").onclick = () => {
 };
 addEventListener("keydown", (e) => {
   controller.useKeyboard();
-  if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName) && e.code !== "Escape") return;
+  if (
+    ["INPUT", "TEXTAREA"].includes(document.activeElement.tagName) &&
+    e.code !== "Escape"
+  )
+    return;
   if (me() && testingCode.accept(e)) {
     e.preventDefault();
     release();
@@ -1091,6 +1112,7 @@ function frame(now) {
       (controller.mode === "controller" ? controller.input.aim : aim),
   );
   casinoView.animate(state);
+  prizeWheelUI.animate(dt, state, p);
   music.update(state);
   soundscape.update(dt, state, myId, yaw, station?.id, {
     newSnapshot: state !== lastSoundState,

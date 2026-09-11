@@ -362,7 +362,9 @@ export class World {
           p.down ? 0xff606f : 0x82ffce,
         );
 
-        const moving = old.distanceTo(a.position) > 0.005;
+        const moving =
+          Math.hypot(old.x - a.position.x, old.z - a.position.z) > 0.005 &&
+          !(p.height > 0.05);
         this.assets.animate(
           a,
           dt,
@@ -431,7 +433,7 @@ export class World {
       if (p) {
         const a = this.actors.get(myId),
           ray = aimRay(
-            { ...p, x: a.position.x, z: a.position.z },
+            { ...p, x: a.position.x, height: a.position.y, z: a.position.z },
             yaw,
             pitch,
             aim,
