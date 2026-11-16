@@ -10,7 +10,7 @@ function wager(view, g) {
     ? ""
     : `<div class="choice-label">WAGER</div><div class="choice-row">${options.map((n) => `<button data-extra-wager="${n}" class="${amount === n ? "selected" : ""}">${n} ◉</button>`).join("")}</div><button class="deal-button" data-play="${id}" ${view.p.chips < amount ? "disabled" : ""}>${id === "craps" ? "PLACE LINE BET" : "DEAL HAND"} <b>${amount} ◉</b></button>`;
 }
-function die(n) {
+export function die(n) {
   const dots = {
     1: [4],
     2: [0, 8],
@@ -19,7 +19,7 @@ function die(n) {
     5: [0, 2, 4, 6, 8],
     6: [0, 2, 3, 5, 6, 8],
   };
-  return `<div class="casino-die">${Array.from({ length: 9 }, (_, i) => `<i class="${dots[n || 1].includes(i) ? "pip" : ""}"></i>`).join("")}</div>`;
+  return `<div class="casino-die" aria-label="Die showing ${n || 1}">${Array.from({ length: 9 }, (_, i) => `<i class="${dots[n || 1].includes(i) ? "pip" : ""}"></i>`).join("")}</div>`;
 }
 export function extraTable(view, g, cards) {
   if (view.s.id === "poker") {

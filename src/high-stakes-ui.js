@@ -1,3 +1,4 @@
+import { die } from "./extra-casino-ui.js";
 import {
   HIGH_STAKES,
   SIC_BO_BETS,
@@ -49,7 +50,7 @@ export function highStakesTable(v, g, cards) {
             ) + choice("FOLD", "fold", "Forfeit placed bets");
   }
   if (id === "sicbo") {
-    felt = `<div class="sicbo-dice ${busy ? "dice-rolling" : ""}">${[0, 1, 2].map((i) => `<span>${g?.dice?.[i] ? ["", "⚀", "⚁", "⚂", "⚃", "⚄", "⚅"][g.dice[i]] : "◆"}</span>`).join("")}</div><div class="sicbo-grid">${SIC_BO_BETS.map(([key, label]) => `<button data-sicbo="${key}" class="${(g?.bet || e.sicboBet) === key ? "selected" : ""}" ${g ? "disabled" : ""}>${label}<small>${key.startsWith("face") ? "1–3:1" : key === "triple" ? "30:1" : "1:1"}</small></button>`).join("")}</div>`;
+    felt = `<div class="sicbo-dice ${busy ? "dice-rolling" : ""}">${[0, 1, 2].map((i) => die(g?.dice?.[i])).join("")}</div><div class="sicbo-grid">${SIC_BO_BETS.map(([key, label]) => `<button data-sicbo="${key}" class="${(g?.bet || e.sicboBet) === key ? "selected" : ""}" ${g ? "disabled" : ""}>${label}<small>${key.startsWith("face") ? "1–3:1" : key === "triple" ? "30:1" : "1:1"}</small></button>`).join("")}</div>`;
   }
   if (id === "keno") {
     const picks = g?.picks || e.kenoPicks,

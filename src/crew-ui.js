@@ -54,6 +54,20 @@ export class CrewUI {
     if (!root.hidden) this.render(p, state);
   }
   update(p, state, id) {
+    document.body.dataset.phase = state?.phase || "lobby";
+    if (state?.phase === "over") {
+      const extracted = !!state.summary?.extracted;
+      const ending = document.querySelector("#gameover");
+      ending.querySelector(".eyebrow").textContent = extracted
+        ? "EXTRACTION COMPLETE"
+        : "THANK YOU FOR YOUR PATRONAGE";
+      ending.querySelector("h2").innerHTML = extracted
+        ? "You beat<br />the House."
+        : "The house<br />always wins.";
+      document.querySelector("#restart").textContent = extracted
+        ? "PLAY AGAIN"
+        : "RESTART THE RUN";
+    }
     const objective = document.querySelector("#campaignHud");
     objective.hidden =
       !p || state?.phase === "lobby" || state?.phase === "over";
@@ -63,7 +77,8 @@ export class CrewUI {
         "♠ " +
         objectiveText(state.campaign);
     const spectator = document.querySelector("#spectatorHud");
-    spectator.hidden = !p?.down;
+    spectator.hidden = !p?.down || state?.phase === "over" ||
+      !state?.players.some(player => !player.down && !player.offline);
     if (p?.down)
       spectator.textContent =
         "DOWNED · WATCHING YOUR CREW · [ / ] CHANGE SURVIVOR";
@@ -85,7 +100,7 @@ export class CrewUI {
         el.id = "runSummary";
         el.className = "run-summary";
         el.innerHTML = `<b>${state.summary.extracted ? "YOU BEAT THE HOUSE" : "RUN COMPLETE"} · ${state.summary.round} WAVES</b><p>${s.kills} kills · ${s.headshots} headshots · ${s.revives} revives<br>${s.hands} casino hands · ${s.net >= 0 ? "+" : ""}${s.net} casino chips<br>${state.summary.rooms}/12 rooms · ${Math.floor(state.summary.seconds / 60)} minutes</p>`;
-        document.querySelector("#gameover").appendChild(el);
+        document.querySelector("#gameover").insertBefore(el, document.querySelector("#restart"));
       }
     }
   }

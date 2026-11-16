@@ -74,11 +74,14 @@ export class CampaignScene {
           ? "E / A · RESTORE POWER · 150 CHIPS"
           : "E · INTERACT",
         "#e7c482",
-        2.1,
-        0.5,
+        0.78,
+        0.22,
       );
-      text.position.y = 2;
+      text.position.set(0, 1.45, .02);
       group.add(text);
+      const post = new T.Mesh(new T.CylinderGeometry(.025,.025,.32,8),gold);
+      post.position.set(0,1.30,0);
+      group.add(post);
       this.devices[d.id] = group;
       if (d.id.startsWith("trap-")) {
         const ring = new T.Mesh(
@@ -100,7 +103,7 @@ export class CampaignScene {
       (s) => !["slots", "poker", "keno", "hilo"].includes(s.id),
     )) {
       const dealer = assets.character(false, 1);
-      dealer.position.set(station.x, 0, station.z - 0.9);
+      dealer.position.set(station.x, 0, station.z - station.r - 0.22);
       dealer.rotation.y = Math.PI;
       dealer.scale.setScalar(0.95);
       this.root.add(dealer);

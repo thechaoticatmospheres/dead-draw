@@ -32,7 +32,9 @@ export function animateCasinoEnemy(root, dt, z, distance) {
   const d = root.userData,
     kind = d.customEnemy;
   const moving = distance > 0.001 && !z.stun;
-  d.phase += dt * (kind === "crawler" ? 4.4 : kind === "wheelchair" ? 3 : 5.5);
+  d.phase += moving
+    ? distance * (kind === "crawler" ? 7 : kind === "wheelchair" ? 3 : 5.5)
+    : dt * 0.35;
   const t = d.phase,
     swing = moving ? Math.sin(t) : 0,
     attack = z.attack > 0.65 ? Math.sin(((1 - z.attack) * Math.PI) / 0.35) : 0;
@@ -74,7 +76,15 @@ export function animateCasinoEnemy(root, dt, z, distance) {
     p("ArmL").rotation.x += swing * 0.12;
     p("ArmR").rotation.x -= attack * 0.9 + swing * 0.14;
     p("Head").rotation.z = Math.sin(t * 0.5) * 0.06;
-    d.visual.position.y = moving ? Math.abs(swing) * 0.025 : 0;
+    d.visual.position.y = moving ? Math.abs(swing) * 0.018 : 0;
+    if (d.windup) {
+      p("ArmR").rotation.x -= d.windup * 1.25;
+      p("ArmL").rotation.x -= d.windup * 0.7;
+      p("Head").rotation.x -= d.windup * 0.12;
+    }
   }
-  d.visual.rotation.x = z.stun ? -0.12 : 0;
+  const hit = d.impact || 0;
+  d.visual.rotation.x = (z.stun ? -0.08 : 0) - hit * 0.13;
+  if (p("Head")) p("Head").rotation.x -= hit * 0.16;
+  if (p("Body")) p("Body").rotation.y += hit * 0.07;
 }

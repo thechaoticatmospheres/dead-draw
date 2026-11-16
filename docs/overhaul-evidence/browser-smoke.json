@@ -1,0 +1,104 @@
+{
+  "url": "http://127.0.0.1:5191",
+  "checks": [
+    "Two separate browser contexts join the same campaign",
+    "Pointer capture, keyboard movement, firing and reload reach authority",
+    "Unlocked held movement, right-button drag, H/IJKL look and V aiming reach authority",
+    "Shift roll and Space jump/landing are observed in authoritative snapshots",
+    "Actual casino wager settles and private hand is absent from peer stream",
+    "Reload and Resume reconnect the same survivor without duplication",
+    "Both survivors ready and authoritative first wave spawns"
+  ],
+  "errors": [],
+  "screenshots": [
+    "test-results/overhaul-browser/01-title.png",
+    "test-results/overhaul-browser/02-floor.png",
+    "test-results/overhaul-browser/03-unlocked-keyboard-aim.png",
+    "test-results/overhaul-browser/04-floorplan.png",
+    "test-results/overhaul-browser/05-private-casino.png",
+    "test-results/overhaul-browser/06-live-combat.png"
+  ],
+  "unlockedMovement": {
+    "before": {
+      "x": -0.6000000000000001,
+      "z": 7.600000000000007,
+      "yaw": 0,
+      "lastSeq": 253
+    },
+    "after": {
+      "x": 0.8,
+      "z": 7.600000000000007,
+      "yaw": 0,
+      "lastSeq": 265
+    },
+    "heldInput": {
+      "forward": 0,
+      "right": 1,
+      "yaw": 0,
+      "pitch": -0.04,
+      "aim": false,
+      "shoot": false,
+      "sprint": false,
+      "revive": false,
+      "seq": 254
+    },
+    "currentInput": {
+      "forward": 0,
+      "right": 0,
+      "yaw": 0,
+      "pitch": -0.04,
+      "aim": false,
+      "shoot": false,
+      "sprint": false,
+      "revive": false,
+      "seq": 266
+    },
+    "error": null,
+    "browser": {
+      "focused": true,
+      "hidden": false,
+      "activeElement": "BODY",
+      "pointerLock": null,
+      "keyboardLook": false
+    }
+  },
+  "slotApproach": {
+    "target": {
+      "x": -2.4,
+      "z": 7.8
+    },
+    "trace": [
+      {
+        "x": 0.20000000000000007,
+        "z": 7.600000000000007,
+        "yaw": 0.008250000000000016
+      },
+      {
+        "x": -0.5074942849858499,
+        "z": 8.30671906491361,
+        "yaw": 0.78485
+      },
+      {
+        "x": -1.0728695369167345,
+        "z": 7.74072363692493,
+        "yaw": 0.78485
+      },
+      {
+        "x": -1.4973661079082445,
+        "z": 8.164755075873092,
+        "yaw": 0.78485
+      },
+      {
+        "x": -2.062741359839129,
+        "z": 7.598759647884413,
+        "yaw": 0.78485
+      },
+      {
+        "x": -2.345739073833469,
+        "z": 7.881447273849855,
+        "yaw": 0.78485
+      }
+    ]
+  },
+  "status": "passed"
+}

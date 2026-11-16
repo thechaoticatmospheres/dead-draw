@@ -28,8 +28,13 @@ const colors = {
 };
 const material = new T.MeshStandardMaterial({
   vertexColors: true,
-  roughness: 0.72,
-  metalness: 0.12,
+  roughness: 0.83,
+  metalness: 0,
+});
+const metalMaterial = new T.MeshStandardMaterial({
+  vertexColors: true,
+  roughness: 0.3,
+  metalness: 0.78,
 });
 function part(parent, name, x = 0, y = 0, z = 0) {
   const p = new T.Group();
@@ -45,21 +50,36 @@ function shape(p, geo, color, x, y, z, rx = 0, ry = 0, rz = 0) {
   for (let i = 0; i < g.attributes.position.count; i++)
     data.push(c.r, c.g, c.b);
   g.setAttribute("color", new T.Float32BufferAttribute(data, 3));
-  const o = new T.Mesh(g, material);
+  const o = new T.Mesh(
+    g,
+    [colors.gold, colors.grey].includes(color) ? metalMaterial : material,
+  );
   o.position.set(x, y, z);
   o.rotation.set(rx, ry, rz);
   p.add(o);
   return o;
 }
 const box = (p, w, h, d, x, y, z, c, rx = 0, ry = 0, rz = 0) =>
-  shape(p, new T.BoxGeometry(w, h, d), c, x, y, z, rx, ry, rz);
+  shape(
+    p,
+    Math.min(w, h, d) > 0.055
+      ? new RoundedBoxGeometry(w, h, d, 1, Math.min(w, h, d) * 0.18)
+      : new T.BoxGeometry(w, h, d),
+    c,
+    x,
+    y,
+    z,
+    rx,
+    ry,
+    rz,
+  );
 const cyl = (p, r, h, x, y, z, c, rx = 0, rz = 0) =>
-  shape(p, new T.CylinderGeometry(r, r, h, 12), c, x, y, z, rx, 0, rz);
+  shape(p, new T.CylinderGeometry(r, r, h, 24), c, x, y, z, rx, 0, rz);
 function head(root, y, z, old = false, security = false) {
   const h = part(root, "Head", 0, y, z);
   shape(
     h,
-    new RoundedBoxGeometry(0.37, 0.4, 0.34, 2, 0.065),
+    new RoundedBoxGeometry(0.37, 0.4, 0.34, 3, 0.085),
     old ? 0xaeb49b : colors.skin,
     0,
     0,
@@ -76,6 +96,32 @@ function head(root, y, z, old = false, security = false) {
     box(h, 0.055, 0.042, 0.016, x, 0.04, -0.181, colors.eyes);
   box(h, 0.15, 0.065, 0.018, 0, -0.1, -0.178, colors.red);
   box(h, 0.025, 0.043, 0.016, 0.037, -0.097, -0.19, colors.white);
+  // Brow, recessed sockets, ears and a lower jaw retain a stylized face at the same hit volume.
+  for (const x of [-0.085, 0.085]) {
+    box(
+      h,
+      0.083,
+      0.022,
+      0.03,
+      x,
+      0.09,
+      -0.174,
+      colors.dark,
+      0,
+      0,
+      x > 0 ? -0.12 : 0.12,
+    );
+    shape(
+      h,
+      new T.SphereGeometry(0.04, 12, 8),
+      colors.skin,
+      Math.sign(x) * 0.192,
+      -0.01,
+      0,
+    );
+  }
+  box(h, 0.065, 0.09, 0.055, 0, -0.02, -0.177, colors.skin);
+  box(h, 0.22, 0.065, 0.05, 0, -0.16, -0.14, old ? 0x92977f : 0x788269);
   if (security) {
     box(h, 0.44, 0.13, 0.4, 0, 0.23, 0, 0x26364a);
     box(h, 0.43, 0.035, 0.24, 0, 0.19, -0.21, 0x26364a);
@@ -95,6 +141,11 @@ function arm(root, name, x, y, z, sleeve, holding = false) {
   box(a, 0.19, 0.31, 0.2, 0, -0.14, 0, sleeve);
   box(a, 0.16, 0.25, 0.17, 0, -0.37, -0.065, colors.skin);
   box(a, 0.18, 0.14, 0.18, 0, -0.49, -0.13, colors.skin);
+  box(a, 0.196, 0.055, 0.205, 0, -0.26, -0.035, colors.white);
+  cyl(a, 0.018, 0.015, 0.105, -0.255, -0.04, colors.gold, 0, Math.PI / 2);
+  // Split knuckle seam; deliberately no repeated damage pattern.
+  for (const dx of [-0.046, 0.01, 0.064])
+    box(a, 0.008, 0.055, 0.012, dx, -0.51, -0.225, 0x75806b);
   return a;
 }
 function leg(root, name, x, y, z, color) {
@@ -123,6 +174,48 @@ for (const kind of ["dealer", "security", "wheelchair", "crawler"]) {
     } else {
       box(body, 0.09, 0.09, 0.026, -0.15, 1.29, -0.18, colors.gold);
       box(body, 0.09, 0.18, 0.025, 0.18, 0.96, -0.18, colors.red);
+    }
+    // Tailored lapels, cloth piping and buttons carry the employee silhouette.
+    for (const sign of [-1, 1]) {
+      box(
+        body,
+        0.085,
+        0.37,
+        0.03,
+        sign * 0.115,
+        1.22,
+        -0.181,
+        security ? 0x34475a : 0x6d2948,
+        0,
+        0,
+        -sign * 0.16,
+      );
+      box(
+        body,
+        0.006,
+        0.36,
+        0.008,
+        sign * 0.158,
+        1.22,
+        -0.201,
+        security ? 0x87948c : 0xb77e72,
+        0,
+        0,
+        -sign * 0.16,
+      );
+      box(body, 0.13, 0.018, 0.02, sign * 0.16, 0.99, -0.178, colors.dark);
+    }
+    for (const y of [1.04, 1.13, 1.22]) {
+      const button = cyl(
+        body,
+        0.016,
+        0.012,
+        0,
+        y,
+        -0.202,
+        colors.gold,
+        Math.PI / 2,
+      );
     }
     head(root, 1.68, 0, false, security);
     leg(root, "LegL", -0.15, 0.73, 0, colors.dark);
@@ -259,15 +352,24 @@ for (const kind of ["dealer", "security", "wheelchair", "crawler"]) {
   for (const group of groups) {
     const meshes = group.children.filter((o) => o.isMesh);
     if (!meshes.length) continue;
-    const gs = meshes.map((o) => {
+    const byMaterial = new Map();
+    for (const o of meshes) {
       o.updateMatrix();
-      return o.geometry.clone().applyMatrix4(o.matrix);
-    });
-    meshes.forEach((o) => group.remove(o));
-    group.add(new T.Mesh(mergeGeometries(gs), material));
+      if (!byMaterial.has(o.material)) byMaterial.set(o.material, []);
+      byMaterial
+        .get(o.material)
+        .push(o.geometry.clone().applyMatrix4(o.matrix));
+      group.remove(o);
+    }
+    for (const [finish, gs] of byMaterial)
+      group.add(new T.Mesh(mergeGeometries(gs), finish));
   }
   const raw = await new GLTFExporter().parseAsync(root, { binary: true });
   const document = await io.readBinary(new Uint8Array(raw));
+  // These authored bodies use vertex colour; unused UVs waste memory and split the bevel seams.
+  for (const mesh of document.getRoot().listMeshes())
+    for (const primitive of mesh.listPrimitives())
+      primitive.setAttribute("TEXCOORD_0", null);
   await document.transform(dedup(), weld(), quantize());
   const glb = await io.writeBinary(document);
   await writeFile(

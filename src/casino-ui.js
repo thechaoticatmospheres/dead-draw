@@ -18,8 +18,27 @@ import {
   handOptions,
 } from "../shared/casino-rules.js";
 const cardName = (n) => ({ 1: "A", 11: "J", 12: "Q", 13: "K" })[n] || n;
-function cards(cards, hidden = false) {
-  return `<div class="playing-cards">${cards.map((c, i) => (c.rank === 0 ? '<div class="playing-card card-back"><span>GP</span></div>' : `<div class="playing-card ${["♥", "♦"].includes(c.suit) ? "red" : ""}" style="--deal:${i}"><span>${cardName(c.rank)}<small>${c.suit}</small></span><b>${c.suit}</b><span>${cardName(c.rank)}<small>${c.suit}</small></span></div>`)).join("")}</div>`;
+const PIPS = {
+  1: [[50, 50]],
+  2: [[50, 18], [50, 82]],
+  3: [[50, 18], [50, 50], [50, 82]],
+  4: [[24, 18], [76, 18], [24, 82], [76, 82]],
+  5: [[24, 18], [76, 18], [50, 50], [24, 82], [76, 82]],
+  6: [[24, 18], [76, 18], [24, 50], [76, 50], [24, 82], [76, 82]],
+  7: [[24, 18], [76, 18], [50, 34], [24, 50], [76, 50], [24, 82], [76, 82]],
+  8: [[24, 18], [76, 18], [50, 34], [24, 50], [76, 50], [50, 66], [24, 82], [76, 82]],
+  9: [[24, 15], [76, 15], [24, 38], [76, 38], [50, 50], [24, 62], [76, 62], [24, 85], [76, 85]],
+  10: [[24, 15], [76, 15], [50, 26], [24, 38], [76, 38], [24, 62], [76, 62], [50, 74], [24, 85], [76, 85]],
+};
+const suitName = { "\u2660": "spades", "\u2665": "hearts", "\u2663": "clubs", "\u2666": "diamonds" };
+export function cards(hand) {
+  return `<div class="playing-cards">${hand.map((c, i) => {
+    if (c.rank === 0) return '<div class="playing-card card-back" data-face="back" aria-label="Face-down card"><span>GP</span></div>';
+    const face = c.rank <= 10
+      ? `<div class="card-pips ${c.rank === 1 ? "card-ace" : ""}" aria-hidden="true">${PIPS[c.rank].map(([x, y]) => `<i style="left:${x}%;top:${y}%;--pip-turn:${y > 50 ? 180 : 0}deg">${c.suit}</i>`).join("")}</div>`
+      : `<div class="court-face" aria-hidden="true"><i>${c.suit}</i><b>${cardName(c.rank)}</b><i>${c.suit}</i></div>`;
+    return `<div class="playing-card ${["\u2665", "\u2666"].includes(c.suit) ? "red" : ""}" data-face="${c.rank}:${c.suit}" style="--deal:${i}" aria-label="${cardName(c.rank)} of ${suitName[c.suit] || c.suit}"><span>${cardName(c.rank)}<small>${c.suit}</small></span>${face}<span>${cardName(c.rank)}<small>${c.suit}</small></span></div>`;
+  }).join("")}</div>`;
 }
 function wheel() {
   const sectors = WHEEL_ORDER.map((n, i) => {
@@ -62,8 +81,10 @@ export class CasinoView {
     this.state = state;
     this.openedStation = s.id;
     const clock = document.getElementById("casinoDeadline");
-    if (clock)
+    if (clock) {
       clock.textContent = `NEXT WAVE ${Math.ceil(state.timer)}s${state.timer < 7 ? " · NEW WAGERS CLOSED" : ""}`;
+      clock.classList.toggle("deadline-urgent", state.timer <= 10);
+    }
     const g = state.games[s.id];
     const fingerprint = JSON.stringify([
       s.id,
@@ -87,6 +108,25 @@ export class CasinoView {
     if (fingerprint === this.fingerprint) return;
     this.fingerprint = fingerprint;
     const panel = document.getElementById("casino");
+    const body = document.getElementById("casinoBody");
+    // Preserve what is already on the table. A new snapshot must not redeal
+    // held cards or repeatedly announce a settled result.
+    const handKey = `${s.id}:${g?.startedAt ?? "idle"}`;
+    const sameHand = this.presentationHand === handKey;
+    const oldCards = sameHand
+      ? [...body.querySelectorAll(".playing-cards")].map((hand) =>
+          [...hand.querySelectorAll(".playing-card")].map((card) => card.dataset.face),
+        )
+      : [];
+    const oldDetails = new Map(
+      [...body.querySelectorAll("details")].map((node, index) => [index, node.open]),
+    );
+    const focused = body.contains(document.activeElement)
+      ? [...document.activeElement.attributes].find((attr) => attr.name.startsWith("data-"))
+      : null;
+    const oldScroll = panel.scrollTop;
+    const sameResult = sameHand && this.displayPhase === "result";
+    this.presentationHand = handKey;
     panel.dataset.game = s.id;
     panel.classList.toggle(
       "jackpot",
@@ -98,7 +138,7 @@ export class CasinoView {
     let html = `<div class="table-topline"><span>PRIVATE GAME · <b id="casinoDeadline">NEXT WAVE ${Math.ceil(state.timer)}s</b></span><span>YOUR CHIPS <b>◉ ${p.chips}</b></span></div>`;
     if (g && g.player !== p.id) {
       html +=
-        '<div class="table-wait"><span>♠</span><h3>Table occupied</h3><p>Another survivor is finishing a game.<br>The next round will wait.</p></div>';
+        '<div class="table-wait"><span>♠</span><h3>Table occupied</h3><p>Another survivor is finishing a game.<br>The intermission bell still applies.</p></div>';
     } else if (["bonus", "risk"].includes(g?.phase))
       html += bonusPanel(g, p.chips);
     else if (s.id === "slots") html += this.slots(g);
@@ -110,7 +150,27 @@ export class CasinoView {
     if (g?.phase === "result" && g.player === p.id)
       html += this.result(g) + bonusPanel(g, p.chips);
     html += `<div class="comp-strip"><span>♣ ${p.comps || 0} COMPS</span><span>1 COMP / 50 CHIPS WAGERED · SPEND AT THE SURVIVOR’S CLUB</span></div>`;
-    document.getElementById("casinoBody").innerHTML = html;
+    body.innerHTML = html;
+    body.querySelectorAll(".playing-cards").forEach((hand, handIndex) => {
+      let incoming = 0;
+      hand.querySelectorAll(".playing-card").forEach((card, cardIndex) => {
+        const previous = oldCards[handIndex]?.[cardIndex];
+        card.dataset.arrival = previous === card.dataset.face
+          ? "held"
+          : previous === "back" ? "reveal" : "deal";
+        card.style.setProperty("--deal", card.dataset.arrival === "deal" ? incoming++ : 0);
+      });
+    });
+    if (sameHand) body.querySelectorAll("details").forEach((node, index) => {
+      if (node.classList.contains("slot-feature") && (p.slotFeature || p.freeSpins)) node.open = true;
+      else if (oldDetails.has(index)) node.open = oldDetails.get(index);
+    });
+    const settlement = body.querySelector(".settlement");
+    if (settlement) {
+      settlement.dataset.arrival = sameResult ? "held" : "deal";
+      settlement.setAttribute("role", "status");
+    }
+    if (sameHand) panel.scrollTop = oldScroll;
     if (this.displayPhase !== g?.phase && ["bonus", "risk"].includes(g?.phase))
       panel.scrollTop = 0;
     this.displayPhase = g?.phase;
@@ -121,13 +181,17 @@ export class CasinoView {
         )
         .forEach((b) => (b.disabled = true));
     this.bind(g);
-    bindBonus(this, document.getElementById("casinoBody"));
+    bindBonus(this, body);
+    if (focused) {
+      const target = body.querySelector(`[${focused.name}="${CSS.escape(focused.value)}"]`);
+      if (target && !target.disabled) target.focus({ preventScroll: true });
+    }
   }
   slots(g) {
     const lines = g?.lines || this.lines,
       stake = g?.stake || this.stake;
     const reels = `<div class="slot-cabinet theme-${this.extra.slotTheme || "afterlife"}"><div class="slot-marquee">LUCKY AFTERLIFE <span>777</span></div><div class="reel-window">${[0, 1, 2].map((i) => `<div class="physical-reel" data-reel="${i}">${[-1, 0, 1].map((row) => `<span data-row="${row}" class="${row === 0 ? "center-symbol" : ""}">7</span>`).join("")}</div>`).join("")}<div class="payline center"></div>${lines === 3 ? '<div class="payline upper"></div><div class="payline lower"></div>' : ""}</div><div class="slot-readout"><span>${lines} PAYLINE${lines === 3 ? "S" : ""}</span><span>${stake} ◉ / LINE</span><span>${g?.phase === "playing" ? "REELS SPINNING" : g?.phase === "result" ? g.result : "INSERT CHIPS"}</span></div></div>`;
-    const feature = `<div class="slot-feature"><span class="eyebrow">NEON RUSH · EVERY 7 PAID SPINS</span><p>${(this.p.paidSpins || 0) % 7}/7 paid spins · Bonus pulls use the 25-chip center-line paytable.</p>${this.p.slotFeature ? `<div class="choice-row"><button data-slot-feature="bank" ${g ? "disabled" : ""}>BANK 60 CHIPS</button><button data-slot-feature="spins" ${g ? "disabled" : ""}>TAKE 3 FREE SPINS</button></div>` : ""}${this.p.freeSpins ? `<button data-free-spin ${g ? "disabled" : ""}>NEON RUSH · ${this.p.freeSpins} FREE PULLS LEFT</button>` : ""}<div class="choice-row"><button data-slot-theme="afterlife">AFTERLIFE</button><button data-slot-theme="neon">NEON RUSH</button><button data-slot-theme="gold">GILDED PALM</button></div></div>`;
+    const feature = `<details class="slot-feature" ${this.p.slotFeature || this.p.freeSpins ? "open" : ""}><summary>NEON RUSH · ${(this.p.paidSpins || 0) % 7}/7 PAID SPINS · CABINET FINISH</summary><p>${(this.p.paidSpins || 0) % 7}/7 paid spins · Bonus pulls use the 25-chip center-line paytable.</p>${this.p.slotFeature ? `<div class="choice-row"><button data-slot-feature="bank" ${g ? "disabled" : ""}>BANK 60 CHIPS</button><button data-slot-feature="spins" ${g ? "disabled" : ""}>TAKE 3 FREE SPINS</button></div>` : ""}${this.p.freeSpins ? `<button data-free-spin ${g ? "disabled" : ""}>NEON RUSH · ${this.p.freeSpins} FREE PULLS LEFT</button>` : ""}<div class="choice-row"><button data-slot-theme="afterlife">AFTERLIFE</button><button data-slot-theme="neon">NEON RUSH</button><button data-slot-theme="gold">GILDED PALM</button></div></details>`;
     return (
       feature +
       `<div class="progressive-strip"><div><span>THE GILDED VAULT</span><b>◉ ${this.state.jackpot || 250}</b></div><div class="vault-stamps">${[0, 1, 2, 3, 4].map((i) => `<i class="${i < (this.p.vaultSpins || 0) ? "filled" : ""}">◆</i>`).join("")}<small>Every 5 paid spins opens the vault · ${this.p.vaultSpins || 0}/5</small></div></div><div class="casino-layout slots-layout"><div>${reels}${!g ? `<div class="choice-label">PAYLINES</div><div class="choice-row">${[1, 3].map((n) => `<button data-lines="${n}" class="${this.lines === n ? "selected" : ""}">${n === 1 ? "CENTER LINE" : "ALL 3 LINES"}</button>`).join("")}</div><div class="choice-label">CHIPS PER LINE</div><div class="choice-row">${[25, 50, 100].map((n) => `<button data-stake="${n}" class="${this.stake === n ? "selected" : ""}">${n} ◉</button>`).join("")}</div><button class="deal-button" data-play="slots" ${this.p.chips < lines * stake ? "disabled" : ""}>PULL THE LEVER <b>${lines * stake} ◉</b></button>` : ""}<p class="table-note">${g?.protection ? "A third losing spin activated your safety ammo." : `Safety net: ${Math.min(2, this.p.losses)} / 2 losses. A third losing spin gives 36 rounds.`}</p></div><div class="paytable"><span class="eyebrow">THE PAYTABLE</span><p>Matches run left to right on each active horizontal line.</p>${SLOT_PAYTABLE.map((r) => `<div><strong>${r.pattern}</strong><span>${r.detail}<small>${r.chance} per line</small></span></div>`).join("")}<p>20 stops per reel. Each stop is equally likely. Higher stakes multiply chips and ammo; weapon quality stays the same. Safety ammo stays fixed.</p></div></div>`
@@ -258,7 +322,7 @@ export class CasinoView {
       this.send({ type: "collect", station: this.s.id });
     });
   }
-  animate(state) {
+  animate(state, presentationTime = performance.now() / 1000) {
     if (document.getElementById("casino").hidden || !this.s) return;
     const shared =
       this.crewMode === this.s.id ? state?.crewTables?.[this.s.id] : null;
@@ -268,14 +332,22 @@ export class CasinoView {
             phase: shared.phase === "rolling" ? "playing" : shared.phase,
           }
         : state?.games[this.s.id],
-      now = performance.now() / 1000;
+      now = presentationTime;
+    const dt = this.lastPresentationTime === undefined ? 1 / 60 : Math.max(0, Math.min(.1, now - this.lastPresentationTime));
+    this.lastPresentationTime = now;
     if (this.s.id === "slots") {
       document.querySelectorAll("[data-reel]").forEach((el) => {
         const i = Number(el.dataset.reel),
           stop = g?.reelStops?.[i],
           spinning = g?.phase === "playing" && stop === null,
           index = spinning ? Math.floor(now * (17 - i * 2)) % 20 : (stop ?? 14);
+        const wasSpinning = el.classList.contains("rolling");
         el.classList.toggle("rolling", spinning);
+        if (wasSpinning && !spinning) {
+          el.classList.remove("reel-settled");
+          void el.offsetWidth;
+          el.classList.add("reel-settled");
+        }
         el.querySelectorAll("[data-row]").forEach((cell) => {
           const symbol =
             SLOT_REELS[i][(index + Number(cell.dataset.row) + 20) % 20];
@@ -314,7 +386,7 @@ export class CasinoView {
           angle =
             this.landing.start +
             (this.landing.end - this.landing.start) * (1 - (1 - f) ** 3);
-        } else angle = (this.rotation || 0) + 12;
+        } else angle = (this.rotation || 0) + 720 * dt;
       } else
         angle =
           g?.phase === "result"

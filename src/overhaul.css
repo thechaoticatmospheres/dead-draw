@@ -1,0 +1,209 @@
+/* Gilded Palm: printed ivory, brass rules and dark lacquer. All assets are local. */
+:root { --gold: #e4c58d; --mint: #b9d8bf; --ink: #111915; --muted: #b6b6a8; }
+body { color: #f3eddf; font-family: "Segoe UI", Arial, sans-serif; }
+button, input, select { border-radius: 2px; }
+button { transition: background .15s, border-color .15s, transform .15s; }
+button:active:not(:disabled) { transform: translateY(1px); }
+button:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px solid #f6d997; outline-offset: 4px; }
+#vignette { box-shadow: inset 0 0 130px #03070555; background: linear-gradient(0deg, #060a0780, transparent 19%, transparent 80%, #060a0750); }
+#welcome.screen { padding: clamp(26px, 5vh, 62px) 5.4vw; background: linear-gradient(90deg, #080e0df2 0%, #080e0de8 21%, #080e0d75 39%, #080e0d00 65%); overflow: auto; }
+#welcome .brand { width: 430px; max-width: 43vw; position: relative; z-index: 1; }
+#welcome .welcome-kicker { font-size: 9px; letter-spacing: 3px; display: flex; gap: 11px; align-items: center; color: #cebd98; }
+.welcome-kicker i { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #dbbd7a; box-shadow: 0 0 9px #dbbd7a55; }
+#welcome h1 { font-family: Impact, "Arial Narrow", sans-serif; font-size: clamp(95px, 8.2vw, 154px); line-height: .86; letter-spacing: 1px; font-weight: 400; margin: 34px 0 19px; text-shadow: 0 3px 3px #0002; }
+#welcome h1 em { color: #ddc08b; }
+#welcome .diamond { font: 32px Georgia, serif; right: -48px; top: 19px; color: #dec28e; }
+#welcome .rule { position: relative; height: 1px; width: 286px; background: linear-gradient(90deg, #cdb583a0, #cdb58310); margin: 24px 0; }
+#welcome .rule span { display: block; position: absolute; left: 0; top: -5px; font-size: 9px; padding-right: 10px; background: #080e0d; }
+#welcome .tagline { font: 27px/1.18 Georgia, "Times New Roman", serif; text-transform: none; letter-spacing: -.5px; margin-bottom: 15px; }
+#welcome .tagline em { font-style: italic; color: #dfc696; }
+#welcome .intro { color: #c2c4bb; font-size: 12px; line-height: 1.7; margin: 0; }
+.welcome-actions { margin-top: 25px; width: 340px; max-width: 100%; }
+.welcome-actions .primary { width: 100%; text-align: left; padding: 16px 19px; background: linear-gradient(100deg, #e3c996, #cfaf72); color: #1c241d; border: 1px solid #eed7a5; box-shadow: 0 3px 0 #76603c; }
+.welcome-actions small { display: block; color: #9fa59c; font-size: 9px; line-height: 1.5; margin-top: 11px; }
+#welcome .entry { margin-top: 23px; max-width: 340px; gap: 9px 12px; }
+#welcome .entry label { color: #afad9b; font-size: 8px; letter-spacing: 1.6px; }
+#welcome input { background: #101a17; border: 1px solid #b1a2854a; border-bottom-color: #a28b5c88; padding: 9px 10px; margin-top: 6px; color: #e5e8de; }
+#welcome #enter { padding: 12px 15px; background: #15221dc9; color: #e6cf9f; border-color: #b499625c; font-size: 10px; text-align: left; box-shadow: none; }
+#welcome #enter:hover { background: #24352a; border-color: #d7bb82; }
+#welcome #resumeRun { grid-column: 1 / -1; width: 100%; margin: 0; font-size: 10px; padding: 9px; background: #142019; border-color: #a9956140; }
+#welcome #connection { font-size: 8px; line-height: 1.6; letter-spacing: 1px; margin-top: 4px; }
+#welcome .welcome-aside { right: 5.4vw; bottom: 15vh; text-align: right; pointer-events: none; text-shadow: 0 2px 10px #000; }
+.attract-label { font-size: 8px; letter-spacing: 2.8px; color: #e3dac3; display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+.attract-label i { width: 5px; height: 5px; border-radius: 50%; background: #d6aa6a; box-shadow: 0 0 8px #d6aa6a; }
+#welcome .welcome-aside p { font: 34px/1.1 Georgia, serif; letter-spacing: 1px; color: #f0e4c9; margin: 17px 0; }
+#welcome .welcome-aside p em { font-style: italic; font-size: 29px; color: #cfb583; }
+#welcome .welcome-aside small { font-size: 8px; color: #cfccc0; letter-spacing: 3px; }
+.welcome-sound { position: absolute; top: 32px; right: 5.4vw; display: flex; align-items: center; gap: 12px; }
+.welcome-sound button { background: #0b1712df; color: #ead4a4; border: 1px solid #cbb27870; padding: 10px 15px; font-size: 9px; letter-spacing: 1.5px; }
+.welcome-sound span { font-size: 8px; color: #c7c9bb; max-width: 136px; line-height: 1.5; text-shadow: 0 2px 3px #000; }
+#welcome footer { left: 5.4vw; right: 5.4vw; bottom: 22px; font-size: 8px; border-color: #cbbb8d30; color: #a9afa0; }
+/* Compact information at the picture's edges. */
+#hud .round-block { left: 28px; top: 26px; }
+#hud .round-block .eyebrow { font-size: 8px; letter-spacing: 2px; color: #e1cfab; }
+#hud .round-block > div { gap: 12px; margin-top: 4px; }
+#hud .round-block b { font: 42px/1.1 Impact, "Arial Narrow", sans-serif; font-weight: 400; }
+#hud #phase { font-size: 9px; letter-spacing: 1.8px; max-width: 180px; }
+#hud #team { font-size: 9px; color: #c5d1c4; }
+#hud .room-block { right: 28px; top: 26px; gap: 8px; }
+#hud .room-block button { background: #111b16df; font-size: 8px; letter-spacing: 1px; padding: 7px 9px; border-color: #bda7794d; }
+#hud .vitals { width: 210px; left: 28px; bottom: 42px; padding: 12px 14px 10px 0; text-shadow: 0 1px 7px #000; }
+#hud .health-row { font-size: 18px; }
+#hud .health-row small { font-size: 8px; letter-spacing: 1.1px; }
+#hud .health-track { height: 3px; margin-top: 8px; background: #e2dfc233; }
+#hud .health-track i { background: #c1d9b5; }
+#hud #chips { font: 25px/1.1 Georgia, serif; margin-top: 11px; }
+#hud #chips small { font: 8px "Segoe UI", sans-serif; letter-spacing: 1.2px; }
+#hud .weapon { right: 28px; bottom: 52px; text-shadow: 0 1px 8px #000; }
+#hud .weapon .eyebrow { font-size: 9px; letter-spacing: 1.8px; }
+#hud .weapon b { font: 51px/1.15 Impact, "Arial Narrow", sans-serif; font-weight: 400; }
+#hud .weapon #reserve { font: 23px Georgia, serif; color: #d0d1c4; }
+#hud .weapon small { font-size: 8px; letter-spacing: 1px; }
+#hud #hint { bottom: 18px; font-size: 8px; letter-spacing: .65px; text-shadow: 0 1px 4px #000; color: #bec5b8; }
+#hud #prompt { bottom: 21%; padding: 10px 17px; background: #111b15ed; border-left: 2px solid #d4b979; color: #f2ead7; font-size: 11px; line-height: 1.5; max-width: 460px; }
+#hud #announcement { top: 18%; font: 27px/1.2 Georgia, serif; letter-spacing: 2px; }
+#demoTools { position: fixed; left: 50%; top: auto; bottom: 45px; transform: translateX(-50%); display: flex; align-items: center; gap: 8px; max-width: min(520px, 50vw); pointer-events: auto; z-index: 4; }
+#demoBadge { font-size: 8px; letter-spacing: 1.4px; color: #dfca9c; background: #0d1611de; border: 1px solid #bd9c5d55; padding: 8px 12px; }
+#exitDemo { font: 8px "Segoe UI", sans-serif; letter-spacing: 1px; background: #132019ef; color: #e5ddc7; padding: 8px 10px; border: 1px solid #bda77955; }
+body[data-phase="over"] #hud > :not(#demoTools),
+body[data-phase="over"] #demoBadge { display: none !important; }
+body[data-phase="over"] #demoTools { bottom: 28px; }
+#gameover .run-summary { margin: 18px 0 22px; }
+#gameover #restart { width: 100%; }
+#intermission { right: 28px; top: 83px; width: 255px; padding: 12px 14px; background: #101b16ec; border-left: 1px solid #d9bc7d; box-shadow: none; }
+#intermission .eyebrow { font-size: 8px; letter-spacing: 1.6px; }
+#intermission p { font-size: 10px; margin: 7px 0; }
+#intermission .primary { padding: 10px 12px; margin-top: 10px; font-size: 9px; }
+/* Service desks and tables have an opaque, lacquered surround, not glass UI. */
+body #casino, body #club, body .small-panel, body .crew-panel, body .jukebox-panel, body .wheel-card { background: #111e18; border: 1px solid #ad915c; border-radius: 2px; box-shadow: 0 24px 64px #0009, inset 0 0 0 4px #111e18, inset 0 0 0 5px #b69a5c22; }
+body #casino { width: min(820px, 92vw); padding: 25px 28px 20px; max-height: 87vh; }
+body #casino h2, body .small-panel h2, body .crew-panel h2, body .jukebox-panel h2 { font: 34px/1.12 Georgia, serif; text-transform: none; color: #e7d4ab; letter-spacing: -.5px; }
+body #casino .close, body .small-panel .close { width: 28px; height: 28px; font-size: 19px; color: #d5c7aa; }
+body #casino .fineprint { font-size: 7px; letter-spacing: 1.1px; padding-top: 12px; }
+#casinoBody .table-topline { position: sticky; top: -25px; z-index: 4; background: #111e18; padding: 12px 0; font-size: 8px; letter-spacing: .8px; color: #b9c3b4; }
+#casinoBody .table-topline b { font: 15px Georgia, serif; color: #ead7ad; }
+#casinoBody .table-topline .deadline-urgent { color: #f1aa8e; }
+#casinoBody .comp-strip { color: #b4c4b0; font-size: 8px; }
+#casinoBody button { border-color: #9c8d5f66; border-radius: 2px; background: #203a2d; }
+#casinoBody button:hover:not(:disabled) { background: #304d39; border-color: #dbc48b; }
+#casinoBody .deal-button { background: linear-gradient(105deg, #dfc58f, #c8a86a); color: #142219; box-shadow: inset 0 1px #ffeac455, 0 3px 0 #6e5934; }
+#casinoBody .deal-button:hover:not(:disabled) { background: #ebd4a3; }
+#casinoBody .choice-row button { border-color: #aaa17d4d; background: #18291f; }
+#casinoBody .choice-row .selected { color: #eed29a; border-color: #ceb478; background: #3e4228; }
+#casinoBody .slot-cabinet { border-radius: 14px 14px 5px 5px; padding: 13px; border: 1px solid #e9ce8f; background: linear-gradient(110deg, #55412d, #bf9d62 3%, #ebcf8a 6%, #967947 10%, #40352a 49%, #b29763 91%, #e1c58b 95%, #6f5735); box-shadow: inset 0 0 0 3px #352c1d, 0 8px 0 #1b2118, 0 14px 18px #0006; }
+#casinoBody .slot-marquee { color: #e9cc98; background: linear-gradient(#263128, #101f18); border-color: #b7a16b99; box-shadow: inset 0 0 18px #d3a75912; font: 14px Georgia, serif; letter-spacing: 2px; padding: 10px 4px; }
+#casinoBody .slot-marquee > span { font: italic 36px Georgia, serif; letter-spacing: 13px; margin-top: 4px; text-shadow: 0 1px #fff3, 0 0 10px #dfae5440; }
+#casinoBody .reel-window { border: 5px solid #23251c; border-radius: 3px; box-shadow: 0 0 0 1px #e3cb9270; gap: 3px; }
+#casinoBody .reel-window:after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(115deg, #fff5 0%, #fff0 12%, #fff0 65%, #fff2 66%, #fff0 77%); box-shadow: inset 0 12px 17px #0005, inset 0 -12px 17px #0005; }
+#casinoBody .physical-reel { background: linear-gradient(#858575, #eee5ca 28%, #fff5da 51%, #ede4ca 72%, #898878); }
+#casinoBody .physical-reel span { font-family: Georgia, serif; }
+#casinoBody .slot-readout { background: #141c15; color: #e9cf91; border: 1px inset #89714b; padding: 10px 6px; }
+#casinoBody .slot-feature { padding: 10px 0; border-top: 1px solid #b2996044; margin: 16px 0 6px; background: none; }
+#casinoBody .slot-feature summary { color: #c6b68c; cursor: pointer; font-size: 9px; letter-spacing: .7px; }
+#casinoBody .slot-feature p { font-size: 10px; }
+#casinoBody .progressive-strip { padding: 9px 12px; background: #263221; border: 1px solid #b9a06a5c; margin-bottom: 16px; }
+#casinoBody .blackjack-felt, #casinoBody .craps-felt, #casinoBody .betting-felt, #casinoBody .high-stakes-felt { background: repeating-linear-gradient(0deg, #ffffff03 0, #ffffff03 1px, transparent 1px, transparent 3px), repeating-linear-gradient(90deg, #00000005 0, #00000005 1px, transparent 1px, transparent 3px), radial-gradient(ellipse at 45% 40%, #30583b, #193b29 80%); border-color: #6b4d31; box-shadow: inset 0 1px 0 #d7b980, inset 0 0 0 2px #332617, inset 0 12px 22px #0003, 0 7px 0 #3e2c1d, 0 12px 16px #0005; }
+#casinoBody .felt-lettering { font: 16px Georgia, serif; letter-spacing: 2px; color: #d4be8b; }
+#casinoBody .playing-cards { perspective: 800px; flex-wrap: wrap; max-width: 100%; row-gap: 10px; }
+#casinoBody .player-hands { align-items: flex-start; }
+#casinoBody .player-hands .hand-zone { flex: 1; min-width: 0; }
+#casinoBody .playing-card { background: linear-gradient(125deg, #fffaf0, #ece6d6); color: #24332b; border: 1px solid #fcf8e9; border-radius: 5px; box-shadow: 0 1px 0 #a99f87, 0 2px 0 #e1d8c1, 0 6px 8px #0005; animation: none; transform-origin: 50% 80%; }
+#casinoBody .playing-card.red { background: linear-gradient(125deg, #fffaf0, #ece6d6); color: #a6383b; }
+#casinoBody .playing-card[data-arrival="deal"] { animation: palm-deal .32s cubic-bezier(.15,.7,.22,1) both; animation-delay: calc(var(--deal, 0) * 55ms); }
+#casinoBody .playing-card[data-arrival="reveal"] { animation: palm-reveal .3s ease-out both; }
+#casinoBody .playing-card[data-arrival="held"] { animation: none; }
+#casinoBody .playing-card > b { font-size: 31px; font-family: Georgia, serif; }
+#casinoBody .card-pips { position: absolute; inset: 15px 11px; }
+#casinoBody .card-pips i { position: absolute; display: block; transform: translate(-50%, -50%) rotate(var(--pip-turn)); font: 15px/1 Georgia, serif; font-style: normal; }
+#casinoBody .card-pips.card-ace i { font-size: 31px; }
+#casinoBody .court-face { position: absolute; inset: 17px 12px; border: 1px solid currentColor; display: grid; place-items: center; background: repeating-linear-gradient(45deg, #a08d6011 0 1px, transparent 1px 3px); }
+#casinoBody .court-face b { font: 24px/.9 Georgia, serif; }
+#casinoBody .court-face i { font: 11px/1 Georgia, serif; font-style: normal; }
+#casinoBody .court-face i:last-child { transform: rotate(180deg); }
+#casinoBody .playing-card.card-back { border: 4px solid #e9dfc7; background: repeating-linear-gradient(45deg, #b9a77b22 0 1px, transparent 1px 5px), repeating-linear-gradient(-45deg, #b9a77b22 0 1px, transparent 1px 5px), #284839; }
+#casinoBody .playing-card.card-back span { color: #d4c18e; border: 1px solid #c4af7744; margin: 3px; height: calc(100% - 6px); }
+#casinoBody .casino-chip, #casinoBody .placed-chip { border: 3px dashed #f6edd2; background: radial-gradient(circle, #d8c69a 0 51%, #a68a50 53% 64%, #4c6650 66%); color: #243b2b; font: 600 12px Georgia, serif; box-shadow: 0 2px 0 #e0d4ab, 0 4px 0 #4d5c42, 0 5px 0 #a89c7d, 0 8px 6px #0006; }
+#casinoBody .placed-chip { border-width: 2px; font-size: 8px; box-shadow: 0 2px 0 #567157, 0 3px 0 #ddcfa9, 0 5px 4px #0006; animation: palm-chip .22s ease-out; }
+#casinoBody .casino-chip.selected { outline-color: #e9d4a3; outline-offset: 4px; }
+#casinoBody .casino-die { background: linear-gradient(145deg, #fffaf0, #d6ccad); border-radius: 9px; box-shadow: inset 1px 1px 0 #fff, inset -2px -3px 4px #94887080, 2px 7px 0 #817157, 5px 10px 10px #0005; }
+#casinoBody .casino-die .pip { background: #273a2e; box-shadow: inset 0 1px 2px #000; }
+#casinoBody .roulette-wheel { border: 8px solid #9c7b44; background: repeating-conic-gradient(#50382a 0deg 3deg, #593f2e 3deg 6deg); box-shadow: 0 0 0 1px #edd5a3, inset 0 0 0 2px #dbc18a, inset 0 0 0 8px #3c2b20, 0 7px 0 #36291c, 0 15px 22px #0006; }
+#casinoBody .wheel-hub { background: radial-gradient(circle at 38% 28%, #f0dca7, #c0a268 55%, #73603d); box-shadow: 0 0 0 7px #453323, 1px 8px 8px #0006; }
+#casinoBody .roulette-ball i { background: radial-gradient(circle at 30% 25%, #fffef4, #e6dfc3 60%, #ada68c); width: 9px; height: 9px; box-shadow: 1px 2px 3px #000a; }
+#casinoBody .settlement { border-top-color: #d0b77770; background: linear-gradient(90deg, #c7aa5720, transparent); padding: 15px 12px; margin-top: 18px; }
+#casinoBody .settlement strong { font: 21px Georgia, serif; }
+#casinoBody .settlement[data-arrival="deal"] { animation: palm-settle .3s ease-out both; }
+#casinoBody .reel-settled { animation: palm-reel-stop .18s ease-out; }
+#casinoBody .sicbo-dice { gap: 22px; padding: 16px 0; }
+#casinoBody .sicbo-dice .casino-die:nth-child(3) { transform: rotate(-5deg); }
+#casinoBody .keno-board button { background: #292334; border-color: #b399bb55; color: #e0d5e3; }
+#casinoBody .keno-board .selected { background: #9c7aab; border-color: #d8c1e0; color: #130f19; }
+#casinoBody .keno-board .drawn { box-shadow: inset 0 0 0 2px #e3c58c; color: #e5c895; }
+#casinoBody .keno-board .drawn.selected { background: #d7bc7c; color: #18281c; box-shadow: inset 0 0 0 2px #f8e8be; }
+#casinoBody .sicbo-grid .selected, #casinoBody .hold-card.held { border-color: #ddc182; background: #3a4b32; color: #eddbb2; }
+#casinoBody .hold-card { border-color: transparent; background: transparent; }
+#casinoBody .hold-card:hover:not(:disabled) { border-color: #bfa773; background: #d5c38112; }
+body .wheel-panel { background: #03080665; place-items: center end; padding-right: 5vw; }
+body .wheel-card { width: min(600px, 88vw); padding: 25px 30px; }
+body .wheel-card h1 { font: 31px Georgia, serif; letter-spacing: 1px; }
+body #help .accessibility-guide { border-top: 1px solid #b29c6444; padding-top: 14px; margin-top: 14px; }
+body #help summary { color: #d9c18f; cursor: pointer; font-size: 12px; }
+body #help .accessibility-guide label { display: flex; gap: 10px; align-items: center; font-size: 12px; }
+body #help .accessibility-guide input { width: 16px; margin: 0; accent-color: #d7b87c; }
+#toast { background: #142019f5; border-color: #b9a06a66; color: #e9d4a4; }
+@keyframes palm-deal { from { opacity: 0; transform: translate(38px, -27px) rotate(9deg) scale(.92); } to { opacity: 1; transform: none; } }
+@keyframes palm-reveal { from { transform: rotateY(78deg); opacity: .5; } to { transform: rotateY(0); opacity: 1; } }
+@keyframes palm-chip { from { opacity: .3; margin-top: -13px; } to { opacity: 1; margin-top: 0; } }
+@keyframes palm-settle { from { opacity: .3; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+@keyframes palm-reel-stop { 0% { transform: translateY(4px); } 50% { transform: translateY(-1px); } 100% { transform: translateY(0); } }
+@media (max-height: 840px) {
+  #welcome.screen { padding-top: 25px; }
+  #welcome h1 { font-size: clamp(85px, 8vw, 120px); margin-top: 22px; margin-bottom: 14px; }
+  #welcome .rule { margin: 18px 0; }
+  #welcome .tagline { font-size: 24px; margin-bottom: 11px; }
+  .welcome-actions { margin-top: 17px; }
+  #welcome .entry { margin-top: 15px; gap: 7px 12px; }
+  #welcome footer { bottom: 14px; padding-top: 10px; }
+}
+@media (max-width: 1000px) {
+  #welcome .brand { max-width: 50vw; }
+  #welcome .welcome-aside { right: 4vw; }
+  #welcome .welcome-aside p { font-size: 25px; }
+  #welcome .welcome-aside p em { font-size: 22px; }
+  .welcome-sound span { display: none; }
+  #demoTools { top: auto; bottom: 48px; max-width: 46vw; }
+}
+@media (max-width: 700px) {
+  #welcome.screen { background: linear-gradient(90deg, #080e0df5 0%, #080e0dba 65%, #080e0d55); padding: 25px 6vw 78px; }
+  #welcome .brand { max-width: 88vw; width: 340px; }
+  #welcome h1 { font-size: 100px; }
+  #welcome .welcome-kicker { font-size: 7px; letter-spacing: 2px; }
+  #welcome .welcome-aside { display: none; }
+  .welcome-sound { top: auto; bottom: 50px; left: 6vw; right: auto; }
+  .welcome-sound button { padding: 8px 12px; font-size: 8px; }
+  #hud .round-block { top: 15px; left: 16px; }
+  #hud .room-block { top: 15px; right: 12px; gap: 4px; }
+  #hud .vitals { left: 16px; width: 165px; }
+  #hud .weapon { right: 16px; }
+  #intermission { right: 14px; top: 75px; width: 225px; }
+  #hud #prompt { max-width: 80vw; bottom: 25%; font-size: 10px; }
+  body #casino { width: 94vw; max-height: 92vh; padding: 19px 17px; }
+  #casinoBody .table-topline { top: -19px; gap: 12px; }
+  #casinoBody .table-topline b { font-size: 12px; margin-left: 3px; }
+  #demoTools { left: 50%; top: auto; bottom: 48px; max-width: 48vw; transform: translateX(-50%); }
+  #demoBadge { font-size: 7px; letter-spacing: .6px; padding: 6px; }
+}
+@media (max-height: 680px) and (min-width: 701px) {
+  #welcome h1 { font-size: 82px; margin: 18px 0 12px; }
+  #welcome .rule { margin: 13px 0; }
+  #welcome .tagline { font-size: 21px; }
+  #welcome .intro { font-size: 10px; }
+  .welcome-actions { margin-top: 12px; }
+  .welcome-actions .primary { padding: 12px 16px; }
+  #welcome .entry { margin-top: 12px; }
+  #welcome input { padding: 7px 9px; }
+  #welcome footer { position: fixed; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #casinoBody *, #welcome *, #hud *, .wheel-panel * { animation: none !important; transition: none !important; }
+}

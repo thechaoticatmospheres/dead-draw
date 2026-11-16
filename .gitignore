@@ -15,3 +15,6 @@ Thumbs.db
 *.pem
 *.key
 /backups/
+/repository-history.bundle
+__pycache__/
+/assets/source/bake/*.blend1

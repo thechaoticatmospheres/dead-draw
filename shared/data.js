@@ -325,18 +325,22 @@ export function moveCircle(entity, dx, dz, r = 0.4, open = ["atrium"]) {
 }
 // Same shoulder-camera origin on client and server, including furniture avoidance.
 export function aimRay(p, yaw, pitch, aim, open = ["atrium"]) {
-  const lift = p.height || 0;
+  const lift = p.height || 0,
+    eyeY = 1.65 + lift;
   const dir = {
     x: -Math.sin(yaw) * Math.cos(pitch),
     y: Math.sin(pitch),
     z: -Math.cos(yaw) * Math.cos(pitch),
   };
   if (aim && opticFor(p))
-    return { dir, origin: { x: p.x, y: 1.65 + lift, z: p.z } };
+    return { dir, origin: { x: p.x, y: Math.min(4.8, eyeY), z: p.z } };
   const back = aim ? 2.4 : 4.2,
     dx = -dir.x * back + Math.cos(yaw) * 0.65,
     dz = -dir.z * back - Math.sin(yaw) * 0.65,
-    dy = -dir.y * back;
+    // Test the same segment that will be rendered. Clamping height only after
+    // wall checks could make the test ray pass below a wall while the actual
+    // camera, raised back to floor height, ended up on its other side.
+    dy = Math.max(0.5 - eyeY, Math.min(4.8 - eyeY, -dir.y * back));
   let fraction = 1;
   const a = dx * dx + dz * dz;
   for (const o of OBSTACLES) {
@@ -348,11 +352,11 @@ export function aimRay(p, yaw, pitch, aim, open = ["atrium"]) {
       disc = b * b - 4 * a * c;
     if (disc < 0 || a < 0.001) continue;
     const t = (-b - Math.sqrt(disc)) / (2 * a);
-    if (t > 0 && t < fraction && 1.65 + dy * t < o.h + 0.15)
+    if (t > 0 && t < fraction && eyeY + dy * t < o.h + 0.15)
       fraction = Math.max(0.08, t - 0.05);
   }
   const wallFraction = barrierDistance(
-    { x: p.x, y: 1.65, z: p.z },
+    { x: p.x, y: eyeY, z: p.z },
     { x: dx, y: dy, z: dz },
     open,
     0.18,
@@ -365,7 +369,7 @@ export function aimRay(p, yaw, pitch, aim, open = ["atrium"]) {
         BOUNDS.minX + 0.2,
         Math.min(BOUNDS.maxX - 0.2, p.x + dx * fraction),
       ),
-      y: Math.max(0.5, 1.65 + lift + dy * fraction),
+      y: Math.max(0.5, Math.min(4.8, eyeY + dy * fraction)),
       z: Math.max(
         BOUNDS.minZ + 0.2,
         Math.min(BOUNDS.maxZ - 0.2, p.z + dz * fraction),

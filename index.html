@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#102321" />
+    <link rel="icon" type="image/svg+xml" href="%BASE_URL%favicon.svg" />
     <title>Dead Draw — The Gilded Palm</title>
   </head>
   <body>
@@ -11,14 +12,14 @@
     <div id="vignette"></div>
     <main id="welcome" class="screen">
       <div class="brand">
-        <span class="eyebrow">THE GILDED PALM PRESENTS</span>
+        <span class="eyebrow welcome-kicker"><i></i> THE GILDED PALM · AFTER HOURS</span>
         <h1>DEAD<br /><em>DRAW</em><span class="diamond">♦</span></h1>
-        <div class="rule"></div>
+        <div class="rule" aria-hidden="true"><span>♦</span></div>
         <p class="tagline">Your luck just ran out.<br />Your chips haven’t.</p>
         <p class="intro">
-          A co-op casino survival shooter.<br />Kill the dead. Take their chips.
-          Play for your life.
+          A zombie casino survival shooter for 1–4 players.<br />Survive the waves. Win your weapons. Beat the House.
         </p>
+        <div class="welcome-actions"><button id="playDemo" class="primary">PLAY COMBAT DEMO <span>↗</span></button><small>Jump straight into the fight. Separate from your saved run.</small><small class="capture-note">Click the floor to capture the mouse. Esc releases it.</small></div>
         <div class="entry">
           <label
             >YOUR NAME<input
@@ -33,18 +34,19 @@
               maxlength="6"
               placeholder="Leave blank to host" /></label
           ><button id="enter" class="primary">
-            ENTER THE CASINO <span>↗</span>
+            START / JOIN CAMPAIGN <span>↗</span>
           </button>
           <p id="connection">
-            1–4 PLAYERS · PRIVATE CO-OP · HIGH ROLLERS UPDATE
+            12 ROOMS · PRIVATE CO-OP · FICTIONAL CHIPS
           </p>
         </div>
       </div>
-      <aside class="welcome-aside">
-        <span class="outline-diamond">♠</span>
-        <p>OPEN ALL NIGHT.<br />AND THE AFTERLIFE.</p>
-        <small>PLEASE GAMBLE RESPONSIBLY.<br />THE DEAD DO NOT.</small>
+      <aside class="welcome-aside" aria-label="The casino floor">
+        <span class="attract-label"><i></i> LIVE FROM THE GILDED PALM</span>
+        <p>THE HOUSE<br /><em>NEVER SLEEPS.</em></p>
+        <small>SURVIVE. GAMBLE. GET OUT.</small>
       </aside>
+      <div class="welcome-sound"><button id="enableSound" aria-pressed="false">ENABLE SOUND</button><span>Starts silent. Your volume settings are remembered.</span></div>
       <footer>
         GILDED PALM / EST. 1978 <span>DESKTOP · MOUSE + KEYBOARD</span>
       </footer>
@@ -62,7 +64,7 @@
         <button id="mapButton" title="Floor plan (M)">MAP · M</button>
         <span id="room"></span
         ><button id="helpButton" title="Controls">?</button
-        ><button id="mute" title="Toggle audio">SOUND ON</button>
+        ><button id="mute" title="Enable sound">ENABLE SOUND</button>
       </div>
       <div id="scopeView" hidden>
         <div class="scope-ring"><i class="scope-dot"></i></div>
@@ -99,6 +101,7 @@
         <div><b id="ammo">12</b><span id="reserve">/ 60</span></div>
         <small id="reload">R RELOAD &nbsp; Q SWITCH</small>
       </div>
+      <div id="demoTools" hidden><span id="demoBadge">PLAYABLE DEMONSTRATION</span><button id="exitDemo" hidden>BACK TO TITLE</button></div>
       <div id="hint">
         WASD MOVE &nbsp; SHIFT ROLL · SPACE JUMP &nbsp; RMB / V (toggle) AIM
         &nbsp; LMB FIRE &nbsp; E INTERACT
@@ -184,10 +187,9 @@
           casino hands before leaving.
         </p>
         <p>
-          Choose Shared Crew Table at roulette, blackjack, baccarat or craps to
-          play alongside friends. Cards and wheel wait for everyone's
-          confirmation. At craps the shooter controls rolls. No intermission
-          countdown.
+          Every survivor plays a private hand, even at the same table. Your cards,
+          wagers and results stay yours. The 90-second intermission countdown
+          always applies; unfinished hands settle at the bell.
         </p>
       </details>
       <details class="field-guide">
@@ -229,7 +231,13 @@
           final 10 seconds.
         </p>
       </details>
-      <details class="controller-guide" open>
+      <details class="accessibility-guide">
+        <summary>Mouse capture & accessible look</summary>
+        <p>Click the casino floor to capture the pointer. Esc releases it. With the pointer free, hold the right mouse button and drag to look; use V to aim.</p>
+        <label><input id="keyboardLook" type="checkbox" /> Keyboard look (H)</label>
+        <p>With keyboard look enabled, use I / K to look up / down and J / L to turn. WASD still moves. Menus keep normal pointer control.</p>
+      </details>
+      <details class="controller-guide">
         <summary>Controller / Xbox-style layout</summary>
         <p>
           LS move · RS look · LT aim · RT fire<br />A use / buy · X reload · Y
@@ -262,7 +270,7 @@
           Controllers require localhost or HTTPS.</small
         >
       </details>
-      <details class="audio-settings" open>
+      <details class="audio-settings">
         <summary>Sound & volume</summary>
         <label class="audio-slider" for="audio-master"
           >MASTER VOLUME <output id="volume-master">70%</output
@@ -309,7 +317,7 @@
         >
         <button id="testSound">TEST SOUND · WEAPON / CHIPS / WIN</button>
         <small id="audioStatus" role="status"
-          >Select Test sound to enable audio.</small
+          >Select Enable sound or Test sound to activate audio.</small
         >
       </details>
       <label class="quality-label"
@@ -325,7 +333,7 @@
       <span class="eyebrow">THANK YOU FOR YOUR PATRONAGE</span>
       <h2>The house<br />always wins.</h2>
       <p id="runStats"></p>
-      <button id="restart" class="primary">ONE MORE HAND ↗</button>
+      <button id="restart" class="primary">RESTART THE RUN ↗</button>
     </section>
     <div id="toast" role="status"></div>
     <div id="controllerStatus">

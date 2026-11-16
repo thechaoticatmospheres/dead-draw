@@ -26,6 +26,9 @@ import { maxHealth } from "../shared/expansion.js";
 import { gameSocketURL } from "./connection.js";
 import { StateDecoder, STATE_PROTOCOL } from "../shared/state-stream.js";
 import { textValue, styleValue } from "./dom-values.js";
+import { LocalDemo, DEMO_ID, demoOptions } from "./demo.js";
+import { MOVEMENT_KEYS, LOOK_KEYS, keyboardLook } from "./accessibility-input.js";
+import "./overhaul.css";
 const nodes = new Map();
 const $ = (id) => {
     let node = nodes.get(id);
@@ -39,16 +42,11 @@ const $ = (id) => {
 const setText = (id, value) => textValue($(id), value);
 const audio = new Audio();
 const soundscape = new Soundscape(audio);
-bindAudioSettings(audio);
+bindAudioSettings(audio, { onEnable: () => music.unlock() });
 const music = new BackgroundMusic(audio);
-addEventListener("pointerdown", () => music.unlock(), { capture: true });
-addEventListener(
-  "keydown",
-  (e) => {
-    if (e.isTrusted) music.unlock();
-  },
-  { capture: true },
-);
+// Jukebox UI still controls playback, but activation is explicit and session-local.
+const unlockMusic = music.unlock.bind(music);
+music.unlock = () => { if (audio.enabled) unlockMusic(); };
 for (const event of ["blur", "focus", "pagehide"])
   addEventListener(event, () => music.update(state));
 document.addEventListener("visibilitychange", () => music.update(state));
@@ -78,7 +76,11 @@ let socket,
   toastTimeout,
   noticeTimeout;
 const keys = new Set();
+const captureOptions = demoOptions(location.search);
+let localDemo = null, attractDemo = null, dragLooking = false, keyboardLooking = false;
+let lastDemoSnapshot = 0, captureWarmupFrames = 0;
 const send = (msg) => {
+  if (localDemo) { localDemo.action(msg); return; }
   if (socket?.readyState === WebSocket.OPEN) socket.send(JSON.stringify(msg));
 };
 const me = () => state?.players.find((p) => p.id === myId);
@@ -292,6 +294,9 @@ world.ready
   .then(() => {
     $("enter").disabled = false;
     setText("connection", "THE FLOOR IS READY");
+    if ($("playDemo")) $("playDemo").disabled = false;
+    if (captureOptions.requested) beginDemo(captureOptions);
+    else attractDemo = new LocalDemo({ seed: 1978, stateName: "tour", auto: true, attract: true });
   })
   .catch((error) => {
     setText("connection", "Could not load 3D assets. Reload to retry.");
@@ -323,6 +328,90 @@ for (const [id, key] of [
   };
 }
 $("graphicsQuality").onchange = (e) => world.setQuality(e.target.value);
+function acceptDemoSnapshot() {
+  if (!localDemo) return;
+  state = localDemo.snapshot();
+  for (const event of state.events) handleEvent(event);
+  crewUI.update(me(), state, myId);
+  testingUI.update(me(), state);
+  updateHUD();
+  const label = localDemo.frozen
+    ? `LOCAL CAPTURE / ${localDemo.fixtureName.toUpperCase()} / ${localDemo.time.toFixed(2)}s / SEED ${localDemo.seed}`
+    : `${localDemo.auto ? "BOT DEMONSTRATION" : "PLAYABLE DEMO"} / LOCAL ONLY / CAREER & SAVES UNCHANGED`;
+  if ($("demoBadge")) setText("demoBadge", label);
+}
+function beginDemo(options = {}) {
+  // Joining a real room always remains a separate explicit action.
+  if (socket && [WebSocket.OPEN, WebSocket.CONNECTING].includes(socket.readyState)) return;
+  release();
+  clearTimeout(toastTimeout);
+  clearTimeout(noticeTimeout);
+  $("toast").style.opacity = 0;
+  $("announcement").style.opacity = 0;
+  $("hitmarker").style.opacity = 0;
+  localDemo = new LocalDemo({ seed: 1978, stateName: "combat", ...options });
+  attractDemo = null;
+  myId = DEMO_ID;
+  yaw = localDemo.player.yaw;
+  pitch = localDemo.player.pitch;
+  lastPhase = "";
+  lastDemoSnapshot = 0;
+  captureWarmupFrames = localDemo.frozen ? 60 : 0;
+  world.setSeed?.(localDemo.seed);
+  world.predicted = null;
+  document.body.dataset.demo = "true";
+  for (const id of ["welcome", "lobby", "gameover", "casino", "help", "club", "floorplan", "crewPanel", "jukeboxPanel", "prizeWheelPanel", "testingPanel"]) show(id, false);
+  show("hud");
+  if ($("demoTools")) show("demoTools");
+  if ($("exitDemo")) show("exitDemo");
+  setText("room", "LOCAL DEMO");
+  acceptDemoSnapshot();
+  world.inspectionView = localDemo.inspectionView();
+  if (!localDemo.frozen) toast("DEMO · WASD move · click to capture mouse · RMB aim · Esc releases · H enables keyboard look");
+}
+function endDemo() {
+  release();
+  localDemo = null;
+  myId = undefined;
+  state = undefined;
+  lastPhase = "";
+  lastSoundState = null;
+  world.predicted = null;
+  world.inspectionView = null;
+  delete document.body.dataset.demo;
+  for (const id of ["hud", "lobby", "gameover", "casino", "help", "club", "floorplan", "crewPanel", "jukeboxPanel", "prizeWheelPanel", "testingPanel", "campaignHud", "spectatorHud"]) show(id, false);
+  if ($("demoTools")) show("demoTools", false);
+  show("welcome");
+  attractDemo = new LocalDemo({ seed: 1978, stateName: "tour", auto: true, attract: true });
+}
+function setKeyboardLook(value) {
+  keyboardLooking = !!value;
+  release();
+  if ($("keyboardLook")) {
+    $("keyboardLook").setAttribute("aria-pressed", String(keyboardLooking));
+    $("keyboardLook").textContent = keyboardLooking ? "KEYBOARD LOOK ON · I J K L" : "ENABLE KEYBOARD LOOK · H";
+  }
+  document.body.classList.toggle("keyboard-look", keyboardLooking);
+  toast(keyboardLooking ? "Keyboard look: I / K up & down · J / L turn · V aim · click to fire · H returns to mouse" : "Mouse look: click to capture · Esc releases · hold RMB to drag while unlocked");
+}
+if ($("playDemo")) {
+  $("playDemo").disabled = true;
+  $("playDemo").onclick = () => beginDemo();
+}
+if ($("exitDemo")) $("exitDemo").onclick = endDemo;
+if ($("keyboardLook")) $("keyboardLook").onclick = () => setKeyboardLook(!keyboardLooking);
+// Read-only diagnostics plus local-only fixture entry for reproducible QA/export.
+window.__deadDraw = {
+  get world() { return world; },
+  get state() { return state || attractDemo?.game.snapshot(DEMO_ID, false); },
+  get captureReady() { return !!world.loaded && (!localDemo?.frozen || captureWarmupFrames === 0); },
+  get player() { return me(); },
+  get localDemo() { return localDemo; },
+  get mode() { return localDemo ? "demo" : myId ? "multiplayer" : "attract"; },
+  get keyboardLooking() { return keyboardLooking; },
+  get audioEnabled() { return audio.enabled; },
+  beginDemo: (options) => { if (!socket) beginDemo(options); },
+};
 function toast(text) {
   setText("toast", text);
   $("toast").style.opacity = 1;
@@ -339,11 +428,13 @@ function release() {
   keys.clear();
   shoot = false;
   aim = false;
+  dragLooking = false;
   document.exitPointerLock?.();
 }
 function lock() {
   if (
     !state ||
+    menuRoot() ||
     !$("casino").hidden ||
     !$("help").hidden ||
     !$("floorplan").hidden ||
@@ -352,7 +443,7 @@ function lock() {
     !["combat", "break"].includes(state.phase)
   )
     return;
-  if (controller.mode !== "controller")
+  if (controller.mode !== "controller" && !keyboardLooking)
     $("world")
       .requestPointerLock?.()
       ?.catch(() => {});
@@ -368,6 +459,9 @@ function closeCasino() {
 }
 let connectingSince = 0;
 function join(resume = false) {
+  if (localDemo) endDemo();
+  attractDemo = null;
+  world.inspectionView = null;
   if ([WebSocket.OPEN, WebSocket.CONNECTING].includes(socket?.readyState))
     return;
   connectingSince ||= Date.now();
@@ -882,7 +976,7 @@ $("start").onclick = () => {
   send({ type: "start" });
   show("lobby", false);
   audio.start();
-  if (controller.mode !== "controller")
+  if (controller.mode !== "controller" && !keyboardLooking)
     $("world")
       .requestPointerLock?.()
       ?.catch(() => {});
@@ -890,7 +984,7 @@ $("start").onclick = () => {
 $("restart").onclick = () => {
   send({ type: "start" });
   show("gameover", false);
-  if (controller.mode !== "controller")
+  if (controller.mode !== "controller" && !keyboardLooking)
     $("world")
       .requestPointerLock?.()
       ?.catch(() => {});
@@ -959,6 +1053,16 @@ addEventListener("keydown", (e) => {
     send({ type: "nextRound" });
     return;
   }
+  if (me() && !menuRoot()) {
+    if (MOVEMENT_KEYS.has(e.code) || (keyboardLooking && LOOK_KEYS.has(e.code))) {
+      keys.add(e.code);
+      e.preventDefault();
+    }
+    if (e.code === "KeyH" && !e.repeat) {
+      setKeyboardLook(!keyboardLooking);
+      return;
+    }
+  }
   if (me() && !menuRoot() && !e.repeat) {
     if (e.code === "KeyB") {
       browseNearby();
@@ -1002,8 +1106,7 @@ addEventListener("keydown", (e) => {
       return;
     }
   }
-  if (document.pointerLockElement !== $("world")) return;
-  keys.add(e.code);
+  // Movement stays available without pointer lock; menus consume gameplay keys.
 });
 addEventListener("keyup", (e) => keys.delete(e.code));
 addEventListener("blur", () => {
@@ -1024,7 +1127,7 @@ document.addEventListener("pointerlockchange", () => {
 });
 addEventListener("mousemove", (e) => {
   if (e.movementX || e.movementY) controller.useKeyboard();
-  if (document.pointerLockElement !== $("world") || station) return;
+  if ((!dragLooking && document.pointerLockElement !== $("world")) || menuRoot() || !me()) return;
   const sensitivity = aim ? 1 / (opticFor(me())?.zoom || 1) : 1;
   yaw -= e.movementX * 0.0022 * sensitivity;
   pitch = Math.max(
@@ -1052,16 +1155,25 @@ addEventListener("mousedown", (e) => {
       return;
     }
   }
-  if (document.pointerLockElement !== $("world")) return;
-  if (e.button === 0) shoot = true;
-  if (e.button === 2) aim = true;
+  if (menuRoot() || !me() || e.target !== $("world")) return;
+  const locked = document.pointerLockElement === $("world");
+  if (e.button === 0 && (locked || keyboardLooking)) shoot = true;
+  if (e.button === 2) {
+    if (locked) aim = true;
+    else dragLooking = true;
+    e.preventDefault();
+  }
 });
 addEventListener("mouseup", (e) => {
   if (e.button === 0) shoot = false;
-  if (e.button === 2) aim = false;
+  if (e.button === 2) {
+    if (!dragLooking) aim = false;
+    dragLooking = false;
+  }
 });
-addEventListener("contextmenu", (e) => e.preventDefault());
+addEventListener("contextmenu", (e) => { if (e.target === $("world")) e.preventDefault(); });
 function readInput() {
+  if (menuRoot() || !me() || me().down) return { yaw, pitch };
   return {
     forward:
       controller.mode === "controller"
@@ -1086,7 +1198,7 @@ function readInput() {
   };
 }
 setInterval(() => {
-  if (!myId || socket?.readyState !== WebSocket.OPEN) return;
+  if (localDemo || !myId || socket?.readyState !== WebSocket.OPEN) return;
   latestInput = readInput();
   latestInput.seq = ++inputSeq;
   prediction.sent(inputSeq, latestInput);
@@ -1097,47 +1209,66 @@ function frame(now) {
   const dt = Math.min((now - lastFrame) / 1000, 0.05);
   lastFrame = now;
   controller.update(dt, now);
+  if (keyboardLooking && !menuRoot() && me()) {
+    const look = keyboardLook(keys, dt, yaw, pitch, aim ? opticFor(me())?.zoom || 1 : 1);
+    yaw = look.yaw;
+    pitch = look.pitch;
+  }
+  if (localDemo) {
+    localDemo.advance(dt, readInput());
+    if (now - lastDemoSnapshot >= 1000 / 30) {
+      acceptDemoSnapshot();
+      lastDemoSnapshot = now;
+    }
+    if (localDemo.auto || localDemo.frozen) {
+      yaw = localDemo.player.yaw;
+      pitch = localDemo.player.pitch;
+      aim = !!localDemo.player.input.aim;
+    }
+    world.inspectionView = localDemo.inspectionView();
+  } else if (!myId && attractDemo) {
+    attractDemo.advance(dt);
+    world.inspectionView = attractDemo.inspectionView();
+  }
+  const displayState = state || attractDemo?.snapshot();
+  if (!state && displayState) {
+    for (const event of displayState.events) {
+      world.event(event, DEMO_ID);
+      if (audio.enabled) soundscape.event(event, displayState, DEMO_ID);
+    }
+  }
   $("padMenuHint").hidden = controller.mode !== "controller" || !menuRoot();
-  let viewId = myId,
-    viewYaw = yaw,
-    viewPitch = pitch;
+  let viewId = myId || (attractDemo ? DEMO_ID : undefined),
+    viewYaw = attractDemo ? attractDemo.player.yaw : yaw,
+    viewPitch = attractDemo ? attractDemo.player.pitch : pitch;
   const p = me();
   if (p?.down) {
     const living = state.players.filter((p) => !p.down && !p.offline);
-    const target =
-      living[
-        ((spectatorIndex % living.length) + living.length) % living.length
-      ];
+    const target = living[((spectatorIndex % living.length) + living.length) % living.length];
     if (target) {
       viewId = target.id;
       viewYaw = target.yaw;
       viewPitch = target.pitch;
     }
   }
-  world.predicted =
-    p && !p.down
-      ? prediction.update(dt, p, readInput(), state.openRooms)
-      : null;
-  world.localId = myId;
-  world.update(
-    dt,
-    state,
-    viewId,
-    viewYaw,
-    viewPitch,
-    !menuRoot() &&
-      !me()?.down &&
-      (controller.mode === "controller" ? controller.input.aim : aim),
-  );
-  casinoView.animate(state);
-  prizeWheelUI.animate(dt, state, p);
-  music.update(state);
-  soundscape.update(dt, state, myId, yaw, station?.id, {
-    newSnapshot: state !== lastSoundState,
+  world.predicted = !localDemo && p && !p.down
+    ? prediction.update(dt, p, readInput(), state.openRooms) : null;
+  world.localId = myId || (attractDemo ? DEMO_ID : undefined);
+  const renderDt = localDemo?.frozen ? (captureWarmupFrames > 0 ? 1 / 30 : 0) : dt;
+  if (localDemo?.frozen && captureWarmupFrames > 0 && world.loaded) captureWarmupFrames--;
+  if (localDemo) world.clock = localDemo.time - renderDt;
+  world.update(renderDt, displayState, viewId, viewYaw, viewPitch,
+    attractDemo ? !!attractDemo.player.input.aim :
+      !menuRoot() && !me()?.down && (controller.mode === "controller" ? controller.input.aim : aim));
+  casinoView.animate(displayState, localDemo ? localDemo.time : undefined);
+  prizeWheelUI.animate(renderDt, displayState, p);
+  music.update(displayState);
+  soundscape.update(renderDt, displayState, viewId, viewYaw, station?.id, {
+    newSnapshot: displayState !== lastSoundState,
     trigger: controller.mode === "controller" ? controller.input.shoot : shoot,
     menu: !!menuRoot(),
   });
-  lastSoundState = state;
+  lastSoundState = displayState;
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);

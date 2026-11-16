@@ -1,0 +1,49 @@
+{
+  "renderer": {
+    "engine": "three.js r180",
+    "graphics": "ready",
+    "drawCalls": "847",
+    "triangles": "918115",
+    "frameAverage": "5.55",
+    "frameP95": "6.20",
+    "frameP99": "6.50",
+    "slowFramePercent": "0.0",
+    "renderWidth": "1920",
+    "renderHeight": "1080",
+    "renderScale": "1",
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce RTX 4070 (0x00002786) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "cpuP95": "4.90",
+    "gpuP95": "5.11",
+    "geometries": "828",
+    "textures": "160",
+    "effectsAllocated": "492",
+    "effectsActive": "55",
+    "bakedLighting": "static-diffuse",
+    "compressedModels": "0"
+  },
+  "bake": "ready",
+  "all": {
+    "frames": 1771,
+    "averageMS": 5.650762281197064,
+    "averageFPS": 176.9672745440919,
+    "p95MS": 5.69999999999709,
+    "p99MS": 11.099999999998545,
+    "over20MSPercent": 0,
+    "enemiesMin": 11,
+    "enemiesMax": 35,
+    "effectsMax": 456
+  },
+  "heavy": {
+    "frames": 708,
+    "averageMS": 5.76539548022599,
+    "averageFPS": 173.44863911413796,
+    "p95MS": 5.700000000000728,
+    "p99MS": 11.100000000002183,
+    "over20MSPercent": 0,
+    "enemiesMin": 20,
+    "enemiesMax": 35,
+    "effectsMax": 456
+  },
+  "errors": [],
+  "measurementNotes": "Raw frames retained. Excluded one invalid initial -3.60000038ms RAF interval from aggregates; first RAF timestamp preceded scheduling performance.now(). Generator now initializes last at its first RAF callback."
+}

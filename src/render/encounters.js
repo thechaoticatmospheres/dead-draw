@@ -1,4 +1,5 @@
 import * as T from "three";
+import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 import { ENEMIES } from "../../shared/expansion.js";
 export class Encounters {
   constructor(scene) {
@@ -11,7 +12,26 @@ export class Encounters {
     this.disc = new T.CircleGeometry(1, 48);
     this.box = new T.BoxGeometry(1, 1, 1);
     this.sphere = new T.SphereGeometry(0.14, 10, 8);
-    this.crown = new T.CylinderGeometry(0.27, 0.3, 0.2, 8);
+    this.crown = new T.CylinderGeometry(0.245, 0.27, 0.23, 32);
+    this.hatBrim = new T.CylinderGeometry(0.32, 0.32, 0.028, 32);
+    this.tailoring = new RoundedBoxGeometry(0.68, 0.5, 0.34, 2, 0.05);
+    this.lapel = new RoundedBoxGeometry(0.085, 0.35, 0.024, 1, 0.006);
+    this.button = new T.SphereGeometry(0.018, 8, 6);
+    this.velvet = new T.MeshStandardMaterial({
+      color: 0x332b2e,
+      roughness: 0.9,
+      metalness: 0,
+    });
+    this.ivory = new T.MeshStandardMaterial({
+      color: 0xbcae8a,
+      roughness: 0.88,
+      metalness: 0,
+    });
+    this.satin = new T.MeshStandardMaterial({
+      color: 0x151c1b,
+      roughness: 0.48,
+      metalness: 0,
+    });
     this.barGeometry = new T.PlaneGeometry(1, 0.07);
     this.gold = new T.MeshStandardMaterial({
       color: 0xe6bc6b,
@@ -78,23 +98,35 @@ export class Encounters {
         : tint(o.material);
     });
     if (["brute", "boss"].includes(z.kind)) {
+      // Tailored waistcoats and a battered dinner hat read as casino staff/patrons,
+      // with mass carried by the original body scale instead of floating armour blocks.
       const vest = new T.Mesh(
-        this.box,
-        z.kind === "boss" ? this.gold : this.armor,
+        this.tailoring,
+        z.kind === "boss" ? this.ivory : this.velvet,
       );
-      vest.scale.set(0.68, 0.42, 0.31);
       vest.position.set(0, 1.1, 0);
       actor.add(vest);
-      for (const x of [-0.39, 0.39]) {
-        const pad = new T.Mesh(this.box, this.gold);
-        pad.scale.set(0.22, 0.14, 0.36);
-        pad.position.set(x, 1.36, 0);
-        actor.add(pad);
+      for (const sign of [-1, 1]) {
+        const lapel = new T.Mesh(this.lapel, this.satin);
+        lapel.position.set(sign * 0.14, 1.23, -0.181);
+        lapel.rotation.z = sign * 0.3;
+        actor.add(lapel);
+      }
+      for (const y of [1.01, 1.09, 1.17]) {
+        const button = new T.Mesh(this.button, this.gold);
+        button.position.set(0, y, -0.184);
+        actor.add(button);
       }
       if (z.kind === "boss") {
-        const crown = new T.Mesh(this.crown, this.gold);
-        crown.position.y = 1.85;
-        actor.add(crown);
+        const crown = new T.Mesh(this.crown, this.satin),
+          brim = new T.Mesh(this.hatBrim, this.satin);
+        crown.position.y = 1.88;
+        brim.position.y = 1.77;
+        actor.add(crown, brim);
+        const band = new T.Mesh(this.hatBrim, this.gold);
+        band.scale.set(0.79, 1.6, 0.79);
+        band.position.y = 1.81;
+        actor.add(band);
       }
     }
     if (z.kind === "spitter") {
@@ -133,17 +165,22 @@ export class Encounters {
     const ratio = Math.max(0, Math.min(1, z.hp / (z.maxHp || z.hp)));
     fill.scale.x = ratio;
     fill.position.x = -(1 - ratio) / 2;
-    bars.visible = z.kind !== "walker" || ratio < 1;
-    name.visible = z.kind !== "walker";
+    const distance = camera.position.distanceTo(actor.position);
+    // Identification appears near the threat; distant floating text must not bury the room.
+    bars.visible = distance < 18 && (z.kind !== "walker" || ratio < 1);
+    name.visible =
+      z.kind !== "walker" && distance < (z.kind === "boss" ? 24 : 10);
   }
   makeHazard(h) {
     const group = new T.Group(),
       color =
-        h.kind === "grenade"
-          ? 0x9fd8ef
-          : h.kind === "slam"
-            ? 0xffb65e
-            : 0x9eef70;
+        h.kind === "rocket"
+          ? 0xffbb79
+          : h.kind === "grenade"
+            ? 0x9fd8ef
+            : h.kind === "slam"
+              ? 0xffb65e
+              : 0x9eef70;
     const ring = new T.Mesh(
       this.ring,
       new T.MeshBasicMaterial({
@@ -188,7 +225,15 @@ export class Encounters {
         this.hazards.set(h.id, mesh);
       }
       const { ring, disc, bomb } = mesh.userData,
-        progress = Math.max(0, Math.min(1, 1 - h.delay / h.total));
+        // Rockets have a short authoritative delay but no `total` field.
+        // Keep every transform finite without changing explosion timing.
+        progress = Math.max(
+          0,
+          Math.min(
+            1,
+            1 - (h.delay || 0) / (h.total || (h.kind === "rocket" ? 0.15 : 1)),
+          ),
+        );
       ring.material.opacity =
         h.delay > 0 ? 0.55 + Math.sin(time * 16) * 0.2 : 1;
       disc.material.opacity =

@@ -14,9 +14,24 @@ import { COVER } from "../../shared/campaign.js";
 import { WHEEL_PADS } from "../../shared/arsenal.js";
 import { SERVICES } from "../../shared/services.js";
 import { surfaces, label } from "./surfaces.js";
+import { dressStaticProp } from "./physical-materials.js";
+import { ROOM_PALETTES, roomArchitecture, wallDetails, chandelierDetail, stationDetails, stationSignFrame } from "./environment-detail.js";
 import { batchRigid, freezeLocalMatrices } from "./static-batch.js";
+import { bakeGeometrySignature } from "./baked-lighting.js";
 function box(root, w, h, d, x, y, z, m) {
-  const o = new T.Mesh(new T.BoxGeometry(w, h, d), m);
+  const geometry = new T.BoxGeometry(w, h, d);
+  // Keep wall veneer grain and wallpaper at a physical scale; a 14 m partition
+  // must not stretch one cabinet-sized texture across its entire length.
+  if(m.name === "Tobacco walnut lacquer" || m.name === "Woven champagne wallcovering") {
+    const p=geometry.attributes.position,n=geometry.attributes.normal,uv=geometry.attributes.uv;
+    const scale=m.name === "Tobacco walnut lacquer" ? 1.5 : .25;
+    for(let i=0;i<p.count;i++) {
+      const u=Math.abs(n.getX(i))>.5?p.getZ(i):p.getX(i);
+      const v=Math.abs(n.getY(i))>.5?p.getZ(i):p.getY(i);
+      uv.setXY(i,u*scale,v*scale);
+    }
+  }
+  const o = new T.Mesh(geometry, m);
   o.position.set(x, y, z);
   o.castShadow = true;
   o.receiveShadow = true;
@@ -32,21 +47,24 @@ function plane(root, w, h, x, y, z, m) {
   return o;
 }
 function batch(group) {
+  // Group by indexing too: bevelled trim and flat shell geometry have different
+  // index layouts. Never discard geometry when an otherwise valid merge fails.
   group.updateMatrixWorld(true);
   const buckets = new Map();
   group.traverse((o) => {
-    if (!o.isMesh) return;
-    const geo = o.geometry.clone().applyMatrix4(o.matrixWorld);
-    const list = buckets.get(o.material) || [];
-    list.push(geo);
-    buckets.set(o.material, list);
+    if (!o.isMesh || Array.isArray(o.material) || o.material.transparent) return;
+    const key = `${o.material.uuid}:${!!o.geometry.index}:${Object.keys(o.geometry.attributes).sort().join()}`;
+    if(!buckets.has(key)) buckets.set(key, {m:o.material, gs:[]});
+    buckets.get(key).gs.push(o.geometry.clone().applyMatrix4(o.matrixWorld));
   });
   group.clear();
-  for (const [m, gs] of buckets) {
-    const o = new T.Mesh(mergeGeometries(gs), m);
-    o.castShadow = true;
-    o.receiveShadow = true;
-    group.add(o);
+  for (const {m, gs} of buckets.values()) {
+    const geo=mergeGeometries(gs);
+    if(!geo) throw new Error(`Static geometry merge failed for ${m.name}`);
+    const o = new T.Mesh(geo, m);
+    o.name = `Casino shell / ${m.name}`;
+    o.castShadow = true; o.receiveShadow = true;
+    group.add(o); gs.forEach(g=>g.dispose());
   }
 }
 export class CasinoEnvironment {
@@ -58,6 +76,8 @@ export class CasinoEnvironment {
     this.ceiling = new T.Group();
     scene.add(this.ceiling);
     this.roomProps = new Map();
+    this.roomLights = new Map();
+    this.serviceEntrances = [];
     this.doors = {};
     this.stations = {};
     this.build();
@@ -68,14 +88,16 @@ export class CasinoEnvironment {
     for (const room of ROOMS) {
       plane(g, 16, 16, room.x, 0, room.z, m.marble);
       const carpet = m.carpet.clone();
-      carpet.color.setHex(room.color).lerp(new T.Color(0x624e5e), 0.5);
+      carpet.color.setHex(ROOM_PALETTES[room.id]);
+      carpet.name = `Woven Deco wool / ${room.id}`;
       plane(g, 11.5, 11.5, room.x, 0.012, room.z, carpet);
       for (const d of [-1, 1]) {
         box(g, 11.6, 0.015, 0.035, room.x, 0.024, room.z + d * 5.8, m.brass);
         box(g, 0.035, 0.015, 11.6, room.x + d * 5.8, 0.024, room.z, m.brass);
       }
+      roomArchitecture(room, g, this.ceiling, m);
       // Deco inlay medallion, flush to the carpet.
-      const ring = new T.Mesh(new T.RingGeometry(2.92, 2.97, 96), m.brass);
+      const ring = new T.Mesh(new T.RingGeometry(2.92, 2.97, 96), m.rugInlay);
       ring.rotation.x = -Math.PI / 2;
       ring.position.set(room.x, 0.028, room.z);
       g.add(ring);
@@ -89,7 +111,7 @@ export class CasinoEnvironment {
           room.x + Math.sin(a) * 2.6,
           0.028,
           room.z + Math.cos(a) * 2.6,
-          m.brass,
+          m.rugInlay,
         );
         inlay.rotation.y = a;
       }
@@ -130,10 +152,10 @@ export class CasinoEnvironment {
         room.name,
         "THE GILDED PALM · EST. 1978",
         "#e9c88d",
-        5.2,
-        0.86,
+        4.6,
+        0.55,
       );
-      name.position.set(room.x, 3.95, room.z - 7.73);
+      name.position.set(room.x, 4.6, room.z - 7.73);
       scene.add(name);
       const props = new T.Group();
       scene.add(props);
@@ -146,8 +168,12 @@ export class CasinoEnvironment {
       );
       light.position.set(room.x, 4.4, room.z);
       scene.add(light);
+      light.name = `${room.id}-chandelier-light`;
+      light.userData.room = room.id;
+      this.roomLights.set(room.id, light);
     }
     for (const wall of [...WALLS, ...OUTER_WALLS]) {
+      wallDetails(wall, g, m);
       box(g, wall.w, wall.h, wall.d, wall.x, wall.h / 2, wall.z, m.wall);
       const horizontal = wall.w > wall.d,
         length = horizontal ? wall.w : wall.d;
@@ -193,10 +219,11 @@ export class CasinoEnvironment {
       box(root, 4.1, 0.25, 0.55, 0, 3.9, 0, m.brass);
       box(root, 3.6, 0.08, 0.55, 0, 0.045, 0, m.brass);
       const shutter = new T.Group();
+      shutter.userData.bakeExclude = true;
       root.add(shutter);
-      box(shutter, 3.6, 3.7, 0.2, 0, 1.85, 0, m.dark);
-      for (let y = 0.15; y < 3.7; y += 0.16)
-        box(shutter, 3.6, 0.012, 0.22, 0, y, 0, m.brass);
+      box(shutter, 3.6, 3.7, 0.2, 0, 1.85, 0, m.shutter);
+      for (let y = 0.15; y < 3.7; y += 0.24)
+        box(shutter, 3.6, 0.055, 0.235, 0, y, 0, m.dark);
       const room = ROOMS.find((r) => r.id === door.to);
       for (const side of [-1, 1]) {
         const sign = label(
@@ -237,6 +264,8 @@ export class CasinoEnvironment {
       const r = ROOMS.find((r) => r.id === e.room),
         side = r.z > 0 ? 1 : -1,
         root = new T.Group();
+      root.name = `Service entrance / ${e.room}`;
+      this.serviceEntrances.push(root);
       root.position.set(e.x, 0, e.z + side * 1.75);
       root.rotation.y = side > 0 ? Math.PI : 0;
       scene.add(root);
@@ -258,6 +287,8 @@ export class CasinoEnvironment {
         plank.rotation.z = 0.08;
       }
       box(root, 0.06, 0.06, 0.03, 0.68, 1.28, 0.16, m.warm);
+      batchRigid(root);
+      freezeLocalMatrices(root);
     }
     batch(g);
     batchRigid(this.ceiling);
@@ -268,14 +299,15 @@ export class CasinoEnvironment {
     this.assets = assets;
     for (const room of ROOMS) {
       const g = this.roomProps.get(room.id),
-        chandelier = assets.prop("chandelier");
-      chandelier.position.set(room.x, 4.6, room.z);
+        chandelier = chandelierDetail(room, this.m);
+      batchRigid(chandelier, true);
+      freezeLocalMatrices(chandelier);
       g.add(chandelier);
     }
     for (const o of OBSTACLES.slice(
       WHEEL_PADS.length + COVER.length + SERVICES.length + STATIONS.length,
     )) {
-      const prop = assets.prop(o.h > 3 ? "column" : "cocktail");
+      const prop = dressStaticProp(assets.prop(o.h > 3 ? "column" : "cocktail"), this.m);
       prop.position.set(o.x, 0, o.z);
       if (o.h > 3) prop.scale.x = prop.scale.z = o.r / 0.78;
       this.roomProps.get(roomAt(o).id).add(prop);
@@ -284,8 +316,17 @@ export class CasinoEnvironment {
       const root = new T.Group();
       root.position.set(s.x, 0, s.z);
       this.roomProps.get(s.room).add(root);
-      const prop = assets.prop(s.id);
+      const prop = dressStaticProp(assets.prop(s.id), this.m);
+      if(s.id === 'slots') prop.traverse(piece => {
+        if(!piece.isMesh || !['mesh_5','mesh_6','mesh_7','mesh_8'].includes(piece.name)) return;
+        // Translucent printed reels are illuminated inside the cabinet.
+        piece.material = piece.material.clone();
+        piece.material.name = 'Backlit ivory slot reels';
+        piece.material.emissive.setHex(0xffe6ba);
+        piece.material.emissiveIntensity = .85;
+      });
       root.add(prop);
+      stationDetails(s, root, this.m);
       const sign = label(
         s.id === "poker"
           ? "VIDEO POKER"
@@ -300,6 +341,7 @@ export class CasinoEnvironment {
         s.id === "slots" || s.id === "poker" ? 2.05 : 2.65,
         0.5,
       );
+      stationSignFrame(s, root, this.m);
       sign.position.set(0, 3.25, 0);
       root.add(sign);
       const light = new T.PointLight(s.color, 10, 5, 2);
@@ -316,13 +358,14 @@ export class CasinoEnvironment {
       );
       prize.position.set(0, 2.1, 0);
       prize.visible = false;
+      prize.userData.bakeExclude = true;
       root.add(prize);
       root.userData = { light, prize, prop };
       this.stations[s.id] = root;
       // Seats stay inside the existing table collision footprint.
       if (!["slots", "poker", "keno", "hilo"].includes(s.id)) {
         for (const x of [-0.9, 0.9]) {
-          const chair = assets.prop("chair");
+          const chair = dressStaticProp(assets.prop("chair"), this.m);
           chair.position.set(x, 0, 1.55);
           chair.rotation.y = Math.PI;
           root.add(chair);
@@ -339,10 +382,63 @@ export class CasinoEnvironment {
       marker.rotation.x = -Math.PI / 2;
       marker.position.y = 0.033;
       root.add(marker);
+      batchRigid(root);
+      for(const piece of root.children) if(piece.isMesh) {piece.updateMatrix();piece.matrixAutoUpdate=false;}
     }
   }
+  collectBakeMeshes() {
+    const meshes=[], seen=new Set();
+    const addRoot=(root)=>root.traverse(o=>{
+      if(!o.isMesh || o.isSkinnedMesh || Array.isArray(o.material) || o.material.transparent) return;
+      for(let ancestor=o;ancestor;ancestor=ancestor.parent) if(ancestor.userData.bakeExclude) return;
+      if(seen.has(o)) return;
+      seen.add(o); meshes.push(o);
+    });
+    addRoot(this.static);addRoot(this.ceiling);
+    for(const root of this.roomProps.values())addRoot(root);
+    for(const root of this.serviceEntrances)addRoot(root);
+    for(const root of Object.values(this.doors))addRoot(root);
+    for(const root of this.bakeExtras || [])addRoot(root);
+    return meshes;
+  }
+  exportBakeScene() {
+    this.scene.updateMatrixWorld(true);
+    const meshes=[], lights=[];
+    const mapAverages=new Map();
+    for(const [bakeId,o] of this.collectBakeMeshes().entries()) {
+      const geometry=o.geometry, material=o.material;
+      const position=geometry.attributes.position, positions=[], point=new T.Vector3();
+      // glTF may use interleaved, normalized integer attributes. Transform in
+      // floating point; writing world metres back into an Int16 buffer wraps it.
+      for(let i=0;i<position.count;i++) {
+        point.fromBufferAttribute(position,i).applyMatrix4(o.matrixWorld);
+        positions.push(point.x,point.y,point.z);
+      }
+      const color=material.color?.clone() || new T.Color(.2,.2,.2);
+      if(material.map?.image) {
+        if(!mapAverages.has(material.map)) {
+          const canvas=document.createElement('canvas');canvas.width=canvas.height=32;
+          const ctx=canvas.getContext('2d',{willReadFrequently:true});
+          ctx.drawImage(material.map.image,0,0,32,32);
+          const pixels=ctx.getImageData(0,0,32,32).data, average=new T.Color(0,0,0), sample=new T.Color();
+          for(let i=0;i<pixels.length;i+=4) {
+            sample.setRGB(pixels[i]/255,pixels[i+1]/255,pixels[i+2]/255,material.map.colorSpace);
+            average.add(sample);
+          }
+          average.multiplyScalar(1/1024);mapAverages.set(material.map,average);
+        }
+        color.multiply(mapAverages.get(material.map));
+      }
+      meshes.push({bakeId,geometrySignature:bakeGeometrySignature(o),name:o.name || material.name || "static", positions,
+        indices:geometry.index ? Array.from(geometry.index.array):null,
+        material:{name:material.name,standard:!!material.isMeshStandardMaterial,color:color.toArray(),metalness:material.metalness || 0,
+          roughness:material.roughness ?? 1,emissive:material.emissive?.toArray(),emissiveIntensity:material.emissiveIntensity || 0}});
+    }
+    this.scene.traverse(o=>{if(o.isPointLight){const p=o.getWorldPosition(new T.Vector3());lights.push({name:o.name,position:p.toArray(),color:o.color.toArray(),intensity:o.intensity,distance:o.distance});}});
+    return {units:"metres",up:"Y",rooms:ROOMS.map(({id,x,z})=>({id,x,z})),meshes,lights};
+  }
   update(dt, state, myId, time) {
-    this.ceiling.visible = !!state;
+    this.ceiling.visible = true;
     for (const d of DOORS) {
       const shutter = this.doors[d.id].userData.shutter,
         open = doorOpen(d, state?.openRooms || ["atrium"]);

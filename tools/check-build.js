@@ -2,7 +2,8 @@ import assert from "node:assert/strict";
 import { readFile, readdir, stat } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import { gunzipSync } from "node:zlib";
-const root = resolve("dist");
+import { checkBakeAssets } from "./check-bake-assets.js";
+const root = resolve(process.argv[2] || "dist");
 const html = await readFile(join(root, "index.html"), "utf8");
 const links = [...html.matchAll(/(?:src|href)="([^"?#]+\.(?:js|css))"/g)].map(
   (m) => m[1],
@@ -80,6 +81,7 @@ async function inspect(dir) {
   }
 }
 await inspect(root);
+const bake = await checkBakeAssets(join(root, "assets/lighting"));
 console.log(
-  `PASS: production entry, ${models.length} embedded models, compiled assets and clean static output.`,
+  `PASS: production entry, ${models.length} embedded models, ${bake.receivers} Cycles-lit static meshes, compiled assets and clean static output.`,
 );

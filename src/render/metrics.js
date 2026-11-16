@@ -18,6 +18,8 @@ export class RenderMetrics {
     this.frame = 0;
     this.gl = enabled ? renderer.getContext() : null;
     this.extension = this.gl?.getExtension("EXT_disjoint_timer_query_webgl2");
+    const rendererInfo = this.gl?.getExtension("WEBGL_debug_renderer_info");
+    this.hardware = rendererInfo ? this.gl.getParameter(rendererInfo.UNMASKED_RENDERER_WEBGL) : "unavailable";
   }
   begin() {
     if (!this.enabled) return;
@@ -72,7 +74,14 @@ export class RenderMetrics {
     });
     if (this.enabled)
       Object.assign(el.dataset, {
+        frameAverage: (this.frames.reduce((a,b)=>a+b,0) / Math.max(1,this.frames.length)).toFixed(2),
         frameP95: percentile(this.frames, 0.95).toFixed(2),
+        frameP99: percentile(this.frames, 0.99).toFixed(2),
+        slowFramePercent: (100*this.frames.filter(ms=>ms>20).length/Math.max(1,this.frames.length)).toFixed(1),
+        renderWidth: String(el.width),
+        renderHeight: String(el.height),
+        renderScale: String(this.renderer.getPixelRatio()),
+        renderer: this.hardware,
         cpuP95: percentile(this.cpu, 0.95).toFixed(2),
         gpuP95: this.gpu.length
           ? percentile(this.gpu, 0.95).toFixed(2)

@@ -1,4 +1,5 @@
 import * as T from "three";
+import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
 // Original lightweight geometry: shared prototypes are cloned by Assets.
 export function arsenalProp(id) {
   const root = new T.Group(),
@@ -9,8 +10,8 @@ export function arsenalProp(id) {
         c,
         new T.MeshStandardMaterial({
           color: c,
-          roughness: 0.4,
-          metalness: 0.65,
+          roughness: id === "goose" ? 0.87 : c === 0x512f32 ? 0.58 : 0.35,
+          metalness: id === "goose" || c === 0x512f32 ? 0 : 0.72,
         }),
       );
     return materials.get(c);
@@ -24,9 +25,15 @@ export function arsenalProp(id) {
     return m;
   };
   const box = (w, h, d, x, y, z, c) =>
-    add(new T.BoxGeometry(w, h, d), c, x, y, z);
+    add(
+      new RoundedBoxGeometry(w, h, d, 1, Math.min(w, h, d) * 0.15),
+      c,
+      x,
+      y,
+      z,
+    );
   const tube = (r, l, x, y, z, c) =>
-    add(new T.CylinderGeometry(r, r, l, 12), c, x, y, z, Math.PI / 2);
+    add(new T.CylinderGeometry(r, r, l, 24), c, x, y, z, Math.PI / 2);
   const gold = 0xd6ad58,
     dark = 0x243338;
   if (id === "goose") {
@@ -38,7 +45,7 @@ export function arsenalProp(id) {
       return p;
     };
     const ellipsoid = (parent, x, y, z, sx, sy, sz, c) => {
-      const m = new T.Mesh(new T.SphereGeometry(1, 12, 8), mat(c));
+      const m = new T.Mesh(new T.SphereGeometry(1, 24, 16), mat(c));
       m.position.set(x, y, z);
       m.scale.set(sx, sy, sz);
       parent.add(m);

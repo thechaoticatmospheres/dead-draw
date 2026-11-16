@@ -1,6 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600;700&display=swap");
 :root {
-  font-family: "DM Sans", sans-serif;
+  font-family: "Segoe UI", Arial, sans-serif;
   color: #f1ebd9;
   background: #071615;
   --gold: #eac67f;
@@ -73,7 +72,7 @@ button {
   color: var(--gold);
 }
 h1 {
-  font-family: "Barlow Condensed", Impact, sans-serif;
+  font-family: "Arial Narrow", Impact, sans-serif;
   font-size: clamp(82px, 10vw, 152px);
   font-weight: 800;
   line-height: 0.81;
@@ -100,7 +99,7 @@ h1 em {
   margin: 25px 0;
 }
 .tagline {
-  font-family: "Barlow Condensed", sans-serif;
+  font-family: "Arial Narrow", sans-serif;
   text-transform: uppercase;
   font-weight: 500;
   letter-spacing: 1px;
@@ -176,7 +175,7 @@ input {
   text-shadow: 0 0 35px #fed28380;
 }
 .welcome-aside p {
-  font-family: "Barlow Condensed", sans-serif;
+  font-family: "Arial Narrow", sans-serif;
   font-size: 28px;
   letter-spacing: 3px;
   line-height: 1.1;
@@ -216,7 +215,7 @@ footer span {
 }
 .round-block b {
   font:
-    600 58px "Barlow Condensed",
+    600 58px "Arial Narrow",
     sans-serif;
   color: var(--gold);
 }
@@ -295,7 +294,7 @@ footer span {
   top: 19%;
   width: 100%;
   text-align: center;
-  font-family: "Barlow Condensed", sans-serif;
+  font-family: "Arial Narrow", sans-serif;
   font-size: 32px;
   letter-spacing: 4px;
   color: var(--gold);
@@ -347,14 +346,14 @@ footer span {
   transition: width 0.15s;
 }
 #chips {
-  font-family: "Barlow Condensed", sans-serif;
+  font-family: "Arial Narrow", sans-serif;
   font-size: 32px;
   color: var(--gold);
   margin-top: 12px;
 }
 #chips small {
   font:
-    9px "DM Sans",
+    9px "Segoe UI",
     sans-serif;
   letter-spacing: 2px;
   margin-left: 8px;
@@ -367,12 +366,12 @@ footer span {
 }
 .weapon b {
   font:
-    600 57px "Barlow Condensed",
+    600 57px "Arial Narrow",
     sans-serif;
 }
 .weapon #reserve {
   font:
-    400 25px "Barlow Condensed",
+    400 25px "Arial Narrow",
     sans-serif;
   color: #aabbaf;
   margin-left: 10px;
@@ -405,7 +404,7 @@ footer span {
 }
 .small-panel h2 {
   font:
-    600 44px/0.95 "Barlow Condensed",
+    600 44px/0.95 "Arial Narrow",
     sans-serif;
   margin: 18px 0;
   text-transform: uppercase;
@@ -439,7 +438,7 @@ footer span {
 }
 #casino h2 {
   font:
-    600 38px "Barlow Condensed",
+    600 38px "Arial Narrow",
     sans-serif;
   text-transform: uppercase;
   margin: 8px 0 20px;
@@ -501,7 +500,7 @@ footer span {
   background: #ece4c9;
   color: #17392b;
   font:
-    700 40px "Barlow Condensed",
+    700 40px "Arial Narrow",
     sans-serif;
   padding: 15px 0;
   overflow: hidden;
@@ -586,7 +585,7 @@ footer span {
 }
 .result {
   font:
-    600 32px "Barlow Condensed",
+    600 32px "Arial Narrow",
     sans-serif;
   color: var(--gold);
   text-align: center;
@@ -928,7 +927,7 @@ body:has(#casino:not([hidden])) #intermission {
   color: #ffb5df;
   text-align: center;
   font:
-    500 18px "Barlow Condensed",
+    500 18px "Arial Narrow",
     sans-serif;
   letter-spacing: 3px;
   padding: 12px 4px;
@@ -965,7 +964,7 @@ body:has(#casino:not([hidden])) #intermission {
   height: 61px;
   border-bottom: 1px solid #8072572b;
   font:
-    700 30px "Barlow Condensed",
+    700 30px "Arial Narrow",
     sans-serif;
 }
 .physical-reel [data-symbol="C"] {
@@ -1022,7 +1021,7 @@ body:has(#casino:not([hidden])) #intermission {
 }
 .paytable > div > strong {
   font:
-    600 16px "Barlow Condensed",
+    600 16px "Arial Narrow",
     sans-serif;
   color: var(--gold);
   white-space: nowrap;
@@ -1071,7 +1070,7 @@ body:has(#casino:not([hidden])) #intermission {
   text-align: center;
   color: #fff;
   font:
-    8px "DM Sans",
+    8px "Segoe UI",
     sans-serif;
 }
 .pocket-number i {
@@ -1094,7 +1093,7 @@ body:has(#casino:not([hidden])) #intermission {
 }
 .wheel-hub span {
   font:
-    5px "DM Sans",
+    5px "Segoe UI",
     sans-serif;
   letter-spacing: 1px;
   margin-top: 6px;
@@ -1303,14 +1302,14 @@ body:has(#casino:not([hidden])) #intermission {
   text-align: center;
   color: #d4c18c;
   font:
-    19px "Barlow Condensed",
+    19px "Arial Narrow",
     sans-serif;
   letter-spacing: 3px;
 }
 .felt-lettering span {
   display: block;
   font:
-    7px "DM Sans",
+    7px "Segoe UI",
     sans-serif;
   letter-spacing: 2px;
   margin: 5px;
@@ -1498,7 +1497,7 @@ body:has(#casino:not([hidden])) #intermission {
 .settlement strong {
   display: block;
   font:
-    23px "Barlow Condensed",
+    23px "Arial Narrow",
     sans-serif;
   margin-top: 4px;
   color: var(--gold);
@@ -1515,7 +1514,7 @@ body:has(#casino:not([hidden])) #intermission {
 }
 #casinoBody .table-wait h3 {
   font:
-    30px "Barlow Condensed",
+    30px "Arial Narrow",
     sans-serif;
   color: var(--gold);
 }
@@ -1641,7 +1640,7 @@ body:has(#casino:not([hidden])) #toast {
 }
 .floor-room strong {
   font:
-    22px "Barlow Condensed",
+    22px "Arial Narrow",
     sans-serif;
   color: var(--gold);
   margin-top: 10px;
@@ -1754,7 +1753,7 @@ body:has(#casino:not([hidden])) #toast {
 .poker-idle small {
   display: block;
   font:
-    8px "DM Sans",
+    8px "Segoe UI",
     sans-serif;
   letter-spacing: 1px;
   margin-top: 15px;
@@ -1795,7 +1794,7 @@ body:has(#casino:not([hidden])) #toast {
 }
 .craps-point b {
   font:
-    24px "Barlow Condensed",
+    24px "Arial Narrow",
     sans-serif;
 }
 .dice-tray {
@@ -1844,7 +1843,7 @@ body:has(#casino:not([hidden])) #toast {
   border: 2px solid #f0dfba99;
   border-radius: 10px 10px 35px 35px;
   font:
-    27px "Barlow Condensed",
+    27px "Arial Narrow",
     sans-serif;
   letter-spacing: 5px;
   padding: 12px;

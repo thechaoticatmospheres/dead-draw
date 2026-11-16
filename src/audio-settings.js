@@ -1,16 +1,29 @@
 import "./audio-settings.css";
-export function bindAudioSettings(audio) {
+import { installAudioActivation } from "./audio-activation.js";
+export function bindAudioSettings(audio, { onEnable } = {}) {
   const $ = (id) => document.getElementById(id);
+  // Session permission is deliberately independent of saved volume preferences.
+  // Focus changes, gameplay clicks and key presses must never grant permission.
+  installAudioActivation(audio, {
+    isActive: () => !document.hidden && document.hasFocus(),
+    onEnable: () => { onEnable?.(); sync(); },
+  });
   const sync = () => {
-    $("mute").textContent = audio.muted ? "SOUND OFF" : "SOUND ON";
-    $("mute").setAttribute("aria-pressed", String(audio.muted));
+    $("mute").textContent = !audio.enabled ? "ENABLE SOUND" : audio.muted ? "SOUND OFF" : "SOUND ON";
+    $("mute").setAttribute("aria-pressed", String(!audio.enabled || audio.muted));
+    if ($("enableSound")) {
+      $("enableSound").textContent = !audio.enabled ? "Enable sound" : audio.muted ? "Sound off" : "Sound on";
+      $("enableSound").setAttribute("aria-pressed", String(audio.enabled && !audio.muted));
+    }
     $("audioMute").checked = audio.muted;
     for (const key of ["master", "effects", "casino", "ambience"]) {
       $("audio-" + key).value = Math.round(audio.settings[key] * 100);
       $("volume-" + key).value = Math.round(audio.settings[key] * 100) + "%";
     }
-    $("testSound").disabled = audio.muted || !audio.settings.master;
-    $("audioStatus").textContent = audio.muted
+    $("testSound").disabled = !audio.settings.master;
+    $("audioStatus").textContent = !audio.enabled
+      ? "Sound is off. Select Enable sound or Test sound to activate it."
+      : audio.muted
       ? "All sound muted."
       : !audio.ctx || audio.ctx.state !== "running"
         ? "Select Test sound to enable audio."
@@ -30,17 +43,19 @@ export function bindAudioSettings(audio) {
     };
   }
   $("mute").onclick = () => {
+    if (!audio.enabled) return audio.activate();
     audio.muted = !audio.muted;
     audio.start();
     sync();
   };
   $("audioMute").onchange = (e) => {
+    if (!e.target.checked && !audio.enabled) return audio.activate();
     audio.muted = e.target.checked;
     audio.start();
     sync();
   };
   $("testSound").onclick = () => {
-    audio.start();
+    audio.activate();
     requestAnimationFrame(() => {
       audio.test();
       sync();
@@ -53,18 +68,10 @@ export function bindAudioSettings(audio) {
   addEventListener("blur", focus);
   addEventListener("focus", focus);
   document.addEventListener("visibilitychange", focus);
-  const unlock = () => {
-    audio.setActive(!document.hidden && document.hasFocus());
-    audio.start();
+  if ($("enableSound")) $("enableSound").onclick = () => {
+    if (!audio.enabled || audio.muted) audio.activate();
+    else { audio.muted = true; sync(); }
   };
-  addEventListener("pointerdown", unlock, { capture: true });
-  addEventListener(
-    "keydown",
-    (e) => {
-      if (e.isTrusted) unlock();
-    },
-    { capture: true },
-  );
   document.addEventListener(
     "click",
     (e) => {

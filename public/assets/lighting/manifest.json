@@ -1,0 +1,64 @@
+{
+  "status": "baked",
+  "engine": "Blender Cycles",
+  "blenderVersion": "4.5.9 LTS",
+  "device": "OPTIX: NVIDIA GeForce RTX 4070",
+  "sourceSHA256": "302dca696b9d8a6fe23a86a034074d967d80612c605bab5ee3845f0f85576876",
+  "layoutSHA256": "80347e848f7fa98f2a44cd614554885f88c71c7c8f189c035cc345b07ad137fa",
+  "coverage": "static-diffuse",
+  "occluders": "Exact exported opaque static geometry; moving shutters, actors, particles and glass excluded",
+  "dimensions": [
+    4096,
+    4096
+  ],
+  "samples": 256,
+  "encoding": "RGBM",
+  "range": 32,
+  "states": {
+    "emergency": {
+      "file": "static-emergency.png",
+      "sha256": "1c845ad7fc39e0e0c73df130e9c630d8bcba7e0959c2411d98ed254d5fcd2562",
+      "mean": 0.04649699851870537,
+      "peak": 26.972261428833008,
+      "clippedFraction": 0,
+      "decodedRelativeError": 0.0023513396109828806,
+      "bytes": 13953066,
+      "denoiseEnergyChangeFraction": 0.0013674145059059807
+    },
+    "restored": {
+      "file": "static-restored.png",
+      "sha256": "42d7c8d27d62fbaefaeb218662a7c46d1879387cb3381b2165947fe3ecc28f15",
+      "mean": 0.09666883200407028,
+      "peak": 58.37117004394531,
+      "clippedFraction": 0.000006318092346191406,
+      "decodedRelativeError": 0.0019148885415379705,
+      "bytes": 14929466,
+      "denoiseEnergyChangeFraction": 0.0018148171512266038
+    }
+  },
+  "seconds": 86.74,
+  "meshCount": 574,
+  "receiverCount": 257,
+  "triangles": 39602,
+  "mipPaddingPixels": 4,
+  "uvOccupiedArea": 0.3656162525730412,
+  "denoising": {
+    "method": "OpenImageDenoise RT",
+    "guidance": "Clean Cycles world-space normals",
+    "quality": "high",
+    "hdr": true
+  },
+  "gpuBytesWithMipmaps": 178956971,
+  "visualInspection": {
+    "status": "reviewed",
+    "date": "2026-11-16",
+    "scope": "Both final atlas inspection images and Blender room renders; actual in-game captures of all 12 rooms in emergency and restored power; full-resolution Atrium pair, Sapphire tabletop/doorway production subpath, three heavy combat frames, defeat, extraction and restarted play.",
+    "evidence": "docs/overhaul-QA.md",
+    "limits": "Hybrid static diffuse bake. Tiny details and moving objects use live lighting. This review does not certify the entire photographic quality target or a full browser campaign."
+  },
+  "meshMap": {
+    "file": "static-uv.json",
+    "sha256": "304bd2cff3432b1349f6a84046c5ca3f048c40bea554ad155a2a118d6fd04e3e",
+    "bytes": 2647194
+  }
+}

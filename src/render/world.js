@@ -21,8 +21,12 @@ import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/addons/postprocessing/UnrealBloomPass.js";
 import { OutputPass } from "three/addons/postprocessing/OutputPass.js";
+import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
 import { Assets } from "./assets.js";
 import { CasinoEnvironment } from "./environment.js";
+import { CasinoLighting } from "./casino-lighting.js";
+import { RoomReflectionProbes } from "./room-probes.js";
+import { installStaticBake } from "./baked-lighting.js";
 import {
   STATIONS,
   OBSTACLES,
@@ -50,7 +54,7 @@ export class World {
     const roomEnvironment = new RoomEnvironment();
     this.environmentTarget = pmrem.fromScene(roomEnvironment, 0.04);
     this.scene.environment = this.environmentTarget.texture;
-    this.scene.environmentIntensity = 0.42;
+    this.scene.environmentIntensity = 0.25;
     roomEnvironment.dispose();
     pmrem.dispose();
     this.camera = new THREE.PerspectiveCamera(
@@ -60,6 +64,34 @@ export class World {
       100,
     );
     this.actors = new Map();
+    this.retiringActors = [];
+    this.cameraDirection = new THREE.Vector3();
+    this.cameraTarget = new THREE.Vector3();
+    this.muzzlePosition = new THREE.Vector3();
+    const contactPixels = new Uint8Array(32 * 32 * 4);
+    for (let y = 0; y < 32; y++)
+      for (let x = 0; x < 32; x++) {
+        const i = (y * 32 + x) * 4;
+        contactPixels[i + 3] = Math.round(
+          130 *
+            Math.pow(
+              Math.max(0, 1 - Math.hypot((x - 15.5) / 16, (y - 15.5) / 16)),
+              1.6,
+            ),
+        );
+      }
+    const contactMap = new THREE.DataTexture(contactPixels, 32, 32);
+    contactMap.needsUpdate = true;
+    this.contactGeometry = new THREE.PlaneGeometry(1.4, 1.4);
+    this.contactMaterial = new THREE.MeshBasicMaterial({
+      map: contactMap,
+      transparent: true,
+      depthWrite: false,
+      color: 0x000000,
+      polygonOffset: true,
+      polygonOffsetFactor: -1,
+      toneMapped: false,
+    });
     this.effectPool = new EffectPool(this.scene);
     this.chipBatch = new ChipBatch(this.scene);
     this.scratchPosition = new THREE.Vector3();
@@ -73,11 +105,11 @@ export class World {
     this.doors = {};
     this.clock = 0;
     this.recoil = 0;
-    this.scene.add(new THREE.HemisphereLight(0xa8c5cf, 0x35252b, 0.48));
-    const key = new THREE.DirectionalLight(0xffddbc, 1.3);
+    this.scene.add(new THREE.HemisphereLight(0xa8b5c0, 0x35252b, 0.15));
+    const key = new THREE.DirectionalLight(0xffddbc, 0.16);
     this.keyLight = key;
     key.position.set(4, 18, 7);
-    key.castShadow = true;
+    key.castShadow = false;
     key.shadow.mapSize.set(2048, 2048);
     Object.assign(key.shadow.camera, {
       left: -28,
@@ -87,7 +119,12 @@ export class World {
     });
     key.shadow.bias = -0.001;
     this.scene.add(key, key.target);
-    this.composer = new EffectComposer(this.renderer);
+    // The composer renders offscreen, so canvas antialias alone never covers it.
+    const imageTarget = new THREE.WebGLRenderTarget(innerWidth, innerHeight, {
+      type: THREE.HalfFloatType,
+    });
+    imageTarget.samples = Math.min(4, this.renderer.capabilities.maxSamples);
+    this.composer = new EffectComposer(this.renderer, imageTarget);
     this.composer.addPass(new RenderPass(this.scene, this.camera));
     this.bloom = new UnrealBloomPass(
       new THREE.Vector2(innerWidth, innerHeight),
@@ -96,6 +133,20 @@ export class World {
       1.1,
     );
     this.composer.addPass(this.bloom);
+    // A very light exposure-independent grain sits in the image, never over DOM HUD text.
+    this.lens = new ShaderPass({
+      uniforms: {
+        tDiffuse: { value: null },
+        time: { value: 0 },
+        grain: { value: 0.012 },
+      },
+      vertexShader:
+        "varying vec2 vUv; void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}",
+      fragmentShader: `uniform sampler2D tDiffuse; uniform float time; uniform float grain; varying vec2 vUv;
+        void main(){ vec4 c=texture2D(tDiffuse,vUv); float n=fract(sin(dot(gl_FragCoord.xy+floor(time*24.0),vec2(12.9898,78.233)))*43758.5453)-0.5;
+        float edge=smoothstep(0.3,0.8,distance(vUv,vec2(0.5))); c.rgb*=1.0-edge*0.035; c.rgb+=n*grain*min(vec3(1.0),sqrt(max(c.rgb,vec3(0.0)))); gl_FragColor=c; }`,
+    });
+    this.composer.addPass(this.lens);
     this.composer.addPass(new OutputPass());
     this.quality = "high";
     this.renderer.info.autoReset = false;
@@ -104,6 +155,11 @@ export class World {
       new URLSearchParams(location.search).has("profile"),
     );
     this.build();
+    this.practicalLighting = new CasinoLighting(this.scene, this.environment);
+    this.reflections = new RoomReflectionProbes(this.renderer, this.scene, {resolution:64});
+    this.reflections.patchStatic(this.environment.static);
+    this.reflections.patchStatic(this.environment.ceiling);
+    this.probeFrames = 0;
     this.resize();
     addEventListener("resize", () => this.resize());
     canvas.addEventListener("webglcontextlost", (e) => {
@@ -113,6 +169,12 @@ export class World {
       document.getElementById("toast").style.opacity = 1;
     });
     canvas.addEventListener("webglcontextrestored", () => location.reload());
+  }
+  setInspectionView(view) {
+    this.inspectionView = view || null;
+  }
+  setSeed(seed) {
+    this.effectPool.setSeed(seed);
   }
   resize() {
     this.renderer.setSize(innerWidth, innerHeight);
@@ -190,13 +252,29 @@ export class World {
   build() {
     this.environment = new CasinoEnvironment(this.scene);
     this.assets = new Assets();
-    this.ready = this.assets.load().then(() => {
+    this.ready = this.assets.load().then(async () => {
       this.environment.install(this.assets);
       this.stations = this.environment.stations;
       this.doors = this.environment.doors;
       this.campaignScene = new CampaignScene(this.scene, this.assets);
       this.serviceScene = new ServiceScene(this.scene, this.assets);
+      this.serviceScene.teller.userData.bakeExclude = true;
+      this.environment.bakeExtras = this.serviceScene.roots;
       this.prizeWheelScene = new PrizeWheelScene(this.scene);
+      this.bakeStatus = 'loading';
+      if(new URLSearchParams(location.search).get('bake') === 'off') this.bakeStatus = 'disabled';
+      else try {
+        const response = await fetch(`${import.meta.env.BASE_URL}assets/lighting/manifest.json`, {cache:'no-cache'});
+        if (!response.ok) throw new Error(`Lighting manifest: ${response.status}`);
+        const manifest = await response.json();
+        this.bakedLighting = await installStaticBake(this.environment, manifest);
+        this.bakeStatus = 'ready';
+        this.renderer.domElement.dataset.bakedLighting = manifest.coverage;
+      } catch (error) {
+        // Keep the complete game usable if an interrupted update loses an atlas.
+        this.bakeStatus = 'unavailable';
+        console.warn('Casino lighting remains live:', error.message);
+      }
       this.loaded = true;
       this.renderer.domElement.dataset.compressedModels =
         this.assets.downloads.compressed;
@@ -211,6 +289,14 @@ export class World {
         ? casinoEnemy(this.assets, kind)
         : this.assets.character(zombie, variant);
     root.position.set(x, 0, z);
+    root.userData.kind = zombie ? kind : "survivor";
+    root.userData.phase = variant * 0.37;
+    const contact = new THREE.Mesh(this.contactGeometry, this.contactMaterial);
+    contact.rotation.x = -Math.PI / 2;
+    contact.position.y = 0.025;
+    contact.renderOrder = 1;
+    root.add(contact);
+    root.userData.contact = contact;
     this.scene.add(root);
     this.actors.set(id, root);
     return root;
@@ -219,35 +305,83 @@ export class World {
     if (e.type === "explosion") {
       this.particles(e.x, 0.5, e.z, 0xffbd62, 35, 0.7);
       this.particles(e.x, 0.4, e.z, 0xa0c2c1, 20, 1);
-      this.hurtShake = 0.04;
+      // Explosion weight is carried by light, debris and sound, never forced camera shake.
     }
     if (e.type === "dodge") this.particles(e.x, 0.3, e.z, 0x92d0b7, 7, 0.35);
     if (e.type === "shot") {
-      for (const end of e.ends || [e.end]) {
-        this.effectPool.tracer(e, end, WEAPONS[e.weapon]?.color || 0xffda8e);
+      const weapon = WEAPONS[e.weapon],
+        actor = this.actors.get(e.player);
+      const muzzle = this.muzzlePosition.set(e.x, e.y, e.z);
+      if (e.player === myId && this.scopeId) {
+        // The optic hides the third-person rig; its near-field flash stays below the sightline.
+        this.camera.getWorldDirection(this.cameraDirection);
+        muzzle
+          .copy(this.camera.position)
+          .addScaledVector(this.cameraDirection, 0.4);
+        muzzle.y -= 0.08;
+      } else if (actor?.userData.gun?.visible) {
+        // Visual tracer starts at the animated barrel. Its endpoint is always authoritative.
+        const length =
+          weapon?.category === "sidearm" ? 0.34 : weapon?.melee ? 0.9 : 0.68;
+        actor.userData.gun.localToWorld(muzzle.set(0, 0.025, -length));
       }
-      this.particles(
-        e.x,
-        e.y,
-        e.z,
-        WEAPONS[e.weapon]?.color || 0xffd181,
-        3,
-        0.12,
-      );
-      if (e.weapon === "flamethrower")
-        this.particles(e.end.x, e.end.y, e.end.z, 0xff7634, 8, 0.35);
-      const actor = this.actors.get(e.player);
-      if (actor) actor.userData.swing = 0.25;
-      if (e.hit)
+      if (actor) {
+        actor.userData.swing = 0.25;
+        actor.userData.kick =
+          weapon?.category === "shells" || e.weapon === "rpg" ? 0.11 : 0.065;
+      }
+      for (const end of e.ends || [e.end]) {
+        if (!end) continue;
+        if (weapon?.melee) this.effectPool.arc(muzzle, end, 0xffe1a0);
+        else if (e.weapon === "tesla")
+          this.effectPool.arc(muzzle, end, 0xbdc5ff, true);
+        else
+          this.effectPool.tracer(
+            muzzle,
+            end,
+            e.weapon === "railgun" ? 0x9feeff : 0xffe1ab,
+          );
+        if (!e.hit) this.particles(end.x, end.y, end.z, 0xe4c69b, 4, 0.2);
+      }
+      if (!weapon?.melee)
+        this.effectPool.flash(
+          muzzle.x,
+          muzzle.y,
+          muzzle.z,
+          e.weapon === "tesla" ? 0xbbacff : 0xffdc9b,
+        );
+      if (e.weapon === "flamethrower" && e.end) {
+        for (let i = 1; i <= 5; i++)
+          this.effectPool.smoke(
+            muzzle.x + ((e.end.x - muzzle.x) * i) / 5,
+            muzzle.y + ((e.end.y - muzzle.y) * i) / 5,
+            muzzle.z + ((e.end.z - muzzle.z) * i) / 5,
+            i < 3 ? 0xffd398 : 0xe85b29,
+            0.24,
+            0.1 + i * 0.025,
+          );
+      } else if (!weapon?.melee)
+        this.effectPool.smoke(
+          muzzle.x,
+          muzzle.y,
+          muzzle.z,
+          0xb8b3a4,
+          0.32,
+          0.06,
+        );
+      if (e.hit && e.end)
         this.particles(
           e.end.x,
           e.end.y,
           e.end.z,
-          e.head ? 0xffd47b : 0x9bac79,
-          7,
-          0.25,
+          e.head ? 0xf2c071 : 0x88936b,
+          e.head ? 9 : 6,
+          0.28,
         );
-      if (e.player === myId) this.recoil = 0.025 * (this.recoilScale || 1);
+      if (e.player === myId)
+        this.recoil =
+          (weapon?.category === "shells" ? 0.04 : 0.025) *
+          (this.recoilScale || 1);
     }
     if (e.type === "death") {
       this.particles(e.x, 1, e.z, 0x7e926b, 12, 0.6);
@@ -273,11 +407,19 @@ export class World {
   update(dt, state, myId, yaw, pitch, aim) {
     this.metrics.begin();
     this.renderer.info.reset();
-    this.hurtShake = (this.hurtShake || 0) * Math.exp(-dt * 14);
+
     this.clock += dt;
     this.recoil *= Math.exp(-dt * 20);
     const t = this.clock;
+    this.lens.uniforms.time.value = t;
     this.environment.update(dt, state, myId, t);
+    const litPlayer = state?.players.find(p=>p.id===myId);
+    this.practicalLighting.update(dt,state,litPlayer);
+    this.bakedLighting?.update(dt,!!state?.campaign?.power);
+    if (this.loaded && !this.probePropsPatched) {
+      this.probePropsPatched = true;
+      for (const root of this.environment.roomProps.values()) this.reflections.patchStatic(root);
+    }
     this.campaignScene?.update(state, t, dt);
     this.serviceScene?.update(dt, state);
     this.prizeWheelScene?.update(dt, state, myId);
@@ -324,7 +466,12 @@ export class World {
           charm.position.set(0.08, -0.1, 0.03);
           a.userData.gun.add(charm);
           a.userData.masteryCharm = charm;
-          a.userData.disposables = [marker, badge, charm];
+          a.userData.disposables = [
+            ...(a.userData.disposables || []),
+            marker,
+            badge,
+            charm,
+          ];
         }
         if (!a.userData.reviveLabel) {
           a.userData.reviveLabel = this.encounters.label(
@@ -334,7 +481,7 @@ export class World {
           a.userData.reviveLabel.position.set(0, 0.95, 0);
           a.add(a.userData.reviveLabel);
         }
-        a.userData.reviveLabel.visible = !!p.down;
+        a.userData.reviveLabel.visible = !!p.down && state.phase !== "over";
         a.userData.crewOutline.visible = p.id !== this.localId;
         const mastery = p.mastery?.[p.guns[p.selected].id] || 0;
         a.userData.masteryCharm.visible = mastery > 0;
@@ -355,6 +502,12 @@ export class World {
         a.rotation.y = p.id === myId ? yaw : p.yaw;
         a.rotation.z = 0;
         a.userData.visual.rotation.set(0, 0, 0);
+        a.userData.aimPitch = p.id === myId ? pitch : p.pitch || 0;
+        a.userData.aiming = p.id === myId ? aim : p.aim;
+        a.userData.contact.position.y = 0.025 - a.position.y;
+        a.userData.contact.scale.setScalar(
+          Math.max(0.45, 1 - (p.height || 0) * 0.22),
+        );
         a.userData.visual.position.set(0, 0, 0);
         a.userData.gun.visible = !p.down;
         a.userData.badge.visible = !p.down;
@@ -396,36 +549,87 @@ export class World {
       for (const z of state.zombies) {
         const id = "z" + z.id;
         ids.add(id);
-        const a = this.actors.get(id) || this.actor(id, true, z.x, z.z, z.kind);
+        let a = this.actors.get(id);
+        if (a && a.userData.kind !== z.kind) {
+          this.dispose(a);
+          this.actors.delete(id);
+          a = null;
+        }
+        a ||= this.actor(id, true, z.x, z.z, z.kind);
         const before = this.previousPosition.copy(a.position);
         a.position.lerp(
           this.scratchPosition.set(z.x, 0, z.z),
           1 - Math.exp(-dt * 16),
         );
-        const target =
-          z.yaw === undefined
-            ? state.players
-                .filter((p) => !p.down)
-                .sort(
-                  (p, q) =>
-                    Math.hypot(p.x - z.x, p.z - z.z) -
-                    Math.hypot(q.x - z.x, q.z - z.z),
-                )[0]
-            : null;
+        let target = null,
+          nearest = Infinity;
+        if (z.yaw === undefined)
+          for (const player of state.players) {
+            if (player.down) continue;
+            const distance = (player.x - z.x) ** 2 + (player.z - z.z) ** 2;
+            if (distance < nearest) {
+              nearest = distance;
+              target = player;
+            }
+          }
+        const previousHp = a.userData.previousHp;
+        if (previousHp !== undefined && z.hp < previousHp)
+          a.userData.impact = 1;
+        a.userData.previousHp = z.hp;
+        a.userData.impact = Math.max(0, (a.userData.impact || 0) - dt * 5.5);
         if (z.yaw !== undefined || target)
           a.rotation.y = z.yaw ?? Math.atan2(z.x - target.x, z.z - target.z);
+        a.userData.windup = 0;
+        if (
+          ["brute", "security", "boss", "spitter"].includes(z.kind) &&
+          z.stun > 0 &&
+          !a.userData.impact
+        ) {
+          const warning = state.hazards?.find(
+            (h) =>
+              h.delay > 0 &&
+              (z.kind === "boss" ||
+                z.kind === "spitter" ||
+                Math.hypot(h.x - z.x, h.z - z.z) < 0.8),
+          );
+          if (warning)
+            a.userData.windup = Math.max(0, warning.delay / warning.total);
+        }
         a.userData.runRate =
           z.kind === "runner" ? 1.1 : z.kind === "boss" ? 0.3 : 0.45;
         if (a.userData.customEnemy)
           animateCasinoEnemy(a, dt, z, before.distanceTo(a.position));
-        else this.assets.animate(a, dt, !z.stun, false, null);
+        else {
+          a.userData.enemyState = z;
+          this.assets.animate(
+            a,
+            dt,
+            !z.stun && before.distanceTo(a.position) > 0.001,
+            false,
+            null,
+          );
+        }
         this.encounters.actor(a, z, this.camera);
         if (!a.userData.customEnemy)
-          a.userData.visual.rotation.x = z.stun ? -0.18 : 0.08;
+          a.userData.visual.rotation.x =
+            (z.stun ? -0.18 : 0.08) - a.userData.impact * 0.16;
+        if (a.userData.impact) {
+          a.userData.visual.rotation.z +=
+            Math.sin(a.userData.impact * Math.PI) * 0.055;
+        }
       }
       for (const [id, a] of this.actors)
         if (!ids.has(id)) {
-          this.dispose(a);
+          if (id.startsWith("z") && this.retiringActors.length < 8) {
+            a.userData.mixer?.stopAllAction();
+            const encounter = a.userData.encounter;
+            if (encounter) {
+              encounter.name.visible = false;
+              encounter.bars.visible = false;
+            }
+            a.userData.contact.visible = false;
+            this.retiringActors.push({ actor: a, life: 0 });
+          } else this.dispose(a);
           this.actors.delete(id);
         }
       this.chipBatch.update(state.chips, t);
@@ -439,18 +643,17 @@ export class World {
             aim,
             state.openRooms,
           ),
-          dir = new THREE.Vector3(ray.dir.x, ray.dir.y, ray.dir.z),
-          pos = new THREE.Vector3(ray.origin.x, ray.origin.y, ray.origin.z);
+          dir = this.cameraDirection.set(ray.dir.x, ray.dir.y, ray.dir.z),
+          pos = this.scratchPosition.set(
+            ray.origin.x,
+            ray.origin.y,
+            ray.origin.z,
+          );
         this.keyLight.target.position.set(p.x, 0, p.z);
         this.keyLight.position.set(p.x + 4, 18, p.z + 7);
         this.camera.position.copy(pos);
-        this.camera.lookAt(
-          pos
-            .clone()
-            .add(dir)
-            .add(new THREE.Vector3(0, this.hurtShake || 0, 0)),
-        );
-        const optic = aim && !p.down ? opticFor(p) : null;
+        this.camera.lookAt(this.cameraTarget.copy(pos).add(dir));
+        const optic = aim && !p.down && !this.inspectionView ? opticFor(p) : null;
         a.visible = !optic;
         this.recoilScale = gunStats(
           WEAPONS[p.guns[p.selected].id],
@@ -481,10 +684,41 @@ export class World {
         }
       }
     } else {
-      this.camera.position.set(11 + Math.sin(t * 0.08) * 2, 7.8, 15);
-      this.camera.lookAt(-2, 1, -3);
+      // Eye-height composition from inside the playable Atrium, below the real ceiling.
+      this.camera.position.set(3.8 + Math.sin(t * 0.075) * 0.45, 2.35, 13.2);
+      this.camera.lookAt(-1.4, 1.65, 4.1);
+    }
+    for (let i = this.retiringActors.length - 1; i >= 0; i--) {
+      const item = this.retiringActors[i];
+      item.life += dt;
+      const fall = Math.min(1, item.life / 0.45),
+        eased = 1 - (1 - fall) ** 3;
+      item.actor.rotation.x = -eased * Math.PI * 0.48;
+      item.actor.position.y = 0.08 - Math.max(0, item.life - 1.2) * 2;
+      if (item.life >= 1.8) {
+        this.dispose(item.actor);
+        this.retiringActors.splice(i, 1);
+      }
+    }
+    if (this.inspectionView) {
+      const view = this.inspectionView;
+      this.camera.position.set(...view.position);
+      this.camera.lookAt(...view.target);
+      if (this.camera.fov !== (view.fov || 54)) {
+        this.camera.fov = view.fov || 54;
+        this.camera.updateProjectionMatrix();
+      }
     }
     this.effectPool.update(dt);
+    if (this.loaded && ++this.probeFrames > 30) {
+      const hidden = [...this.actors.values(), ...this.retiringActors.map(v=>v.actor)];
+      const reflected = this.reflections.update(litPlayer,state,{
+        allowCapture: this.probeFrames % 30 === 0 && this.practicalLighting.power === 0 ||
+          this.probeFrames % 30 === 0 && this.practicalLighting.power > .99,
+        hide:hidden,
+      });
+      this.scene.environmentIntensity = reflected ? .6 : .25;
+    }
     if (this.quality === "high") this.composer.render();
     else this.renderer.render(this.scene, this.camera);
     this.metrics.end(this.loaded, this.effectPool);
