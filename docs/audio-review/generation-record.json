@@ -1,0 +1,180 @@
+{
+  "flow_id": "2C75vSuIQQnCbmeVpgmu",
+  "run": {
+    "flow_id": "2C75vSuIQQnCbmeVpgmu",
+    "flow_created": false,
+    "url": "https://elevenlabs.io/app/flows/2C75vSuIQQnCbmeVpgmu?vs=viewstate_01m28xabs6fekah6s5c2pwb3ev",
+    "flow_url": "https://elevenlabs.io/app/flows/2C75vSuIQQnCbmeVpgmu",
+    "results": [
+      {
+        "success": true,
+        "node_id": "qD1dLqHRwNiheeyU8PDj",
+        "session_id": "u6M5T1UBCRdIJE7QoPfE"
+      },
+      {
+        "success": true,
+        "node_id": "qD1dLqHRwNiheeyU8PDj",
+        "session_id": "0rMvE3YJyDmo6ZwSRGMe"
+      },
+      {
+        "success": true,
+        "node_id": "qD1dLqHRwNiheeyU8PDj",
+        "session_id": "DSNU9Oqyml0vAnxpjxhV"
+      },
+      {
+        "success": true,
+        "node_id": "qD1dLqHRwNiheeyU8PDj",
+        "session_id": "SbfJg1uyjhCqsFh3fdpP"
+      },
+      {
+        "success": true,
+        "node_id": "wYO7sRmrGXsfqcKl8e45",
+        "session_id": "CxuPnr3Cln26XcqLGyyu"
+      },
+      {
+        "success": true,
+        "node_id": "wYO7sRmrGXsfqcKl8e45",
+        "session_id": "cJsbDHFcGGvh34O8zZLI"
+      },
+      {
+        "success": true,
+        "node_id": "wYO7sRmrGXsfqcKl8e45",
+        "session_id": "eodQfoHSh6UmpPNEPdVR"
+      },
+      {
+        "success": true,
+        "node_id": "wYO7sRmrGXsfqcKl8e45",
+        "session_id": "WKEI3AMTuiRAmzNQm68d"
+      },
+      {
+        "success": true,
+        "node_id": "dhFQ1BrPMGaJcgvtvYaV",
+        "session_id": "RRJCztQnlJcCQSsMfnUY"
+      },
+      {
+        "success": true,
+        "node_id": "dhFQ1BrPMGaJcgvtvYaV",
+        "session_id": "0D8wR5KT8Uy1RWmJ6sQy"
+      },
+      {
+        "success": true,
+        "node_id": "dhFQ1BrPMGaJcgvtvYaV",
+        "session_id": "Gu1aP2JpnNuBnQCL9qEZ"
+      },
+      {
+        "success": true,
+        "node_id": "dhFQ1BrPMGaJcgvtvYaV",
+        "session_id": "27PNh8Jmjj1ODuDxSXkM"
+      }
+    ],
+    "summary": {
+      "nodes_run": 3,
+      "generations_started": 12,
+      "failed": 0,
+      "generations_by_node": {
+        "qD1dLqHRwNiheeyU8PDj": 4,
+        "wYO7sRmrGXsfqcKl8e45": 4,
+        "dhFQ1BrPMGaJcgvtvYaV": 4
+      }
+    },
+    "session_ids": [
+      "u6M5T1UBCRdIJE7QoPfE",
+      "0rMvE3YJyDmo6ZwSRGMe",
+      "DSNU9Oqyml0vAnxpjxhV",
+      "SbfJg1uyjhCqsFh3fdpP",
+      "CxuPnr3Cln26XcqLGyyu",
+      "cJsbDHFcGGvh34O8zZLI",
+      "eodQfoHSh6UmpPNEPdVR",
+      "WKEI3AMTuiRAmzNQm68d",
+      "RRJCztQnlJcCQSsMfnUY",
+      "0D8wR5KT8Uy1RWmJ6sQy",
+      "Gu1aP2JpnNuBnQCL9qEZ",
+      "27PNh8Jmjj1ODuDxSXkM"
+    ],
+    "pending": [
+      {
+        "generation_id": "5A7MkOtpzyxGqpmnYY7L",
+        "kind": "audio"
+      },
+      {
+        "generation_id": "9V1K1YxyPJqeH2QPqTOM",
+        "kind": "audio"
+      },
+      {
+        "generation_id": "Ot3APzdi9TnWjYuxTs6P",
+        "kind": "audio"
+      },
+      {
+        "generation_id": "H8Im4rx5ql4vGtzNDiFl",
+        "kind": "audio"
+      },
+      {
+        "generation_id": "Cpgk4lTkY1RgliAKGvnR",
+        "kind": "audio"
+      },
+      {
+        "generation_id": "h1girEq4uBIU18phV4vH",
+        "kind": "audio"
+      },
+      {
+        "generation_id": "oUReY4blhmnkT8vKrvzR",
+        "kind": "audio"
+      },
+      {
+        "generation_id": "sgOfiyQUGoxVM73Du7J7",
+        "kind": "audio"
+      },
+      {
+        "generation_id": "CvEGXE7Qwtv1czyHmPXo",
+        "kind": "audio"
+      },
+      {
+        "generation_id": "W9s7bPHLbk2BeSMxLe4W",
+        "kind": "audio"
+      },
+      {
+        "generation_id": "B5zeoI48xc5CTwjTAZyk",
+        "kind": "audio"
+      },
+      {
+        "generation_id": "GY6oJPwl1QdIVprAZJC2",
+        "kind": "audio"
+      }
+    ],
+    "poll_after_seconds": 3,
+    "notes": "Not finished yet. If a generation view is shown it tracks progress and polls by itself, so there is nothing to do here. Only call creative_get_flow_run_status yourself if no view appeared: wait poll_after_seconds, then call it with this flow_id and session_ids, repeating until all_completed or has_failures is true.",
+    "view_state_id": "viewstate_01m28xabs6fekah6s5c2pwb3ev"
+  },
+  "pilot": [
+    {
+      "id": "courtesy-shot",
+      "name": "Courtesy .38",
+      "cue": "shot",
+      "weapon": "courtesy",
+      "duration": 0.65,
+      "interval": 0.29,
+      "prompt": "One isolated .38 pistol gunshot, immediate crisp dry crack with a tight punchy body and short natural decay, close-mic, no echo or background sound.",
+      "node_id": "qD1dLqHRwNiheeyU8PDj"
+    },
+    {
+      "id": "pitViper-shot",
+      "name": "Pit Viper",
+      "cue": "shot",
+      "weapon": "pitViper",
+      "duration": 1,
+      "interval": 0.75,
+      "prompt": "One isolated heavy shotgun blast, immediate sharp attack and deep chesty thump with a short gritty decay, close-mic, no echo or background sound.",
+      "node_id": "wYO7sRmrGXsfqcKl8e45"
+    },
+    {
+      "id": "walker-enemy",
+      "name": "Drifter",
+      "cue": "enemy",
+      "kind": "walker",
+      "duration": 2.2,
+      "interval": 2.8,
+      "prompt": "One low feral zombie growl, ragged throaty rasp with strained breath, menacing human-sized creature, close-mic, dry isolated recording without words or background sound.",
+      "node_id": "dhFQ1BrPMGaJcgvtvYaV"
+    }
+  ]
+}

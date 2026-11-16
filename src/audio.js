@@ -1,4 +1,5 @@
 import { soundCue } from "./audio-cues.js";
+import { APPROVED_SAMPLES, sampleKey, sampleUrl } from "./audio-samples.js";
 export const AUDIO_DEFAULTS = {
   master: 0.7,
   effects: 0.85,
@@ -37,9 +38,13 @@ export function spatialMix(listener, source, blocked = false) {
     cutoff: blocked ? 650 : Math.max(2200, 16000 - d * 420),
   };
 }
-// Procedural Foley shares a mixer, room tail and cached noise; each cue disposes its nodes.
+// Recorded and procedural cues share the mixer, room tail and voice lifecycle.
 export class Audio {
-  constructor({ contextFactory, storage } = {}) {
+  constructor({
+    contextFactory,
+    storage,
+    fetcher = globalThis.fetch?.bind(globalThis),
+  } = {}) {
     this.contextFactory =
       contextFactory ||
       (() => new (globalThis.AudioContext || globalThis.webkitAudioContext)());
@@ -57,6 +62,9 @@ export class Audio {
     this.cooldowns = new Map();
     this.listener = null;
     this.ducked = false;
+    this.fetcher = fetcher;
+    this.sampleBuffers = new Map();
+    this.sampleLoad = null;
   }
   get muted() {
     return this.settings.muted;
@@ -80,11 +88,27 @@ export class Audio {
     if (!this.active) return;
     try {
       if (!this.ctx) this.createGraph();
+      this.loadSamples();
       if (this.ctx.state === "suspended") this.ctx.resume()?.catch(() => {});
       this.mix();
     } catch {
       /* Audio failure must not prevent play. */
     }
+  }
+  loadSamples() {
+    const ctx = this.ctx;
+    if (this.sampleLoad) return this.sampleLoad;
+    if (!ctx?.decodeAudioData || !this.fetcher) return Promise.resolve();
+    this.sampleLoad = Promise.allSettled(
+      Object.entries(APPROVED_SAMPLES).map(async ([key, sample]) => {
+        const response = await this.fetcher(sampleUrl(sample));
+        if (!response.ok) throw new Error("Sample unavailable");
+        const buffer = await ctx.decodeAudioData(await response.arrayBuffer());
+        if (this.ctx === ctx && ctx.state !== "closed")
+          this.sampleBuffers.set(key, buffer);
+      }),
+    );
+    return this.sampleLoad;
   }
   createGraph() {
     const c = (this.ctx = this.contextFactory());
@@ -183,8 +207,9 @@ export class Audio {
   }
   play(name, options = {}) {
     const cue = soundCue(name, options);
+    const buffer = this.sampleBuffers.get(sampleKey(name, options));
     return cue
-      ? this.layers(cue.layers, {
+      ? this.layers(buffer ? [{ buffer, gain: 1 }] : cue.layers, {
           ...cue,
           ...options,
           key: options.key || name,
@@ -264,12 +289,18 @@ export class Audio {
     };
     this.voices.add(voice);
     for (const layer of layers) {
+      const sample = layer.buffer;
       const at = c.currentTime + delay + (layer.at || 0),
-        duration = Math.max(0.015, layer.duration || 0.1),
-        s = layer.noise ? c.createBufferSource() : c.createOscillator(),
+        duration = sample
+          ? sample.duration
+          : Math.max(0.015, layer.duration || 0.1),
+        s =
+          sample || layer.noise ? c.createBufferSource() : c.createOscillator(),
         env = c.createGain(),
         f = c.createBiquadFilter();
-      if (layer.noise) {
+      if (sample) {
+        s.buffer = sample;
+      } else if (layer.noise) {
         s.buffer = this.noiseBuffer;
         s.loop = true;
       } else {
@@ -282,23 +313,28 @@ export class Audio {
         s.detune.value = (Math.random() - 0.5) * (layer.variation ?? 24);
       }
       f.type = layer.filter || "lowpass";
-      f.frequency.setValueAtTime(layer.cutoff || 12000, at);
+      f.frequency.setValueAtTime(layer.cutoff || (sample ? 20000 : 12000), at);
       if (layer.toCutoff)
         f.frequency.exponentialRampToValueAtTime(layer.toCutoff, at + duration);
       f.Q.value = layer.q || 0.7;
-      env.gain.setValueAtTime(0.0001, at);
-      env.gain.exponentialRampToValueAtTime(
-        Math.max(0.0002, layer.gain || 0.05),
-        at + Math.min(duration / 3, layer.attack || 0.003),
-      );
-      env.gain.exponentialRampToValueAtTime(0.0001, at + duration);
+      if (sample) {
+        // Approved WAVs already contain edge fades; preserve their full envelope.
+        env.gain.setValueAtTime(layer.gain ?? 1, at);
+      } else {
+        env.gain.setValueAtTime(0.0001, at);
+        env.gain.exponentialRampToValueAtTime(
+          Math.max(0.0002, layer.gain || 0.05),
+          at + Math.min(duration / 3, layer.attack || 0.003),
+        );
+        env.gain.exponentialRampToValueAtTime(0.0001, at + duration);
+      }
       s.connect(f).connect(env).connect(channel);
       sources.push(s);
       nodes.push(s, f, env);
       s.onended = () => {
         if (--remaining === 0) dispose();
       };
-      if (layer.noise) s.start(at, Math.random() * 0.5);
+      if (layer.noise && !sample) s.start(at, Math.random() * 0.5);
       else s.start(at);
       s.stop(at + duration + 0.01);
     }
@@ -320,5 +356,7 @@ export class Audio {
     this.ctx?.close()?.catch(() => {});
     this.ctx = null;
     this.output = null;
+    this.sampleBuffers.clear();
+    this.sampleLoad = null;
   }
 }

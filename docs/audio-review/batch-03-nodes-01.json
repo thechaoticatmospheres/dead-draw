@@ -1,0 +1,399 @@
+[
+  {
+    "id": "sword-shot",
+    "name": "Velvet Saber · Swing",
+    "cue": "shot",
+    "group": "Weapons",
+    "duration": 0.5,
+    "interval": 0.62,
+    "batch": 3,
+    "prompt": "One fast sword swing, sharp airy blade whoosh with a light metallic ring, close dry isolated sound.",
+    "loop": false,
+    "weapon": "sword",
+    "appliesTo": [
+      "sword"
+    ],
+    "node_id": "xDagzkKrPH6RofLJU3lz"
+  },
+  {
+    "id": "crossbow-shot",
+    "name": "Pit Boss Crossbow · Fire",
+    "cue": "shot",
+    "group": "Weapons",
+    "duration": 0.5,
+    "interval": 0.8,
+    "batch": 3,
+    "prompt": "One crossbow shot, tight springy string snap and wooden body thump, dry close isolated sound.",
+    "loop": false,
+    "weapon": "crossbow",
+    "appliesTo": [
+      "crossbow"
+    ],
+    "node_id": "RR49SYnRkxQaoEOJ188M"
+  },
+  {
+    "id": "rpg-shot",
+    "name": "Housebreaker RPG · Fire",
+    "cue": "shot",
+    "group": "Weapons",
+    "duration": 1,
+    "interval": 1.1,
+    "batch": 3,
+    "prompt": "One rocket launcher discharge, punchy hollow launch thump and short forceful exhaust whoosh, dry isolated sound.",
+    "loop": false,
+    "weapon": "rpg",
+    "appliesTo": [
+      "rpg"
+    ],
+    "node_id": "57tvvpM6RLWEWybQfUBH"
+  },
+  {
+    "id": "flamethrower-shot",
+    "name": "Dragon’s Breath · Fire",
+    "cue": "shot",
+    "group": "Weapons",
+    "duration": 0.6,
+    "interval": 0.09,
+    "batch": 3,
+    "prompt": "One flamethrower ignition, sharp gas ignition pop swelling into a brief roaring flame burst, dry isolated sound.",
+    "loop": false,
+    "weapon": "flamethrower",
+    "appliesTo": [
+      "flamethrower"
+    ],
+    "node_id": "aFC7Yglt9FDIShgtOg1o"
+  },
+  {
+    "id": "minigun-shot",
+    "name": "The Debt Collector · Fire",
+    "cue": "shot",
+    "group": "Weapons",
+    "duration": 0.5,
+    "interval": 0.055,
+    "batch": 3,
+    "prompt": "One heavy rotary machine-gun shot, tight aggressive mechanical crack and bassy thump, very short dry decay, no burst or background.",
+    "loop": false,
+    "weapon": "minigun",
+    "appliesTo": [
+      "minigun"
+    ],
+    "node_id": "2UooIW7wHHP8jGF2YICs"
+  },
+  {
+    "id": "railgun-shot",
+    "name": "Royal Flush Railgun · Fire",
+    "cue": "shot",
+    "group": "Weapons",
+    "duration": 0.8,
+    "interval": 1.1,
+    "batch": 3,
+    "prompt": "One railgun discharge, sharp electric snap and deep magnetic punch with a short descending whine, dry isolated sound.",
+    "loop": false,
+    "weapon": "railgun",
+    "appliesTo": [
+      "railgun"
+    ],
+    "node_id": "CdMEHWtPXAwvKiZDe9p2"
+  },
+  {
+    "id": "tesla-shot",
+    "name": "Static Jackpot · Fire",
+    "cue": "shot",
+    "group": "Weapons",
+    "duration": 0.7,
+    "interval": 0.5,
+    "batch": 3,
+    "prompt": "One tesla weapon discharge, harsh electrical crack and short buzzing arc, dry isolated sound.",
+    "loop": false,
+    "weapon": "tesla",
+    "appliesTo": [
+      "tesla"
+    ],
+    "node_id": "N9Q9UTWuPf75EiC6RScG"
+  },
+  {
+    "id": "switch-shot",
+    "name": "Switch · Fire",
+    "cue": "shot",
+    "group": "Weapons",
+    "duration": 0.5,
+    "interval": 0.095,
+    "batch": 3,
+    "prompt": "One compact automatic pistol gunshot, immediate sharp dry pop with a tight gritty body, short decay, no burst or echo.",
+    "loop": false,
+    "weapon": "switch",
+    "appliesTo": [
+      "switch"
+    ],
+    "node_id": "eAH4pJv5F5KKhRf5WCP4"
+  },
+  {
+    "id": "dividend-shot",
+    "name": "Dividend · Fire",
+    "cue": "shot",
+    "group": "Weapons",
+    "duration": 0.5,
+    "interval": 0.13,
+    "batch": 3,
+    "prompt": "One rifle gunshot, immediate crisp hard crack and solid midrange punch, short dry decay, no echo or background.",
+    "loop": false,
+    "weapon": "dividend",
+    "appliesTo": [
+      "dividend"
+    ],
+    "node_id": "T4z0iiB2XbgXYHbIhdOD"
+  },
+  {
+    "id": "sovereign-shot",
+    "name": "Sovereign · Fire",
+    "cue": "shot",
+    "group": "Weapons",
+    "duration": 0.6,
+    "interval": 0.16,
+    "batch": 3,
+    "prompt": "One heavy battle rifle gunshot, immediate hard crack with a deep forceful thump and short rough decay, dry isolated sound.",
+    "loop": false,
+    "weapon": "sovereign",
+    "appliesTo": [
+      "sovereign"
+    ],
+    "node_id": "Yd0c1TuYNaUDmEw95NYP"
+  },
+  {
+    "id": "handling-pistol-reload",
+    "name": "Pistols · Reload start",
+    "cue": "reload",
+    "group": "Weapon handling",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "Pistol magazine sliding out with a crisp release click, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "courtesy",
+      "velvet"
+    ],
+    "node_id": "DtoyMfTQG7djXSPtsOS1"
+  },
+  {
+    "id": "handling-pistol-reloadEnd",
+    "name": "Pistols · Reload finish",
+    "cue": "reloadEnd",
+    "group": "Weapon handling",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "Pistol magazine seating firmly with a short metal slide rack, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "courtesy",
+      "velvet"
+    ],
+    "node_id": "HBJ4wMC4Ts8eMQ1STdN6"
+  },
+  {
+    "id": "handling-pistol-switch",
+    "name": "Pistols · Equip",
+    "cue": "switch",
+    "group": "Weapon handling",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "Pistol being drawn with a short cloth slide and metal click, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "courtesy",
+      "velvet"
+    ],
+    "node_id": "xRL8C7cYMLfnum5oFIH2"
+  },
+  {
+    "id": "handling-pistol-empty",
+    "name": "Pistols · Empty",
+    "cue": "empty",
+    "group": "Weapon handling",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "One dry pistol trigger click, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "courtesy",
+      "velvet"
+    ],
+    "node_id": "hqaNnjqdkEhmXfhlKZOj"
+  },
+  {
+    "id": "handling-automatic-reload",
+    "name": "Automatics · Reload start",
+    "cue": "reload",
+    "group": "Weapon handling",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "Compact automatic weapon magazine release and short plastic magazine slide, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "switch",
+      "house"
+    ],
+    "node_id": "wgHPelKsult6AmlAQKlL"
+  },
+  {
+    "id": "handling-automatic-reloadEnd",
+    "name": "Automatics · Reload finish",
+    "cue": "reloadEnd",
+    "group": "Weapon handling",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "Compact automatic weapon magazine seating with a sharp charging-handle click, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "switch",
+      "house"
+    ],
+    "node_id": "rp03ErAYfjQAQ58eUWXx"
+  },
+  {
+    "id": "handling-automatic-switch",
+    "name": "Automatics · Equip",
+    "cue": "switch",
+    "group": "Weapon handling",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "Compact automatic weapon raised with strap rustle and light metal clack, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "switch",
+      "house"
+    ],
+    "node_id": "WjdfUaVZCGkVhAuOf1sK"
+  },
+  {
+    "id": "handling-automatic-empty",
+    "name": "Automatics · Empty",
+    "cue": "empty",
+    "group": "Weapon handling",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "One dry automatic weapon trigger click, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "switch",
+      "house"
+    ],
+    "node_id": "tGKy4M0ULquoo8wWNTui"
+  },
+  {
+    "id": "handling-rifle-reload",
+    "name": "Rifles · Reload start",
+    "cue": "reload",
+    "group": "Weapon handling",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "Rifle magazine release and firm metal magazine slide, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "dividend",
+      "sovereign"
+    ],
+    "node_id": "l5MnVYtoqvBBtpOPB0OR"
+  },
+  {
+    "id": "handling-rifle-reloadEnd",
+    "name": "Rifles · Reload finish",
+    "cue": "reloadEnd",
+    "group": "Weapon handling",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "Rifle magazine seating and a solid bolt clack, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "dividend",
+      "sovereign"
+    ],
+    "node_id": "jlMyvs68A7pWcePbQ4cb"
+  },
+  {
+    "id": "handling-rifle-switch",
+    "name": "Rifles · Equip",
+    "cue": "switch",
+    "group": "Weapon handling",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "Rifle raised with a short strap rustle and solid metal clack, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "dividend",
+      "sovereign"
+    ],
+    "node_id": "brS7Ejpki737hrCkdhwU"
+  },
+  {
+    "id": "handling-rifle-empty",
+    "name": "Rifles · Empty",
+    "cue": "empty",
+    "group": "Weapon handling",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "One dry rifle firing-mechanism click, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "dividend",
+      "sovereign"
+    ],
+    "node_id": "c1Eo9e0W9clpyYOnEOxu"
+  },
+  {
+    "id": "handling-shotgun-reload",
+    "name": "Pit Viper · Reload start",
+    "cue": "reload",
+    "group": "Weapon handling",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "Shotgun loading gate opening with a short metal clack, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "pitViper"
+    ],
+    "node_id": "cROQRsbETnw8ILA3SOqs"
+  },
+  {
+    "id": "handling-shotgun-reloadEnd",
+    "name": "Pit Viper · Reload finish",
+    "cue": "reloadEnd",
+    "group": "Weapon handling",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "Shotgun action racking shut with a heavy mechanical clack, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "pitViper"
+    ],
+    "node_id": "7Qxnc5WZ3QcGscLYoxCm"
+  },
+  {
+    "id": "handling-shotgun-switch",
+    "name": "Pit Viper · Equip",
+    "cue": "switch",
+    "group": "Weapon handling",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "Shotgun raised with a solid wooden and metal handling clunk, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "pitViper"
+    ],
+    "node_id": "aql8BL0Rd4n4DdfnQ9yj"
+  }
+]

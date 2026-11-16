@@ -1,0 +1,384 @@
+[
+  {
+    "id": "handling-shotgun-empty",
+    "name": "Pit Viper · Empty",
+    "cue": "empty",
+    "group": "Weapon handling",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "One hollow dry shotgun trigger click, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "pitViper"
+    ],
+    "node_id": "RdJmMf93SXQN0WgurGtx"
+  },
+  {
+    "id": "handling-crossbow-reload",
+    "name": "Pit Boss Crossbow · Reload start",
+    "cue": "reload",
+    "group": "Weapon handling",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "Crossbow string pulled back against creaking mechanical tension, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "crossbow"
+    ],
+    "node_id": "qBaY5opHlvFkxPn6ODHT"
+  },
+  {
+    "id": "handling-crossbow-reloadEnd",
+    "name": "Pit Boss Crossbow · Reload finish",
+    "cue": "reloadEnd",
+    "group": "Weapon handling",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "Crossbow bolt seated with a wooden tap and latch click, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "crossbow"
+    ],
+    "node_id": "aFf8SPvfEB6jI342d5N4"
+  },
+  {
+    "id": "handling-crossbow-switch",
+    "name": "Pit Boss Crossbow · Equip",
+    "cue": "switch",
+    "group": "Weapon handling",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "Crossbow raised with a short wooden creak and strap rustle, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "crossbow"
+    ],
+    "node_id": "78xgWDKEURYGYmoxHrKx"
+  },
+  {
+    "id": "handling-crossbow-empty",
+    "name": "Pit Boss Crossbow · Empty",
+    "cue": "empty",
+    "group": "Weapon handling",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "One empty crossbow latch click, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "crossbow"
+    ],
+    "node_id": "IBj3Kr5jyg8WveQD0OST"
+  },
+  {
+    "id": "handling-rocket-reload",
+    "name": "Housebreaker RPG · Reload start",
+    "cue": "reload",
+    "group": "Weapon handling",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "Rocket launcher breech opening with a heavy hollow metal clunk, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "rpg"
+    ],
+    "node_id": "aIRdYjdQiExqavjYeo2J"
+  },
+  {
+    "id": "handling-rocket-reloadEnd",
+    "name": "Housebreaker RPG · Reload finish",
+    "cue": "reloadEnd",
+    "group": "Weapon handling",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "Rocket seating in launcher and heavy breech latch snapping shut, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "rpg"
+    ],
+    "node_id": "PHgzqWmk5QYDlbPfMzRM"
+  },
+  {
+    "id": "handling-rocket-switch",
+    "name": "Housebreaker RPG · Equip",
+    "cue": "switch",
+    "group": "Weapon handling",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "Rocket launcher raised with a heavy tube handling clunk, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "rpg"
+    ],
+    "node_id": "Db9r62IIhYgMsJmiTaBI"
+  },
+  {
+    "id": "handling-rocket-empty",
+    "name": "Housebreaker RPG · Empty",
+    "cue": "empty",
+    "group": "Weapon handling",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "One dry rocket launcher trigger click, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "rpg"
+    ],
+    "node_id": "dSK0jvaQhlg5pHdzC5O5"
+  },
+  {
+    "id": "handling-fuel-reload",
+    "name": "Dragon’s Breath · Reload start",
+    "cue": "reload",
+    "group": "Weapon handling",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "Flamethrower fuel coupling unscrewing with a brief pressure hiss, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "flamethrower"
+    ],
+    "node_id": "1rG4wom67SZAW1DyALGo"
+  },
+  {
+    "id": "handling-fuel-reloadEnd",
+    "name": "Dragon’s Breath · Reload finish",
+    "cue": "reloadEnd",
+    "group": "Weapon handling",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "Flamethrower fuel coupling locking shut with a metallic click, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "flamethrower"
+    ],
+    "node_id": "vx67LaQ0fnfFNuyeBEw4"
+  },
+  {
+    "id": "handling-fuel-switch",
+    "name": "Dragon’s Breath · Equip",
+    "cue": "switch",
+    "group": "Weapon handling",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "Flamethrower raised with hose movement and a metal handling clunk, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "flamethrower"
+    ],
+    "node_id": "tqefDNmiP5JwBIQTXpSA"
+  },
+  {
+    "id": "handling-fuel-empty",
+    "name": "Dragon’s Breath · Empty",
+    "cue": "empty",
+    "group": "Weapon handling",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "One empty flamethrower igniter click and weak gas sputter, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "flamethrower"
+    ],
+    "node_id": "RLID5NIURD3Q6FDfqGoK"
+  },
+  {
+    "id": "handling-heavy-reload",
+    "name": "The Debt Collector · Reload start",
+    "cue": "reload",
+    "group": "Weapon handling",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "Heavy machine-gun ammunition box opening with rattling belt links, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "minigun"
+    ],
+    "node_id": "uXy8yXjq9nHr4KaRzHQl"
+  },
+  {
+    "id": "handling-heavy-reloadEnd",
+    "name": "The Debt Collector · Reload finish",
+    "cue": "reloadEnd",
+    "group": "Weapon handling",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "Heavy ammunition feed cover locking with a solid metallic slam, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "minigun"
+    ],
+    "node_id": "y7hvVuw1h8BFfTFX3HXF"
+  },
+  {
+    "id": "handling-heavy-switch",
+    "name": "The Debt Collector · Equip",
+    "cue": "switch",
+    "group": "Weapon handling",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "Heavy rotary gun raised with a heavy metal handling clunk, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "minigun"
+    ],
+    "node_id": "BM3NG7zEStTYnvRF8VPC"
+  },
+  {
+    "id": "handling-heavy-empty",
+    "name": "The Debt Collector · Empty",
+    "cue": "empty",
+    "group": "Weapon handling",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "One empty rotary gun mechanical click, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "minigun"
+    ],
+    "node_id": "9RQGRmLnxXiMiq95Ddxc"
+  },
+  {
+    "id": "handling-energy-reload",
+    "name": "Energy weapons · Reload start",
+    "cue": "reload",
+    "group": "Weapon handling",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "Energy weapon power cell unlocking with a mechanical click and brief electrical hiss, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "railgun",
+      "tesla"
+    ],
+    "node_id": "xhXSWlRbeC4HMNb3Uthw"
+  },
+  {
+    "id": "handling-energy-reloadEnd",
+    "name": "Energy weapons · Reload finish",
+    "cue": "reloadEnd",
+    "group": "Weapon handling",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "Energy weapon power cell seating with a snap and brief charging hum, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "railgun",
+      "tesla"
+    ],
+    "node_id": "3Chzs6HkcId1oPDA6XQr"
+  },
+  {
+    "id": "handling-energy-switch",
+    "name": "Energy weapons · Equip",
+    "cue": "switch",
+    "group": "Weapon handling",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "Energy weapon raised with a short electronic chirp and mechanical clack, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "railgun",
+      "tesla"
+    ],
+    "node_id": "5Wd953haHy1RmdbUKjGM"
+  },
+  {
+    "id": "handling-energy-empty",
+    "name": "Energy weapons · Empty",
+    "cue": "empty",
+    "group": "Weapon handling",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "One depleted energy weapon trigger buzz, close dry isolated sound with no background.",
+    "loop": false,
+    "appliesTo": [
+      "railgun",
+      "tesla"
+    ],
+    "node_id": "FzLJsyxFeM6sg5wtCBf8"
+  },
+  {
+    "id": "sword-switch",
+    "name": "Velvet Saber · Equip",
+    "cue": "switch",
+    "group": "Weapon handling",
+    "duration": 0.65,
+    "interval": 1.05,
+    "batch": 3,
+    "prompt": "One sword drawn from a sheath, clean metallic scrape ending in a short ring, dry isolated sound.",
+    "loop": false,
+    "appliesTo": [
+      "sword"
+    ],
+    "node_id": "1xXjuBad08Y8Rd6Mk3sm"
+  },
+  {
+    "id": "goose-enemy",
+    "name": "Jackpot Goose · Idle vocal",
+    "cue": "enemy",
+    "group": "Zombie vocals",
+    "duration": 2,
+    "interval": 2.4,
+    "batch": 3,
+    "prompt": "One idle vocal from a mutated goose, harsh nasal honk with a rough throaty hiss, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "goose",
+    "appliesTo": [
+      "goose"
+    ],
+    "node_id": "pbKbn7HZ8l1he2sebWhb"
+  },
+  {
+    "id": "goose-enemyAttack",
+    "name": "Jackpot Goose · Attack",
+    "cue": "enemyAttack",
+    "group": "Zombie vocals",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "One short aggressive attack vocal from a mutated goose, harsh nasal honk with a rough throaty hiss, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "goose",
+    "appliesTo": [
+      "goose"
+    ],
+    "node_id": "ED5oVtUbcW1ksjRfraBe"
+  },
+  {
+    "id": "goose-enemyHurt",
+    "name": "Jackpot Goose · Hurt",
+    "cue": "enemyHurt",
+    "group": "Zombie vocals",
+    "duration": 0.7,
+    "interval": 1.1,
+    "batch": 3,
+    "prompt": "One brief pained recoil vocal from a mutated goose, harsh nasal honk with a rough throaty hiss, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "goose",
+    "appliesTo": [
+      "goose"
+    ],
+    "node_id": "1eFEhpFk7vS1CRpdbaPO"
+  }
+]

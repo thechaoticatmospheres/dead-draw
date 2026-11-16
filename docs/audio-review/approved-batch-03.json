@@ -1,0 +1,1180 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-11T20:06:52.797Z",
+  "sounds": {
+    "courtesy-shot": {
+      "pick": "Ot3APzdi9TnWjYuxTs6P",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "pitViper-shot": {
+      "pick": "sgOfiyQUGoxVM73Du7J7",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "walker-enemy": {
+      "pick": "W9s7bPHLbk2BeSMxLe4W",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "velvet-shot": {
+      "pick": "NoQtbriN122jpMDWtjPh",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "house-shot": {
+      "pick": "iZlHS9xsmg3q1EUA9bQY",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "runner-enemy": {
+      "pick": "ptdZHuuGsTja2cdgrr0j",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "brute-enemy": {
+      "pick": "69XCrMn3BTtNCmgRJrvP",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "sword-shot": {
+      "pick": "8k1j8M5dhddrLqZ1O8w0",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "crossbow-shot": {
+      "pick": "YnGVhmeU3DKCdgGRQASq",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "rpg-shot": {
+      "pick": "LOrjjLEmiuGOADJlv1Fu",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "flamethrower-shot": {
+      "pick": "xwVAzeLvqBQGDZ8U8fKO",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "minigun-shot": {
+      "pick": "AfpmW3EA5Ec9u954xF6F",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "railgun-shot": {
+      "pick": "AAjF3ERwA3MzvSN5iT4o",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "tesla-shot": {
+      "pick": "FvyV36c8WSSdHNYjPWH6",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "switch-shot": {
+      "pick": "C4H4SzIwLP7rkayMfPo6",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "dividend-shot": {
+      "pick": "z98XTJKENArO5ce75FGP",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "sovereign-shot": {
+      "pick": "lv06fZ2IMiuUvgleLdAx",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-pistol-reload": {
+      "pick": "PAFipBWd2KheNuVNgrbm",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-pistol-reloadEnd": {
+      "pick": "LrkHGC3tJ5vaSPfNjPwi",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-pistol-switch": {
+      "pick": "6D6aAGHIrqNNnZ1qhvVP",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-pistol-empty": {
+      "pick": "raOg4AxNGXBoDSjnLKM6",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-automatic-reload": {
+      "pick": "C2uc3fUpX5NdoboQHBzS",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-automatic-reloadEnd": {
+      "pick": "KAdTrGMAeiGJyV9QBd7G",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-automatic-switch": {
+      "pick": "0xrL4Ffdi1VGAxJfhZ0L",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-automatic-empty": {
+      "pick": "NjxG5H6aocPLTOfJpwbK",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-rifle-reload": {
+      "pick": "zMJMjocu8MJFx6g0asf4",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-rifle-reloadEnd": {
+      "pick": "xUM3iPYWjkj4mtjizwMT",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-rifle-switch": {
+      "pick": "afqpzit5jqrgo8kxu7Oo",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-rifle-empty": {
+      "pick": "lJfsGNjb9c7CGro987Zn",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-shotgun-reload": {
+      "pick": "EXXgu1G7JzmPVkMTXrwD",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-shotgun-reloadEnd": {
+      "pick": "HgPch20svQW0SR0n6Zkg",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-shotgun-switch": {
+      "pick": "UyuEa5xKekx51lICER09",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-shotgun-empty": {
+      "pick": "M28Wb3qGUZ1Ye4H1eX2B",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-crossbow-reload": {
+      "pick": "iTBNilEeiqOLAL2Y3yPa",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-crossbow-reloadEnd": {
+      "pick": "8ZoXQx1qQaXo85bNGPCW",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-crossbow-switch": {
+      "pick": "tIg6vugp9hag6cTv9Qpi",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-crossbow-empty": {
+      "pick": "ESLF7rAojqpNlngqvPlq",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-rocket-reload": {
+      "pick": "D7T50menglRKvMJxOlGd",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-rocket-reloadEnd": {
+      "pick": "0agIUITYsTd3SI8qFej7",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-rocket-switch": {
+      "pick": "NIr0ZUQTAIiUkG7OSzRy",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-rocket-empty": {
+      "pick": "LdMtn946pw7RnATL1P7v",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-fuel-reloadEnd": {
+      "pick": "7bcfFXn8Lb4uRtQuWCOM",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-fuel-reload": {
+      "pick": "3SLpNYcN7YX3OQVslaoX",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-fuel-switch": {
+      "pick": "7dayj1k9dBaBYKi6Nq9V",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-fuel-empty": {
+      "pick": "EtIbP5Q5f7Ux7QkWlXxe",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-heavy-reloadEnd": {
+      "pick": "ln7gsRI60gKrDIN0VPQX",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-heavy-reload": {
+      "pick": "eigph2AsO47OvVKrGHyH",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-heavy-switch": {
+      "pick": "xiNqu8wtAz5YhHkPWH6y",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-heavy-empty": {
+      "pick": "vrz01JKdV0NGuQzbhf2C",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-energy-reload": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-energy-reloadEnd": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-energy-switch": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "handling-energy-empty": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "sword-switch": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "goose-enemy": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "goose-enemyAttack": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "goose-enemyHurt": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "goose-death": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "dealer-enemy": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "dealer-enemyAttack": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "dealer-enemyHurt": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "dealer-death": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "security-enemy": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "security-enemyAttack": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "security-enemyHurt": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "security-death": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "wheelchair-enemy": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "wheelchair-enemyAttack": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "wheelchair-enemyHurt": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "wheelchair-death": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "crawler-enemy": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "crawler-enemyAttack": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "crawler-enemyHurt": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "crawler-death": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "walker-enemyAttack": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "walker-enemyHurt": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "walker-death": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "runner-enemyAttack": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "runner-enemyHurt": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "runner-death": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "brute-enemyAttack": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "brute-enemyHurt": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "brute-death": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "spitter-enemy": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "spitter-enemyAttack": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "spitter-enemyHurt": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "spitter-death": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "boss-enemy": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "boss-enemyAttack": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "boss-enemyHurt": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "boss-death": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "flame-loop": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "flame-stop": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "minigun-start": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "minigun-loop": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "minigun-stop": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "rocket-flight": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "crossbow-impact": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "railgun-impact": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "tesla-impact": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "brute-warnSlam": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "brute-slam": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "boss-entrance": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "boss-warnSlam": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "boss-slam": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "spitter-warnAcid": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "spitter-spit": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "spitter-acid": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "wheelchair-move": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "crawler-move": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "goose-flap": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "shared-flesh": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "shared-surface": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "shared-headshot": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "shared-explosion": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "sword-flesh": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "sword-surface": {
+      "pick": null,
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    }
+  },
+  "flow": "https://elevenlabs.io/app/flows/2C75vSuIQQnCbmeVpgmu",
+  "exportedAt": "2026-09-11T20:07:16.935Z",
+  "selectedFiles": [
+    {
+      "sound": "sword-shot",
+      "pick": "audio/8k1j8M5dhddrLqZ1O8w0.wav"
+    },
+    {
+      "sound": "crossbow-shot",
+      "pick": "audio/YnGVhmeU3DKCdgGRQASq.wav"
+    },
+    {
+      "sound": "rpg-shot",
+      "pick": "audio/LOrjjLEmiuGOADJlv1Fu.wav"
+    },
+    {
+      "sound": "flamethrower-shot",
+      "pick": "audio/xwVAzeLvqBQGDZ8U8fKO.wav"
+    },
+    {
+      "sound": "minigun-shot",
+      "pick": "audio/AfpmW3EA5Ec9u954xF6F.wav"
+    },
+    {
+      "sound": "railgun-shot",
+      "pick": "audio/AAjF3ERwA3MzvSN5iT4o.wav"
+    },
+    {
+      "sound": "tesla-shot",
+      "pick": "audio/FvyV36c8WSSdHNYjPWH6.wav"
+    },
+    {
+      "sound": "switch-shot",
+      "pick": "audio/C4H4SzIwLP7rkayMfPo6.wav"
+    },
+    {
+      "sound": "dividend-shot",
+      "pick": "audio/z98XTJKENArO5ce75FGP.wav"
+    },
+    {
+      "sound": "sovereign-shot",
+      "pick": "audio/lv06fZ2IMiuUvgleLdAx.wav"
+    },
+    {
+      "sound": "handling-pistol-reload",
+      "pick": "audio/PAFipBWd2KheNuVNgrbm.wav"
+    },
+    {
+      "sound": "handling-pistol-reloadEnd",
+      "pick": "audio/LrkHGC3tJ5vaSPfNjPwi.wav"
+    },
+    {
+      "sound": "handling-pistol-switch",
+      "pick": "audio/6D6aAGHIrqNNnZ1qhvVP.wav"
+    },
+    {
+      "sound": "handling-pistol-empty",
+      "pick": "audio/raOg4AxNGXBoDSjnLKM6.wav"
+    },
+    {
+      "sound": "handling-automatic-reload",
+      "pick": "audio/C2uc3fUpX5NdoboQHBzS.wav"
+    },
+    {
+      "sound": "handling-automatic-reloadEnd",
+      "pick": "audio/KAdTrGMAeiGJyV9QBd7G.wav"
+    },
+    {
+      "sound": "handling-automatic-switch",
+      "pick": "audio/0xrL4Ffdi1VGAxJfhZ0L.wav"
+    },
+    {
+      "sound": "handling-automatic-empty",
+      "pick": "audio/NjxG5H6aocPLTOfJpwbK.wav"
+    },
+    {
+      "sound": "handling-rifle-reload",
+      "pick": "audio/zMJMjocu8MJFx6g0asf4.wav"
+    },
+    {
+      "sound": "handling-rifle-reloadEnd",
+      "pick": "audio/xUM3iPYWjkj4mtjizwMT.wav"
+    },
+    {
+      "sound": "handling-rifle-switch",
+      "pick": "audio/afqpzit5jqrgo8kxu7Oo.wav"
+    },
+    {
+      "sound": "handling-rifle-empty",
+      "pick": "audio/lJfsGNjb9c7CGro987Zn.wav"
+    },
+    {
+      "sound": "handling-shotgun-reload",
+      "pick": "audio/EXXgu1G7JzmPVkMTXrwD.wav"
+    },
+    {
+      "sound": "handling-shotgun-reloadEnd",
+      "pick": "audio/HgPch20svQW0SR0n6Zkg.wav"
+    },
+    {
+      "sound": "handling-shotgun-switch",
+      "pick": "audio/UyuEa5xKekx51lICER09.wav"
+    },
+    {
+      "sound": "handling-shotgun-empty",
+      "pick": "audio/M28Wb3qGUZ1Ye4H1eX2B.wav"
+    },
+    {
+      "sound": "handling-crossbow-reload",
+      "pick": "audio/iTBNilEeiqOLAL2Y3yPa.wav"
+    },
+    {
+      "sound": "handling-crossbow-reloadEnd",
+      "pick": "audio/8ZoXQx1qQaXo85bNGPCW.wav"
+    },
+    {
+      "sound": "handling-crossbow-switch",
+      "pick": "audio/tIg6vugp9hag6cTv9Qpi.wav"
+    },
+    {
+      "sound": "handling-crossbow-empty",
+      "pick": "audio/ESLF7rAojqpNlngqvPlq.wav"
+    },
+    {
+      "sound": "handling-rocket-reload",
+      "pick": "audio/D7T50menglRKvMJxOlGd.wav"
+    },
+    {
+      "sound": "handling-rocket-reloadEnd",
+      "pick": "audio/0agIUITYsTd3SI8qFej7.wav"
+    },
+    {
+      "sound": "handling-rocket-switch",
+      "pick": "audio/NIr0ZUQTAIiUkG7OSzRy.wav"
+    },
+    {
+      "sound": "handling-rocket-empty",
+      "pick": "audio/LdMtn946pw7RnATL1P7v.wav"
+    },
+    {
+      "sound": "handling-fuel-reload",
+      "pick": "audio/3SLpNYcN7YX3OQVslaoX.wav"
+    },
+    {
+      "sound": "handling-fuel-reloadEnd",
+      "pick": "audio/7bcfFXn8Lb4uRtQuWCOM.wav"
+    },
+    {
+      "sound": "handling-fuel-switch",
+      "pick": "audio/7dayj1k9dBaBYKi6Nq9V.wav"
+    },
+    {
+      "sound": "handling-fuel-empty",
+      "pick": "audio/EtIbP5Q5f7Ux7QkWlXxe.wav"
+    },
+    {
+      "sound": "handling-heavy-reload",
+      "pick": "audio/eigph2AsO47OvVKrGHyH.wav"
+    },
+    {
+      "sound": "handling-heavy-reloadEnd",
+      "pick": "audio/ln7gsRI60gKrDIN0VPQX.wav"
+    },
+    {
+      "sound": "handling-heavy-switch",
+      "pick": "audio/xiNqu8wtAz5YhHkPWH6y.wav"
+    },
+    {
+      "sound": "handling-heavy-empty",
+      "pick": "audio/vrz01JKdV0NGuQzbhf2C.wav"
+    },
+    {
+      "sound": "handling-energy-reload",
+      "pick": null
+    },
+    {
+      "sound": "handling-energy-reloadEnd",
+      "pick": null
+    },
+    {
+      "sound": "handling-energy-switch",
+      "pick": null
+    },
+    {
+      "sound": "handling-energy-empty",
+      "pick": null
+    },
+    {
+      "sound": "sword-switch",
+      "pick": null
+    },
+    {
+      "sound": "goose-enemy",
+      "pick": null
+    },
+    {
+      "sound": "goose-enemyAttack",
+      "pick": null
+    },
+    {
+      "sound": "goose-enemyHurt",
+      "pick": null
+    },
+    {
+      "sound": "goose-death",
+      "pick": null
+    },
+    {
+      "sound": "dealer-enemy",
+      "pick": null
+    },
+    {
+      "sound": "dealer-enemyAttack",
+      "pick": null
+    },
+    {
+      "sound": "dealer-enemyHurt",
+      "pick": null
+    },
+    {
+      "sound": "dealer-death",
+      "pick": null
+    },
+    {
+      "sound": "security-enemy",
+      "pick": null
+    },
+    {
+      "sound": "security-enemyAttack",
+      "pick": null
+    },
+    {
+      "sound": "security-enemyHurt",
+      "pick": null
+    },
+    {
+      "sound": "security-death",
+      "pick": null
+    },
+    {
+      "sound": "wheelchair-enemy",
+      "pick": null
+    },
+    {
+      "sound": "wheelchair-enemyAttack",
+      "pick": null
+    },
+    {
+      "sound": "wheelchair-enemyHurt",
+      "pick": null
+    },
+    {
+      "sound": "wheelchair-death",
+      "pick": null
+    },
+    {
+      "sound": "crawler-enemy",
+      "pick": null
+    },
+    {
+      "sound": "crawler-enemyAttack",
+      "pick": null
+    },
+    {
+      "sound": "crawler-enemyHurt",
+      "pick": null
+    },
+    {
+      "sound": "crawler-death",
+      "pick": null
+    },
+    {
+      "sound": "walker-enemyAttack",
+      "pick": null
+    },
+    {
+      "sound": "walker-enemyHurt",
+      "pick": null
+    },
+    {
+      "sound": "walker-death",
+      "pick": null
+    },
+    {
+      "sound": "runner-enemyAttack",
+      "pick": null
+    },
+    {
+      "sound": "runner-enemyHurt",
+      "pick": null
+    },
+    {
+      "sound": "runner-death",
+      "pick": null
+    },
+    {
+      "sound": "brute-enemyAttack",
+      "pick": null
+    },
+    {
+      "sound": "brute-enemyHurt",
+      "pick": null
+    },
+    {
+      "sound": "brute-death",
+      "pick": null
+    },
+    {
+      "sound": "spitter-enemy",
+      "pick": null
+    },
+    {
+      "sound": "spitter-enemyAttack",
+      "pick": null
+    },
+    {
+      "sound": "spitter-enemyHurt",
+      "pick": null
+    },
+    {
+      "sound": "spitter-death",
+      "pick": null
+    },
+    {
+      "sound": "boss-enemy",
+      "pick": null
+    },
+    {
+      "sound": "boss-enemyAttack",
+      "pick": null
+    },
+    {
+      "sound": "boss-enemyHurt",
+      "pick": null
+    },
+    {
+      "sound": "boss-death",
+      "pick": null
+    },
+    {
+      "sound": "flame-loop",
+      "pick": null
+    },
+    {
+      "sound": "flame-stop",
+      "pick": null
+    },
+    {
+      "sound": "minigun-start",
+      "pick": null
+    },
+    {
+      "sound": "minigun-loop",
+      "pick": null
+    },
+    {
+      "sound": "minigun-stop",
+      "pick": null
+    },
+    {
+      "sound": "rocket-flight",
+      "pick": null
+    },
+    {
+      "sound": "crossbow-impact",
+      "pick": null
+    },
+    {
+      "sound": "railgun-impact",
+      "pick": null
+    },
+    {
+      "sound": "tesla-impact",
+      "pick": null
+    },
+    {
+      "sound": "brute-warnSlam",
+      "pick": null
+    },
+    {
+      "sound": "brute-slam",
+      "pick": null
+    },
+    {
+      "sound": "boss-entrance",
+      "pick": null
+    },
+    {
+      "sound": "boss-warnSlam",
+      "pick": null
+    },
+    {
+      "sound": "boss-slam",
+      "pick": null
+    },
+    {
+      "sound": "spitter-warnAcid",
+      "pick": null
+    },
+    {
+      "sound": "spitter-spit",
+      "pick": null
+    },
+    {
+      "sound": "spitter-acid",
+      "pick": null
+    },
+    {
+      "sound": "wheelchair-move",
+      "pick": null
+    },
+    {
+      "sound": "crawler-move",
+      "pick": null
+    },
+    {
+      "sound": "goose-flap",
+      "pick": null
+    },
+    {
+      "sound": "shared-flesh",
+      "pick": null
+    },
+    {
+      "sound": "shared-surface",
+      "pick": null
+    },
+    {
+      "sound": "shared-headshot",
+      "pick": null
+    },
+    {
+      "sound": "shared-explosion",
+      "pick": null
+    },
+    {
+      "sound": "sword-flesh",
+      "pick": null
+    },
+    {
+      "sound": "sword-surface",
+      "pick": null
+    },
+    {
+      "sound": "velvet-shot",
+      "pick": "audio/NoQtbriN122jpMDWtjPh.wav"
+    },
+    {
+      "sound": "house-shot",
+      "pick": "audio/iZlHS9xsmg3q1EUA9bQY.wav"
+    },
+    {
+      "sound": "runner-enemy",
+      "pick": "audio/ptdZHuuGsTja2cdgrr0j.wav"
+    },
+    {
+      "sound": "brute-enemy",
+      "pick": "audio/69XCrMn3BTtNCmgRJrvP.wav"
+    },
+    {
+      "sound": "courtesy-shot",
+      "pick": "audio/Ot3APzdi9TnWjYuxTs6P.wav"
+    },
+    {
+      "sound": "pitViper-shot",
+      "pick": "audio/sgOfiyQUGoxVM73Du7J7.wav"
+    },
+    {
+      "sound": "walker-enemy",
+      "pick": "audio/W9s7bPHLbk2BeSMxLe4W.wav"
+    }
+  ]
+}

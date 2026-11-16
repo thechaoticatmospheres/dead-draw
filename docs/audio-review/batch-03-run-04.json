@@ -1,0 +1,146 @@
+{
+  "flow_id": "2C75vSuIQQnCbmeVpgmu",
+  "flow_created": false,
+  "url": "https://elevenlabs.io/app/flows/2C75vSuIQQnCbmeVpgmu?vs=viewstate_01m28z1z3dfcpsbwc9h9wrehgv",
+  "flow_url": "https://elevenlabs.io/app/flows/2C75vSuIQQnCbmeVpgmu",
+  "results": [
+    {
+      "success": true,
+      "node_id": "WjdfUaVZCGkVhAuOf1sK",
+      "session_id": "0XTXG267K6rK6roZ94BM"
+    },
+    {
+      "success": true,
+      "node_id": "WjdfUaVZCGkVhAuOf1sK",
+      "session_id": "1fokS4lDl2lcONCuPm95"
+    },
+    {
+      "success": true,
+      "node_id": "WjdfUaVZCGkVhAuOf1sK",
+      "session_id": "w7cMdo7sGbqetjNW5b1K"
+    },
+    {
+      "success": true,
+      "node_id": "tGKy4M0ULquoo8wWNTui",
+      "session_id": "zTJ1i3GU4AlIKlc0xHxi"
+    },
+    {
+      "success": true,
+      "node_id": "tGKy4M0ULquoo8wWNTui",
+      "session_id": "mLu1Uhks2nIASwbb69yn"
+    },
+    {
+      "success": true,
+      "node_id": "tGKy4M0ULquoo8wWNTui",
+      "session_id": "Mzgii2JiC5H2Gj5FI83n"
+    },
+    {
+      "success": true,
+      "node_id": "l5MnVYtoqvBBtpOPB0OR",
+      "session_id": "5fQKpx479Jc7Si6WRiio"
+    },
+    {
+      "success": true,
+      "node_id": "l5MnVYtoqvBBtpOPB0OR",
+      "session_id": "VY6UBp8oPeAU183LDq3Y"
+    },
+    {
+      "success": true,
+      "node_id": "l5MnVYtoqvBBtpOPB0OR",
+      "session_id": "VjTlVhBuJ4SWd8heY0u2"
+    },
+    {
+      "success": true,
+      "node_id": "jlMyvs68A7pWcePbQ4cb",
+      "session_id": "gFfbGiBAkedPl7alUVMx"
+    },
+    {
+      "success": true,
+      "node_id": "jlMyvs68A7pWcePbQ4cb",
+      "session_id": "dbUBytjCmhfRJHtMKHLO"
+    },
+    {
+      "success": true,
+      "node_id": "jlMyvs68A7pWcePbQ4cb",
+      "session_id": "qx5YpqDb40nE9fr6iRhD"
+    }
+  ],
+  "summary": {
+    "nodes_run": 4,
+    "generations_started": 12,
+    "failed": 0,
+    "generations_by_node": {
+      "WjdfUaVZCGkVhAuOf1sK": 3,
+      "tGKy4M0ULquoo8wWNTui": 3,
+      "l5MnVYtoqvBBtpOPB0OR": 3,
+      "jlMyvs68A7pWcePbQ4cb": 3
+    }
+  },
+  "session_ids": [
+    "0XTXG267K6rK6roZ94BM",
+    "1fokS4lDl2lcONCuPm95",
+    "w7cMdo7sGbqetjNW5b1K",
+    "zTJ1i3GU4AlIKlc0xHxi",
+    "mLu1Uhks2nIASwbb69yn",
+    "Mzgii2JiC5H2Gj5FI83n",
+    "5fQKpx479Jc7Si6WRiio",
+    "VY6UBp8oPeAU183LDq3Y",
+    "VjTlVhBuJ4SWd8heY0u2",
+    "gFfbGiBAkedPl7alUVMx",
+    "dbUBytjCmhfRJHtMKHLO",
+    "qx5YpqDb40nE9fr6iRhD"
+  ],
+  "pending": [
+    {
+      "generation_id": "9KDFduNTQxR2KE9GAudl",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "gqJZy7SQnU0FySSzfsGq",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "wJE6xzD3QvKohZb96nbo",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "Z2qiSItTS7g6pWWffGLZ",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "cTy6O2kyIivcJv6KqivS",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "XgZGYzCc7TDyOMJJwCVZ",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "1tXFOHr8EjiiClMc0kXy",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "hgFSfaaCSGkxqPs2fgWm",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "MqJ1EAqmjqgXeCUla5cQ",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "MyzyXxzM9GrV0ziQkAUs",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "wP6usGtVddYEoUkRcGSm",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "xUM3iPYWjkj4mtjizwMT",
+      "kind": "audio"
+    }
+  ],
+  "poll_after_seconds": 3,
+  "notes": "Not finished yet. If a generation view is shown it tracks progress and polls by itself, so there is nothing to do here. Only call creative_get_flow_run_status yourself if no view appeared: wait poll_after_seconds, then call it with this flow_id and session_ids, repeating until all_completed or has_failures is true.",
+  "view_state_id": "viewstate_01m28z1z3dfcpsbwc9h9wrehgv"
+}

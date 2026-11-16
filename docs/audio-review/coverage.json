@@ -1,0 +1,818 @@
+{
+  "weapons": [
+    {
+      "id": "sword",
+      "name": "Velvet Saber",
+      "sounds": [
+        {
+          "cue": "shot",
+          "sound": "sword-shot",
+          "ready": true
+        },
+        {
+          "cue": "switch",
+          "sound": "sword-switch",
+          "ready": true
+        },
+        {
+          "cue": "weaponFlesh",
+          "sound": "sword-flesh",
+          "ready": true
+        },
+        {
+          "cue": "weaponImpact",
+          "sound": "sword-surface",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "crossbow",
+      "name": "Pit Boss Crossbow",
+      "sounds": [
+        {
+          "cue": "shot",
+          "sound": "crossbow-shot",
+          "ready": true
+        },
+        {
+          "cue": "reload",
+          "sound": "handling-crossbow-reload",
+          "ready": true
+        },
+        {
+          "cue": "reloadEnd",
+          "sound": "handling-crossbow-reloadEnd",
+          "ready": true
+        },
+        {
+          "cue": "switch",
+          "sound": "handling-crossbow-switch",
+          "ready": true
+        },
+        {
+          "cue": "empty",
+          "sound": "handling-crossbow-empty",
+          "ready": true
+        },
+        {
+          "cue": "weaponImpact",
+          "sound": "crossbow-impact",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "rpg",
+      "name": "Housebreaker RPG",
+      "sounds": [
+        {
+          "cue": "shot",
+          "sound": "rpg-shot",
+          "ready": true
+        },
+        {
+          "cue": "reload",
+          "sound": "handling-rocket-reload",
+          "ready": true
+        },
+        {
+          "cue": "reloadEnd",
+          "sound": "handling-rocket-reloadEnd",
+          "ready": true
+        },
+        {
+          "cue": "switch",
+          "sound": "handling-rocket-switch",
+          "ready": true
+        },
+        {
+          "cue": "empty",
+          "sound": "handling-rocket-empty",
+          "ready": true
+        },
+        {
+          "cue": "projectileLoop",
+          "sound": "rocket-flight",
+          "ready": true
+        },
+        {
+          "cue": "explosion",
+          "sound": "shared-explosion",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "flamethrower",
+      "name": "Dragon’s Breath",
+      "sounds": [
+        {
+          "cue": "shot",
+          "sound": "flamethrower-shot",
+          "ready": true
+        },
+        {
+          "cue": "reload",
+          "sound": "handling-fuel-reload",
+          "ready": true
+        },
+        {
+          "cue": "reloadEnd",
+          "sound": "handling-fuel-reloadEnd",
+          "ready": true
+        },
+        {
+          "cue": "switch",
+          "sound": "handling-fuel-switch",
+          "ready": true
+        },
+        {
+          "cue": "empty",
+          "sound": "handling-fuel-empty",
+          "ready": true
+        },
+        {
+          "cue": "weaponLoop",
+          "sound": "flame-loop",
+          "ready": true
+        },
+        {
+          "cue": "weaponStop",
+          "sound": "flame-stop",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "minigun",
+      "name": "The Debt Collector",
+      "sounds": [
+        {
+          "cue": "shot",
+          "sound": "minigun-shot",
+          "ready": true
+        },
+        {
+          "cue": "reload",
+          "sound": "handling-heavy-reload",
+          "ready": true
+        },
+        {
+          "cue": "reloadEnd",
+          "sound": "handling-heavy-reloadEnd",
+          "ready": true
+        },
+        {
+          "cue": "switch",
+          "sound": "handling-heavy-switch",
+          "ready": true
+        },
+        {
+          "cue": "empty",
+          "sound": "handling-heavy-empty",
+          "ready": true
+        },
+        {
+          "cue": "weaponStart",
+          "sound": "minigun-start",
+          "ready": true
+        },
+        {
+          "cue": "weaponLoop",
+          "sound": "minigun-loop",
+          "ready": true
+        },
+        {
+          "cue": "weaponStop",
+          "sound": "minigun-stop",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "railgun",
+      "name": "Royal Flush Railgun",
+      "sounds": [
+        {
+          "cue": "shot",
+          "sound": "railgun-shot",
+          "ready": true
+        },
+        {
+          "cue": "reload",
+          "sound": "handling-energy-reload",
+          "ready": true
+        },
+        {
+          "cue": "reloadEnd",
+          "sound": "handling-energy-reloadEnd",
+          "ready": true
+        },
+        {
+          "cue": "switch",
+          "sound": "handling-energy-switch",
+          "ready": true
+        },
+        {
+          "cue": "empty",
+          "sound": "handling-energy-empty",
+          "ready": true
+        },
+        {
+          "cue": "weaponImpact",
+          "sound": "railgun-impact",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "tesla",
+      "name": "Static Jackpot",
+      "sounds": [
+        {
+          "cue": "shot",
+          "sound": "tesla-shot",
+          "ready": true
+        },
+        {
+          "cue": "reload",
+          "sound": "handling-energy-reload",
+          "ready": true
+        },
+        {
+          "cue": "reloadEnd",
+          "sound": "handling-energy-reloadEnd",
+          "ready": true
+        },
+        {
+          "cue": "switch",
+          "sound": "handling-energy-switch",
+          "ready": true
+        },
+        {
+          "cue": "empty",
+          "sound": "handling-energy-empty",
+          "ready": true
+        },
+        {
+          "cue": "weaponImpact",
+          "sound": "tesla-impact",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "pitViper",
+      "name": "Pit Viper",
+      "sounds": [
+        {
+          "cue": "shot",
+          "sound": "pitViper-shot",
+          "ready": true
+        },
+        {
+          "cue": "reload",
+          "sound": "handling-shotgun-reload",
+          "ready": true
+        },
+        {
+          "cue": "reloadEnd",
+          "sound": "handling-shotgun-reloadEnd",
+          "ready": true
+        },
+        {
+          "cue": "switch",
+          "sound": "handling-shotgun-switch",
+          "ready": true
+        },
+        {
+          "cue": "empty",
+          "sound": "handling-shotgun-empty",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "courtesy",
+      "name": "Courtesy .38",
+      "sounds": [
+        {
+          "cue": "shot",
+          "sound": "courtesy-shot",
+          "ready": true
+        },
+        {
+          "cue": "reload",
+          "sound": "handling-pistol-reload",
+          "ready": true
+        },
+        {
+          "cue": "reloadEnd",
+          "sound": "handling-pistol-reloadEnd",
+          "ready": true
+        },
+        {
+          "cue": "switch",
+          "sound": "handling-pistol-switch",
+          "ready": true
+        },
+        {
+          "cue": "empty",
+          "sound": "handling-pistol-empty",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "velvet",
+      "name": "Velvet Hand",
+      "sounds": [
+        {
+          "cue": "shot",
+          "sound": "velvet-shot",
+          "ready": true
+        },
+        {
+          "cue": "reload",
+          "sound": "handling-pistol-reload",
+          "ready": true
+        },
+        {
+          "cue": "reloadEnd",
+          "sound": "handling-pistol-reloadEnd",
+          "ready": true
+        },
+        {
+          "cue": "switch",
+          "sound": "handling-pistol-switch",
+          "ready": true
+        },
+        {
+          "cue": "empty",
+          "sound": "handling-pistol-empty",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "switch",
+      "name": "Switch",
+      "sounds": [
+        {
+          "cue": "shot",
+          "sound": "switch-shot",
+          "ready": true
+        },
+        {
+          "cue": "reload",
+          "sound": "handling-automatic-reload",
+          "ready": true
+        },
+        {
+          "cue": "reloadEnd",
+          "sound": "handling-automatic-reloadEnd",
+          "ready": true
+        },
+        {
+          "cue": "switch",
+          "sound": "handling-automatic-switch",
+          "ready": true
+        },
+        {
+          "cue": "empty",
+          "sound": "handling-automatic-empty",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "house",
+      "name": "House Special",
+      "sounds": [
+        {
+          "cue": "shot",
+          "sound": "house-shot",
+          "ready": true
+        },
+        {
+          "cue": "reload",
+          "sound": "handling-automatic-reload",
+          "ready": true
+        },
+        {
+          "cue": "reloadEnd",
+          "sound": "handling-automatic-reloadEnd",
+          "ready": true
+        },
+        {
+          "cue": "switch",
+          "sound": "handling-automatic-switch",
+          "ready": true
+        },
+        {
+          "cue": "empty",
+          "sound": "handling-automatic-empty",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "dividend",
+      "name": "Dividend",
+      "sounds": [
+        {
+          "cue": "shot",
+          "sound": "dividend-shot",
+          "ready": true
+        },
+        {
+          "cue": "reload",
+          "sound": "handling-rifle-reload",
+          "ready": true
+        },
+        {
+          "cue": "reloadEnd",
+          "sound": "handling-rifle-reloadEnd",
+          "ready": true
+        },
+        {
+          "cue": "switch",
+          "sound": "handling-rifle-switch",
+          "ready": true
+        },
+        {
+          "cue": "empty",
+          "sound": "handling-rifle-empty",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "sovereign",
+      "name": "Sovereign",
+      "sounds": [
+        {
+          "cue": "shot",
+          "sound": "sovereign-shot",
+          "ready": true
+        },
+        {
+          "cue": "reload",
+          "sound": "handling-rifle-reload",
+          "ready": true
+        },
+        {
+          "cue": "reloadEnd",
+          "sound": "handling-rifle-reloadEnd",
+          "ready": true
+        },
+        {
+          "cue": "switch",
+          "sound": "handling-rifle-switch",
+          "ready": true
+        },
+        {
+          "cue": "empty",
+          "sound": "handling-rifle-empty",
+          "ready": true
+        }
+      ]
+    }
+  ],
+  "enemies": [
+    {
+      "id": "goose",
+      "name": "Jackpot Goose",
+      "sounds": [
+        {
+          "cue": "enemy",
+          "sound": "goose-enemy",
+          "ready": true
+        },
+        {
+          "cue": "enemyAttack",
+          "sound": "goose-enemyAttack",
+          "ready": true
+        },
+        {
+          "cue": "enemyHurt",
+          "sound": "goose-enemyHurt",
+          "ready": true
+        },
+        {
+          "cue": "death",
+          "sound": "goose-death",
+          "ready": true
+        },
+        {
+          "cue": "enemyMove",
+          "sound": "goose-flap",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "dealer",
+      "name": "Dead Dealer",
+      "sounds": [
+        {
+          "cue": "enemy",
+          "sound": "dealer-enemy",
+          "ready": true
+        },
+        {
+          "cue": "enemyAttack",
+          "sound": "dealer-enemyAttack",
+          "ready": true
+        },
+        {
+          "cue": "enemyHurt",
+          "sound": "dealer-enemyHurt",
+          "ready": true
+        },
+        {
+          "cue": "death",
+          "sound": "dealer-death",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "security",
+      "name": "Casino Security",
+      "sounds": [
+        {
+          "cue": "enemy",
+          "sound": "security-enemy",
+          "ready": true
+        },
+        {
+          "cue": "enemyAttack",
+          "sound": "security-enemyAttack",
+          "ready": true
+        },
+        {
+          "cue": "enemyHurt",
+          "sound": "security-enemyHurt",
+          "ready": true
+        },
+        {
+          "cue": "death",
+          "sound": "security-death",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "wheelchair",
+      "name": "Last Call Regular",
+      "sounds": [
+        {
+          "cue": "enemy",
+          "sound": "wheelchair-enemy",
+          "ready": true
+        },
+        {
+          "cue": "enemyAttack",
+          "sound": "wheelchair-enemyAttack",
+          "ready": true
+        },
+        {
+          "cue": "enemyHurt",
+          "sound": "wheelchair-enemyHurt",
+          "ready": true
+        },
+        {
+          "cue": "death",
+          "sound": "wheelchair-death",
+          "ready": true
+        },
+        {
+          "cue": "enemyMove",
+          "sound": "wheelchair-move",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "crawler",
+      "name": "Drunken Crawler",
+      "sounds": [
+        {
+          "cue": "enemy",
+          "sound": "crawler-enemy",
+          "ready": true
+        },
+        {
+          "cue": "enemyAttack",
+          "sound": "crawler-enemyAttack",
+          "ready": true
+        },
+        {
+          "cue": "enemyHurt",
+          "sound": "crawler-enemyHurt",
+          "ready": true
+        },
+        {
+          "cue": "death",
+          "sound": "crawler-death",
+          "ready": true
+        },
+        {
+          "cue": "enemyMove",
+          "sound": "crawler-move",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "walker",
+      "name": "Drifter",
+      "sounds": [
+        {
+          "cue": "enemy",
+          "sound": "walker-enemy",
+          "ready": true
+        },
+        {
+          "cue": "enemyAttack",
+          "sound": "walker-enemyAttack",
+          "ready": true
+        },
+        {
+          "cue": "enemyHurt",
+          "sound": "walker-enemyHurt",
+          "ready": true
+        },
+        {
+          "cue": "death",
+          "sound": "walker-death",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "runner",
+      "name": "Runner",
+      "sounds": [
+        {
+          "cue": "enemy",
+          "sound": "runner-enemy",
+          "ready": true
+        },
+        {
+          "cue": "enemyAttack",
+          "sound": "runner-enemyAttack",
+          "ready": true
+        },
+        {
+          "cue": "enemyHurt",
+          "sound": "runner-enemyHurt",
+          "ready": true
+        },
+        {
+          "cue": "death",
+          "sound": "runner-death",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "brute",
+      "name": "Pit Boss",
+      "sounds": [
+        {
+          "cue": "enemy",
+          "sound": "brute-enemy",
+          "ready": true
+        },
+        {
+          "cue": "enemyAttack",
+          "sound": "brute-enemyAttack",
+          "ready": true
+        },
+        {
+          "cue": "enemyHurt",
+          "sound": "brute-enemyHurt",
+          "ready": true
+        },
+        {
+          "cue": "death",
+          "sound": "brute-death",
+          "ready": true
+        },
+        {
+          "cue": "warnSlam",
+          "sound": "brute-warnSlam",
+          "ready": true
+        },
+        {
+          "cue": "slam",
+          "sound": "brute-slam",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "spitter",
+      "name": "Spitter",
+      "sounds": [
+        {
+          "cue": "enemy",
+          "sound": "spitter-enemy",
+          "ready": true
+        },
+        {
+          "cue": "enemyAttack",
+          "sound": "spitter-enemyAttack",
+          "ready": true
+        },
+        {
+          "cue": "enemyHurt",
+          "sound": "spitter-enemyHurt",
+          "ready": true
+        },
+        {
+          "cue": "death",
+          "sound": "spitter-death",
+          "ready": true
+        },
+        {
+          "cue": "warnAcid",
+          "sound": "spitter-warnAcid",
+          "ready": true
+        },
+        {
+          "cue": "spit",
+          "sound": "spitter-spit",
+          "ready": true
+        },
+        {
+          "cue": "acid",
+          "sound": "spitter-acid",
+          "ready": true
+        }
+      ]
+    },
+    {
+      "id": "boss",
+      "name": "THE HIGH ROLLER",
+      "sounds": [
+        {
+          "cue": "enemy",
+          "sound": "boss-enemy",
+          "ready": true
+        },
+        {
+          "cue": "enemyAttack",
+          "sound": "boss-enemyAttack",
+          "ready": true
+        },
+        {
+          "cue": "enemyHurt",
+          "sound": "boss-enemyHurt",
+          "ready": true
+        },
+        {
+          "cue": "death",
+          "sound": "boss-death",
+          "ready": true
+        },
+        {
+          "cue": "warnSlam",
+          "sound": "boss-warnSlam",
+          "ready": true
+        },
+        {
+          "cue": "slam",
+          "sound": "boss-slam",
+          "ready": true
+        },
+        {
+          "cue": "boss",
+          "sound": "boss-entrance",
+          "ready": true
+        }
+      ]
+    }
+  ],
+  "shared": [
+    {
+      "sound": "shared-flesh",
+      "ready": true
+    },
+    {
+      "sound": "shared-surface",
+      "ready": true
+    },
+    {
+      "sound": "shared-headshot",
+      "ready": true
+    },
+    {
+      "sound": "shared-explosion",
+      "ready": true
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+import { WEAPONS } from '../shared/data.js';
+import { ENEMIES } from '../shared/expansion.js';
+import { writeFile } from 'node:fs/promises';
+import { APPROVED_SAMPLES } from '../src/audio-samples.js';
+const weapons = Object.entries(WEAPONS).map(([id, w]) => ({ id, name: w.name, category: w.category, interval: w.interval, reloadSeconds: w.reload,
+  cues: w.melee ? ['swing', 'flesh impact', 'surface impact', 'equip'] : ['fire', 'reload start', 'reload finish', 'equip', 'empty'],
+  special: ({ flamethrower: 'Ignition, sustained flame loop, release; loop hook required.', minigun: 'Spin-up, sustained fire, spin-down; loop hooks required.', rpg: 'Rocket launch, flight, explosion.', tesla: 'Electrical discharge and chain impact.', railgun: 'Discharge and piercing impact.', crossbow: 'Bow release, bolt impact and cocking.' })[id] || '',
+  status: APPROVED_SAMPLES[`shot:${id}`] ? 'Selected fire sound integrated; handling queued' : ['velvet','house'].includes(id) ? 'Batch 2 fire sound ready for review' : 'Queued for a later batch' }));
+const enemies = Object.entries(ENEMIES).map(([id, e]) => ({ id, name: e.name, cues: ['idle / alert vocal', 'attack vocal', 'hurt vocal', 'death'], special: ({ brute: 'Slam warning and impact.', boss: 'Entrance roar, slam warning and impact.', spitter: 'Acid warning, spit and splash.', wheelchair: 'Wheel rattle / rolling movement.', crawler: 'Scraping movement.', goose: 'Honks and wing flaps; distinct from human zombies.' })[id] || '', status: APPROVED_SAMPLES[`enemy:${id}`] ? 'Selected idle vocal integrated; other vocals queued' : ['runner','brute'].includes(id) ? 'Batch 2 idle vocal ready for review' : 'Queued for a later batch' }));
+const inventory = { weapons, enemies, shared: ['flesh impact', 'surface impact', 'headshot', 'explosion', 'weapon handling families'], integration: ['Fire dispatch already passes weapon ID; enemy and death cues pass kind.', 'Reload, reloadEnd, switch and empty need weapon context for unique handling.', 'Enemy hurt, attack and movement require distinct hooks; existing hurt cue refers to the player.', 'Special warning cues currently identify hazard type, not enemy kind.', 'Gilded rewards reuse base weapon identity; optional accents can follow base approvals.'] };
+await writeFile(new URL('../docs/audio-review/inventory.json', import.meta.url), JSON.stringify(inventory, null, 2) + '\n');
+console.log(`${weapons.length} weapons and ${enemies.length} enemy types inventoried.`);

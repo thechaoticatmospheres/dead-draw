@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-11T19:08:01.281Z",
+  "sounds": {
+    "courtesy-shot": {
+      "pick": "Ot3APzdi9TnWjYuxTs6P",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "pitViper-shot": {
+      "pick": "sgOfiyQUGoxVM73Du7J7",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "walker-enemy": {
+      "pick": "W9s7bPHLbk2BeSMxLe4W",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "velvet-shot": {
+      "pick": "NoQtbriN122jpMDWtjPh",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "house-shot": {
+      "pick": "iZlHS9xsmg3q1EUA9bQY",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "runner-enemy": {
+      "pick": "ptdZHuuGsTja2cdgrr0j",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "brute-enemy": {
+      "pick": "69XCrMn3BTtNCmgRJrvP",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    }
+  },
+  "flow": "https://elevenlabs.io/app/flows/2C75vSuIQQnCbmeVpgmu",
+  "exportedAt": "2026-09-11T19:18:47.702Z",
+  "selectedFiles": [
+    {
+      "sound": "velvet-shot",
+      "pick": "audio/NoQtbriN122jpMDWtjPh.wav"
+    },
+    {
+      "sound": "house-shot",
+      "pick": "audio/iZlHS9xsmg3q1EUA9bQY.wav"
+    },
+    {
+      "sound": "runner-enemy",
+      "pick": "audio/ptdZHuuGsTja2cdgrr0j.wav"
+    },
+    {
+      "sound": "brute-enemy",
+      "pick": "audio/69XCrMn3BTtNCmgRJrvP.wav"
+    },
+    {
+      "sound": "courtesy-shot",
+      "pick": "audio/Ot3APzdi9TnWjYuxTs6P.wav"
+    },
+    {
+      "sound": "pitViper-shot",
+      "pick": "audio/sgOfiyQUGoxVM73Du7J7.wav"
+    },
+    {
+      "sound": "walker-enemy",
+      "pick": "audio/W9s7bPHLbk2BeSMxLe4W.wav"
+    }
+  ]
+}

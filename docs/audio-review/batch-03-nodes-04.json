@@ -1,0 +1,608 @@
+[
+  {
+    "id": "brute-death",
+    "name": "Pit Boss · Death",
+    "cue": "death",
+    "group": "Zombie vocals",
+    "duration": 1.5,
+    "interval": 1.9,
+    "batch": 3,
+    "prompt": "One dying vocal fading into a final breath from a hulking zombie, deep coarse chest rumble and ragged throaty rasp, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "brute",
+    "appliesTo": [
+      "brute"
+    ],
+    "node_id": "QvLc1rP8wcO5jEkqK03P"
+  },
+  {
+    "id": "spitter-enemy",
+    "name": "Spitter · Idle vocal",
+    "cue": "enemy",
+    "group": "Zombie vocals",
+    "duration": 2,
+    "interval": 2.4,
+    "batch": 3,
+    "prompt": "One idle vocal from a acid-spitting zombie, wet gurgling throat rasp with a hissing breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "spitter",
+    "appliesTo": [
+      "spitter"
+    ],
+    "node_id": "pXqgQogWCG5epLbB9Hrz"
+  },
+  {
+    "id": "spitter-enemyAttack",
+    "name": "Spitter · Attack",
+    "cue": "enemyAttack",
+    "group": "Zombie vocals",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "One short aggressive attack vocal from a acid-spitting zombie, wet gurgling throat rasp with a hissing breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "spitter",
+    "appliesTo": [
+      "spitter"
+    ],
+    "node_id": "gbBu3Nb0qOb89eyiZaY0"
+  },
+  {
+    "id": "spitter-enemyHurt",
+    "name": "Spitter · Hurt",
+    "cue": "enemyHurt",
+    "group": "Zombie vocals",
+    "duration": 0.7,
+    "interval": 1.1,
+    "batch": 3,
+    "prompt": "One brief pained recoil vocal from a acid-spitting zombie, wet gurgling throat rasp with a hissing breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "spitter",
+    "appliesTo": [
+      "spitter"
+    ],
+    "node_id": "L4KcQiXNSCedNC8AGiKn"
+  },
+  {
+    "id": "spitter-death",
+    "name": "Spitter · Death",
+    "cue": "death",
+    "group": "Zombie vocals",
+    "duration": 1.5,
+    "interval": 1.9,
+    "batch": 3,
+    "prompt": "One dying vocal fading into a final breath from a acid-spitting zombie, wet gurgling throat rasp with a hissing breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "spitter",
+    "appliesTo": [
+      "spitter"
+    ],
+    "node_id": "1hkHPA3kP6rErVcdibqW"
+  },
+  {
+    "id": "boss-enemy",
+    "name": "THE HIGH ROLLER · Idle vocal",
+    "cue": "enemy",
+    "group": "Zombie vocals",
+    "duration": 2,
+    "interval": 2.4,
+    "batch": 3,
+    "prompt": "One idle vocal from a enormous undead high roller, very deep resonant chest growl with coarse human throat rasp, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "boss",
+    "appliesTo": [
+      "boss"
+    ],
+    "node_id": "2BXjPbGXOu7h45zzknJB"
+  },
+  {
+    "id": "boss-enemyAttack",
+    "name": "THE HIGH ROLLER · Attack",
+    "cue": "enemyAttack",
+    "group": "Zombie vocals",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "One short aggressive attack vocal from a enormous undead high roller, very deep resonant chest growl with coarse human throat rasp, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "boss",
+    "appliesTo": [
+      "boss"
+    ],
+    "node_id": "Uf9ICWhuwgTMUvvyFC0N"
+  },
+  {
+    "id": "boss-enemyHurt",
+    "name": "THE HIGH ROLLER · Hurt",
+    "cue": "enemyHurt",
+    "group": "Zombie vocals",
+    "duration": 0.7,
+    "interval": 1.1,
+    "batch": 3,
+    "prompt": "One brief pained recoil vocal from a enormous undead high roller, very deep resonant chest growl with coarse human throat rasp, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "boss",
+    "appliesTo": [
+      "boss"
+    ],
+    "node_id": "dubLCXrIWSH5cnENljIo"
+  },
+  {
+    "id": "boss-death",
+    "name": "THE HIGH ROLLER · Death",
+    "cue": "death",
+    "group": "Zombie vocals",
+    "duration": 1.5,
+    "interval": 1.9,
+    "batch": 3,
+    "prompt": "One dying vocal fading into a final breath from a enormous undead high roller, very deep resonant chest growl with coarse human throat rasp, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "boss",
+    "appliesTo": [
+      "boss"
+    ],
+    "node_id": "djhvZenWXbKzjIzpC9q9"
+  },
+  {
+    "id": "flame-loop",
+    "name": "Dragon’s Breath · Sustained flame",
+    "cue": "weaponLoop",
+    "group": "Special abilities",
+    "duration": 3,
+    "interval": 3.4,
+    "batch": 3,
+    "prompt": "Steady pressurized flamethrower roar, close dry rushing flame with gritty crackle, seamless continuous loop without ignition or shutdown.",
+    "loop": true,
+    "weapon": "flamethrower",
+    "appliesTo": [
+      "flamethrower"
+    ],
+    "node_id": "5YImJifnRNSD02J8pQVw"
+  },
+  {
+    "id": "flame-stop",
+    "name": "Dragon’s Breath · Release",
+    "cue": "weaponStop",
+    "group": "Special abilities",
+    "duration": 0.6,
+    "interval": 1,
+    "batch": 3,
+    "prompt": "One flamethrower shutting off, brief dwindling flame whoosh and gas-valve click, dry isolated sound.",
+    "loop": false,
+    "weapon": "flamethrower",
+    "appliesTo": [
+      "flamethrower"
+    ],
+    "node_id": "gFNjj5BYBHCO9p6abulJ"
+  },
+  {
+    "id": "minigun-start",
+    "name": "The Debt Collector · Spin-up",
+    "cue": "weaponStart",
+    "group": "Special abilities",
+    "duration": 1,
+    "interval": 1.4,
+    "batch": 3,
+    "prompt": "Rotary machine-gun barrels spinning up, rising mechanical motor whir, no firing, dry isolated sound.",
+    "loop": false,
+    "weapon": "minigun",
+    "appliesTo": [
+      "minigun"
+    ],
+    "node_id": "ndZWMP6bXTg4BdTZtOWs"
+  },
+  {
+    "id": "minigun-loop",
+    "name": "The Debt Collector · Sustained fire",
+    "cue": "weaponLoop",
+    "group": "Special abilities",
+    "duration": 3,
+    "interval": 3.4,
+    "batch": 3,
+    "prompt": "Steady rotary machine-gun firing at eighteen shots per second, tight rapid mechanical gunfire, seamless loop without startup or shutdown, dry close sound.",
+    "loop": true,
+    "weapon": "minigun",
+    "appliesTo": [
+      "minigun"
+    ],
+    "node_id": "Lgqj3IEAz6EsSsOSt8HO"
+  },
+  {
+    "id": "minigun-stop",
+    "name": "The Debt Collector · Spin-down",
+    "cue": "weaponStop",
+    "group": "Special abilities",
+    "duration": 1,
+    "interval": 1.4,
+    "batch": 3,
+    "prompt": "Rotary machine-gun motor winding down, descending mechanical whir and final light clack, no firing, dry isolated sound.",
+    "loop": false,
+    "weapon": "minigun",
+    "appliesTo": [
+      "minigun"
+    ],
+    "node_id": "eNDcGVQQ2g58xVaywBiQ"
+  },
+  {
+    "id": "rocket-flight",
+    "name": "Housebreaker RPG · Rocket flight",
+    "cue": "projectileLoop",
+    "group": "Special abilities",
+    "duration": 2,
+    "interval": 2.4,
+    "batch": 3,
+    "prompt": "Steady fast rocket exhaust hiss and low rushing air, close dry seamless continuous loop.",
+    "loop": true,
+    "weapon": "rpg",
+    "appliesTo": [
+      "rpg"
+    ],
+    "node_id": "cUhUyzMS82RBl5janRen"
+  },
+  {
+    "id": "crossbow-impact",
+    "name": "Pit Boss Crossbow · Bolt impact",
+    "cue": "weaponImpact",
+    "group": "Special abilities",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "One crossbow bolt striking wood, sharp dry thunk with a short vibrating shaft rattle, isolated sound.",
+    "loop": false,
+    "weapon": "crossbow",
+    "appliesTo": [
+      "crossbow"
+    ],
+    "node_id": "73Xd6nBHeqXJ6UevbuH9"
+  },
+  {
+    "id": "railgun-impact",
+    "name": "Royal Flush Railgun · Piercing impact",
+    "cue": "weaponImpact",
+    "group": "Special abilities",
+    "duration": 0.6,
+    "interval": 1,
+    "batch": 3,
+    "prompt": "One high-velocity rail projectile piercing metal, sharp bright impact crack and short ringing tail, dry isolated sound.",
+    "loop": false,
+    "weapon": "railgun",
+    "appliesTo": [
+      "railgun"
+    ],
+    "node_id": "G7jVbbYtl8nY64IX7wBH"
+  },
+  {
+    "id": "tesla-impact",
+    "name": "Static Jackpot · Chain arc",
+    "cue": "weaponImpact",
+    "group": "Special abilities",
+    "duration": 0.6,
+    "interval": 1,
+    "batch": 3,
+    "prompt": "One electrical arc jumping between targets, sharp sizzling snap and brief buzzing decay, dry isolated sound.",
+    "loop": false,
+    "weapon": "tesla",
+    "appliesTo": [
+      "tesla"
+    ],
+    "node_id": "7JfJuM3LEVuwAa2DI9rh"
+  },
+  {
+    "id": "brute-warnSlam",
+    "name": "Pit Boss · Slam warning",
+    "cue": "warnSlam",
+    "group": "Special abilities",
+    "duration": 0.75,
+    "interval": 1.15,
+    "batch": 3,
+    "prompt": "One hulking zombie preparing a heavy slam, rising deep strained growl, dry isolated sound without words.",
+    "loop": false,
+    "kind": "brute",
+    "appliesTo": [
+      "brute"
+    ],
+    "node_id": "6ent5AQ7vI6g2lRwvRjI"
+  },
+  {
+    "id": "brute-slam",
+    "name": "Pit Boss · Slam impact",
+    "cue": "slam",
+    "group": "Special abilities",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "One huge body slam striking a stone floor, deep heavy thud with a short gritty debris rattle, dry isolated sound.",
+    "loop": false,
+    "kind": "brute",
+    "appliesTo": [
+      "brute"
+    ],
+    "node_id": "pz4Yevxk9kMMwcu2tnbU"
+  },
+  {
+    "id": "boss-entrance",
+    "name": "THE HIGH ROLLER · Entrance roar",
+    "cue": "boss",
+    "group": "Special abilities",
+    "duration": 2.5,
+    "interval": 2.9,
+    "batch": 3,
+    "prompt": "One enormous undead creature entrance roar, very deep coarse resonant human throat bellow, dry isolated sound without words.",
+    "loop": false,
+    "kind": "boss",
+    "appliesTo": [
+      "boss"
+    ],
+    "node_id": "Qtcy8KPF83dN2awSqIZz"
+  },
+  {
+    "id": "boss-warnSlam",
+    "name": "THE HIGH ROLLER · Slam warning",
+    "cue": "warnSlam",
+    "group": "Special abilities",
+    "duration": 0.9,
+    "interval": 1.3,
+    "batch": 3,
+    "prompt": "One enormous undead creature winding up a slam, rising bassy strained bellow with a rough throat rasp, dry isolated sound.",
+    "loop": false,
+    "kind": "boss",
+    "appliesTo": [
+      "boss"
+    ],
+    "node_id": "QRoxzflFlXjAlHArZrit"
+  },
+  {
+    "id": "boss-slam",
+    "name": "THE HIGH ROLLER · Slam impact",
+    "cue": "slam",
+    "group": "Special abilities",
+    "duration": 1,
+    "interval": 1.4,
+    "batch": 3,
+    "prompt": "One enormous ground slam, massive deep stone impact with a short crumbling rubble tail, dry isolated sound.",
+    "loop": false,
+    "kind": "boss",
+    "appliesTo": [
+      "boss"
+    ],
+    "node_id": "GIv8azbNM0jweYRAud81"
+  },
+  {
+    "id": "spitter-warnAcid",
+    "name": "Spitter · Acid warning",
+    "cue": "warnAcid",
+    "group": "Special abilities",
+    "duration": 0.6,
+    "interval": 1,
+    "batch": 3,
+    "prompt": "One acid zombie gathering spit, rising wet throat gurgle and pressurized hiss, dry isolated sound without words.",
+    "loop": false,
+    "kind": "spitter",
+    "appliesTo": [
+      "spitter"
+    ],
+    "node_id": "w62xvrpColNqA1crc820"
+  },
+  {
+    "id": "spitter-spit",
+    "name": "Spitter · Spit attack",
+    "cue": "spit",
+    "group": "Special abilities",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "One forceful acid spit, wet guttural expulsion with a short liquid spray, dry isolated sound.",
+    "loop": false,
+    "kind": "spitter",
+    "appliesTo": [
+      "spitter"
+    ],
+    "node_id": "Ik2WTE5ZRNQJp94d1dhT"
+  },
+  {
+    "id": "spitter-acid",
+    "name": "Spitter · Acid splash",
+    "cue": "acid",
+    "group": "Special abilities",
+    "duration": 1.2,
+    "interval": 1.6,
+    "batch": 3,
+    "prompt": "One corrosive acid splash onto stone, wet splatter and short bubbling sizzle, dry isolated sound.",
+    "loop": false,
+    "kind": "spitter",
+    "appliesTo": [
+      "spitter"
+    ],
+    "node_id": "ReBoz3EiYGULfpu6Yo1R"
+  },
+  {
+    "id": "wheelchair-move",
+    "name": "Last Call Regular · Wheel movement",
+    "cue": "enemyMove",
+    "group": "Special abilities",
+    "duration": 2,
+    "interval": 2.4,
+    "batch": 3,
+    "prompt": "Old wheelchair rolling steadily on hard flooring, light wheel squeak and loose metal rattle, dry seamless loop.",
+    "loop": true,
+    "kind": "wheelchair",
+    "appliesTo": [
+      "wheelchair"
+    ],
+    "node_id": "xEJvX5rF19HJESVM8MsF"
+  },
+  {
+    "id": "crawler-move",
+    "name": "Drunken Crawler · Scraping movement",
+    "cue": "enemyMove",
+    "group": "Special abilities",
+    "duration": 1.5,
+    "interval": 1.9,
+    "batch": 3,
+    "prompt": "One zombie dragging its body over rough flooring, gritty cloth scrape and short heavy hand scuff, dry isolated sound.",
+    "loop": false,
+    "kind": "crawler",
+    "appliesTo": [
+      "crawler"
+    ],
+    "node_id": "SHTUSdgkUmAc5ZJR3aRI"
+  },
+  {
+    "id": "goose-flap",
+    "name": "Jackpot Goose · Wing flaps",
+    "cue": "enemyMove",
+    "group": "Special abilities",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "One pair of frantic goose wing flaps, close sharp feather buffets, dry isolated sound.",
+    "loop": false,
+    "kind": "goose",
+    "appliesTo": [
+      "goose"
+    ],
+    "node_id": "r3EDNPhfLhkzLQ9BD5yE"
+  },
+  {
+    "id": "shared-flesh",
+    "name": "Shared · Flesh impact",
+    "cue": "hit",
+    "group": "Impacts",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "One blunt projectile hit into soft flesh, short wet meaty thud, dry isolated sound.",
+    "loop": false,
+    "appliesTo": [
+      "sword",
+      "crossbow",
+      "rpg",
+      "flamethrower",
+      "minigun",
+      "railgun",
+      "tesla",
+      "pitViper",
+      "courtesy",
+      "velvet",
+      "switch",
+      "house",
+      "dividend",
+      "sovereign"
+    ],
+    "node_id": "gr6qt87lLvNC5MlX5D1E"
+  },
+  {
+    "id": "shared-surface",
+    "name": "Shared · Surface impact",
+    "cue": "impact",
+    "group": "Impacts",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "One bullet hitting hard concrete, sharp dry tick and tiny gritty debris rattle, isolated sound.",
+    "loop": false,
+    "appliesTo": [
+      "sword",
+      "crossbow",
+      "rpg",
+      "flamethrower",
+      "minigun",
+      "railgun",
+      "tesla",
+      "pitViper",
+      "courtesy",
+      "velvet",
+      "switch",
+      "house",
+      "dividend",
+      "sovereign"
+    ],
+    "node_id": "MTz4kbwnBYH5DhFwmrCQ"
+  },
+  {
+    "id": "shared-headshot",
+    "name": "Shared · Headshot",
+    "cue": "headshot",
+    "group": "Impacts",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "One sharp headshot impact, short crunchy wet crack, dry isolated sound.",
+    "loop": false,
+    "appliesTo": [
+      "sword",
+      "crossbow",
+      "rpg",
+      "flamethrower",
+      "minigun",
+      "railgun",
+      "tesla",
+      "pitViper",
+      "courtesy",
+      "velvet",
+      "switch",
+      "house",
+      "dividend",
+      "sovereign"
+    ],
+    "node_id": "rxNU27UdMY3lbikfnHjj"
+  },
+  {
+    "id": "shared-explosion",
+    "name": "Shared · Rocket and grenade explosion",
+    "cue": "explosion",
+    "group": "Impacts",
+    "duration": 1.5,
+    "interval": 1.9,
+    "batch": 3,
+    "prompt": "One heavy explosion, sharp forceful blast and deep thump with a short gritty debris decay, dry isolated sound.",
+    "loop": false,
+    "appliesTo": [
+      "sword",
+      "crossbow",
+      "rpg",
+      "flamethrower",
+      "minigun",
+      "railgun",
+      "tesla",
+      "pitViper",
+      "courtesy",
+      "velvet",
+      "switch",
+      "house",
+      "dividend",
+      "sovereign"
+    ],
+    "node_id": "V476pQwhtq5MvzFCBJV9"
+  },
+  {
+    "id": "sword-flesh",
+    "name": "Velvet Saber · Flesh impact",
+    "cue": "weaponFlesh",
+    "group": "Impacts",
+    "duration": 0.5,
+    "interval": 0.9,
+    "batch": 3,
+    "prompt": "One sword cutting into flesh, short sharp wet slice and meaty impact, dry isolated sound.",
+    "loop": false,
+    "appliesTo": [
+      "sword"
+    ],
+    "node_id": "BDnKbmgzPCV3FmTVmhjs"
+  },
+  {
+    "id": "sword-surface",
+    "name": "Velvet Saber · Surface impact",
+    "cue": "weaponImpact",
+    "group": "Impacts",
+    "duration": 0.6,
+    "interval": 1,
+    "batch": 3,
+    "prompt": "One sword striking hard stone, sharp metallic clang and brief gritty scrape, dry isolated sound.",
+    "loop": false,
+    "appliesTo": [
+      "sword"
+    ],
+    "node_id": "lpyAPBLkFXuhfHQN5Cv8"
+  }
+]

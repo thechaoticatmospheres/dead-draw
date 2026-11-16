@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "updatedAt": "2026-09-11T19:05:48.153Z",
+  "sounds": {
+    "courtesy-shot": {
+      "pick": "Ot3APzdi9TnWjYuxTs6P",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "pitViper-shot": {
+      "pick": "sgOfiyQUGoxVM73Du7J7",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    },
+    "walker-enemy": {
+      "pick": "W9s7bPHLbk2BeSMxLe4W",
+      "alternates": [],
+      "notes": "",
+      "regenerate": false
+    }
+  },
+  "flow": "https://elevenlabs.io/app/flows/2C75vSuIQQnCbmeVpgmu",
+  "exportedAt": "2026-09-11T19:08:42.990Z",
+  "selectedFiles": [
+    {
+      "sound": "courtesy-shot",
+      "pick": "audio/Ot3APzdi9TnWjYuxTs6P.wav"
+    },
+    {
+      "sound": "pitViper-shot",
+      "pick": "audio/sgOfiyQUGoxVM73Du7J7.wav"
+    },
+    {
+      "sound": "walker-enemy",
+      "pick": "audio/W9s7bPHLbk2BeSMxLe4W.wav"
+    }
+  ]
+}

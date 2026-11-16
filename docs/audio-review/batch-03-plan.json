@@ -1,0 +1,1682 @@
+{
+  "flow_id": "2C75vSuIQQnCbmeVpgmu",
+  "batch": 3,
+  "variations": 4,
+  "sounds": [
+    {
+      "id": "sword-shot",
+      "name": "Velvet Saber · Swing",
+      "cue": "shot",
+      "group": "Weapons",
+      "duration": 0.5,
+      "interval": 0.62,
+      "batch": 3,
+      "prompt": "One fast sword swing, sharp airy blade whoosh with a light metallic ring, close dry isolated sound.",
+      "loop": false,
+      "weapon": "sword",
+      "appliesTo": [
+        "sword"
+      ]
+    },
+    {
+      "id": "crossbow-shot",
+      "name": "Pit Boss Crossbow · Fire",
+      "cue": "shot",
+      "group": "Weapons",
+      "duration": 0.5,
+      "interval": 0.8,
+      "batch": 3,
+      "prompt": "One crossbow shot, tight springy string snap and wooden body thump, dry close isolated sound.",
+      "loop": false,
+      "weapon": "crossbow",
+      "appliesTo": [
+        "crossbow"
+      ]
+    },
+    {
+      "id": "rpg-shot",
+      "name": "Housebreaker RPG · Fire",
+      "cue": "shot",
+      "group": "Weapons",
+      "duration": 1,
+      "interval": 1.1,
+      "batch": 3,
+      "prompt": "One rocket launcher discharge, punchy hollow launch thump and short forceful exhaust whoosh, dry isolated sound.",
+      "loop": false,
+      "weapon": "rpg",
+      "appliesTo": [
+        "rpg"
+      ]
+    },
+    {
+      "id": "flamethrower-shot",
+      "name": "Dragon’s Breath · Fire",
+      "cue": "shot",
+      "group": "Weapons",
+      "duration": 0.6,
+      "interval": 0.09,
+      "batch": 3,
+      "prompt": "One flamethrower ignition, sharp gas ignition pop swelling into a brief roaring flame burst, dry isolated sound.",
+      "loop": false,
+      "weapon": "flamethrower",
+      "appliesTo": [
+        "flamethrower"
+      ]
+    },
+    {
+      "id": "minigun-shot",
+      "name": "The Debt Collector · Fire",
+      "cue": "shot",
+      "group": "Weapons",
+      "duration": 0.5,
+      "interval": 0.055,
+      "batch": 3,
+      "prompt": "One heavy rotary machine-gun shot, tight aggressive mechanical crack and bassy thump, very short dry decay, no burst or background.",
+      "loop": false,
+      "weapon": "minigun",
+      "appliesTo": [
+        "minigun"
+      ]
+    },
+    {
+      "id": "railgun-shot",
+      "name": "Royal Flush Railgun · Fire",
+      "cue": "shot",
+      "group": "Weapons",
+      "duration": 0.8,
+      "interval": 1.1,
+      "batch": 3,
+      "prompt": "One railgun discharge, sharp electric snap and deep magnetic punch with a short descending whine, dry isolated sound.",
+      "loop": false,
+      "weapon": "railgun",
+      "appliesTo": [
+        "railgun"
+      ]
+    },
+    {
+      "id": "tesla-shot",
+      "name": "Static Jackpot · Fire",
+      "cue": "shot",
+      "group": "Weapons",
+      "duration": 0.7,
+      "interval": 0.5,
+      "batch": 3,
+      "prompt": "One tesla weapon discharge, harsh electrical crack and short buzzing arc, dry isolated sound.",
+      "loop": false,
+      "weapon": "tesla",
+      "appliesTo": [
+        "tesla"
+      ]
+    },
+    {
+      "id": "switch-shot",
+      "name": "Switch · Fire",
+      "cue": "shot",
+      "group": "Weapons",
+      "duration": 0.5,
+      "interval": 0.095,
+      "batch": 3,
+      "prompt": "One compact automatic pistol gunshot, immediate sharp dry pop with a tight gritty body, short decay, no burst or echo.",
+      "loop": false,
+      "weapon": "switch",
+      "appliesTo": [
+        "switch"
+      ]
+    },
+    {
+      "id": "dividend-shot",
+      "name": "Dividend · Fire",
+      "cue": "shot",
+      "group": "Weapons",
+      "duration": 0.5,
+      "interval": 0.13,
+      "batch": 3,
+      "prompt": "One rifle gunshot, immediate crisp hard crack and solid midrange punch, short dry decay, no echo or background.",
+      "loop": false,
+      "weapon": "dividend",
+      "appliesTo": [
+        "dividend"
+      ]
+    },
+    {
+      "id": "sovereign-shot",
+      "name": "Sovereign · Fire",
+      "cue": "shot",
+      "group": "Weapons",
+      "duration": 0.6,
+      "interval": 0.16,
+      "batch": 3,
+      "prompt": "One heavy battle rifle gunshot, immediate hard crack with a deep forceful thump and short rough decay, dry isolated sound.",
+      "loop": false,
+      "weapon": "sovereign",
+      "appliesTo": [
+        "sovereign"
+      ]
+    },
+    {
+      "id": "handling-pistol-reload",
+      "name": "Pistols · Reload start",
+      "cue": "reload",
+      "group": "Weapon handling",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "Pistol magazine sliding out with a crisp release click, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "courtesy",
+        "velvet"
+      ]
+    },
+    {
+      "id": "handling-pistol-reloadEnd",
+      "name": "Pistols · Reload finish",
+      "cue": "reloadEnd",
+      "group": "Weapon handling",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "Pistol magazine seating firmly with a short metal slide rack, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "courtesy",
+        "velvet"
+      ]
+    },
+    {
+      "id": "handling-pistol-switch",
+      "name": "Pistols · Equip",
+      "cue": "switch",
+      "group": "Weapon handling",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "Pistol being drawn with a short cloth slide and metal click, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "courtesy",
+        "velvet"
+      ]
+    },
+    {
+      "id": "handling-pistol-empty",
+      "name": "Pistols · Empty",
+      "cue": "empty",
+      "group": "Weapon handling",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "One dry pistol trigger click, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "courtesy",
+        "velvet"
+      ]
+    },
+    {
+      "id": "handling-automatic-reload",
+      "name": "Automatics · Reload start",
+      "cue": "reload",
+      "group": "Weapon handling",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "Compact automatic weapon magazine release and short plastic magazine slide, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "switch",
+        "house"
+      ]
+    },
+    {
+      "id": "handling-automatic-reloadEnd",
+      "name": "Automatics · Reload finish",
+      "cue": "reloadEnd",
+      "group": "Weapon handling",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "Compact automatic weapon magazine seating with a sharp charging-handle click, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "switch",
+        "house"
+      ]
+    },
+    {
+      "id": "handling-automatic-switch",
+      "name": "Automatics · Equip",
+      "cue": "switch",
+      "group": "Weapon handling",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "Compact automatic weapon raised with strap rustle and light metal clack, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "switch",
+        "house"
+      ]
+    },
+    {
+      "id": "handling-automatic-empty",
+      "name": "Automatics · Empty",
+      "cue": "empty",
+      "group": "Weapon handling",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "One dry automatic weapon trigger click, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "switch",
+        "house"
+      ]
+    },
+    {
+      "id": "handling-rifle-reload",
+      "name": "Rifles · Reload start",
+      "cue": "reload",
+      "group": "Weapon handling",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "Rifle magazine release and firm metal magazine slide, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "dividend",
+        "sovereign"
+      ]
+    },
+    {
+      "id": "handling-rifle-reloadEnd",
+      "name": "Rifles · Reload finish",
+      "cue": "reloadEnd",
+      "group": "Weapon handling",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "Rifle magazine seating and a solid bolt clack, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "dividend",
+        "sovereign"
+      ]
+    },
+    {
+      "id": "handling-rifle-switch",
+      "name": "Rifles · Equip",
+      "cue": "switch",
+      "group": "Weapon handling",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "Rifle raised with a short strap rustle and solid metal clack, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "dividend",
+        "sovereign"
+      ]
+    },
+    {
+      "id": "handling-rifle-empty",
+      "name": "Rifles · Empty",
+      "cue": "empty",
+      "group": "Weapon handling",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "One dry rifle firing-mechanism click, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "dividend",
+        "sovereign"
+      ]
+    },
+    {
+      "id": "handling-shotgun-reload",
+      "name": "Pit Viper · Reload start",
+      "cue": "reload",
+      "group": "Weapon handling",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "Shotgun loading gate opening with a short metal clack, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "pitViper"
+      ]
+    },
+    {
+      "id": "handling-shotgun-reloadEnd",
+      "name": "Pit Viper · Reload finish",
+      "cue": "reloadEnd",
+      "group": "Weapon handling",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "Shotgun action racking shut with a heavy mechanical clack, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "pitViper"
+      ]
+    },
+    {
+      "id": "handling-shotgun-switch",
+      "name": "Pit Viper · Equip",
+      "cue": "switch",
+      "group": "Weapon handling",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "Shotgun raised with a solid wooden and metal handling clunk, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "pitViper"
+      ]
+    },
+    {
+      "id": "handling-shotgun-empty",
+      "name": "Pit Viper · Empty",
+      "cue": "empty",
+      "group": "Weapon handling",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "One hollow dry shotgun trigger click, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "pitViper"
+      ]
+    },
+    {
+      "id": "handling-crossbow-reload",
+      "name": "Pit Boss Crossbow · Reload start",
+      "cue": "reload",
+      "group": "Weapon handling",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "Crossbow string pulled back against creaking mechanical tension, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "crossbow"
+      ]
+    },
+    {
+      "id": "handling-crossbow-reloadEnd",
+      "name": "Pit Boss Crossbow · Reload finish",
+      "cue": "reloadEnd",
+      "group": "Weapon handling",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "Crossbow bolt seated with a wooden tap and latch click, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "crossbow"
+      ]
+    },
+    {
+      "id": "handling-crossbow-switch",
+      "name": "Pit Boss Crossbow · Equip",
+      "cue": "switch",
+      "group": "Weapon handling",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "Crossbow raised with a short wooden creak and strap rustle, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "crossbow"
+      ]
+    },
+    {
+      "id": "handling-crossbow-empty",
+      "name": "Pit Boss Crossbow · Empty",
+      "cue": "empty",
+      "group": "Weapon handling",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "One empty crossbow latch click, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "crossbow"
+      ]
+    },
+    {
+      "id": "handling-rocket-reload",
+      "name": "Housebreaker RPG · Reload start",
+      "cue": "reload",
+      "group": "Weapon handling",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "Rocket launcher breech opening with a heavy hollow metal clunk, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "rpg"
+      ]
+    },
+    {
+      "id": "handling-rocket-reloadEnd",
+      "name": "Housebreaker RPG · Reload finish",
+      "cue": "reloadEnd",
+      "group": "Weapon handling",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "Rocket seating in launcher and heavy breech latch snapping shut, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "rpg"
+      ]
+    },
+    {
+      "id": "handling-rocket-switch",
+      "name": "Housebreaker RPG · Equip",
+      "cue": "switch",
+      "group": "Weapon handling",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "Rocket launcher raised with a heavy tube handling clunk, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "rpg"
+      ]
+    },
+    {
+      "id": "handling-rocket-empty",
+      "name": "Housebreaker RPG · Empty",
+      "cue": "empty",
+      "group": "Weapon handling",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "One dry rocket launcher trigger click, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "rpg"
+      ]
+    },
+    {
+      "id": "handling-fuel-reload",
+      "name": "Dragon’s Breath · Reload start",
+      "cue": "reload",
+      "group": "Weapon handling",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "Flamethrower fuel coupling unscrewing with a brief pressure hiss, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "flamethrower"
+      ]
+    },
+    {
+      "id": "handling-fuel-reloadEnd",
+      "name": "Dragon’s Breath · Reload finish",
+      "cue": "reloadEnd",
+      "group": "Weapon handling",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "Flamethrower fuel coupling locking shut with a metallic click, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "flamethrower"
+      ]
+    },
+    {
+      "id": "handling-fuel-switch",
+      "name": "Dragon’s Breath · Equip",
+      "cue": "switch",
+      "group": "Weapon handling",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "Flamethrower raised with hose movement and a metal handling clunk, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "flamethrower"
+      ]
+    },
+    {
+      "id": "handling-fuel-empty",
+      "name": "Dragon’s Breath · Empty",
+      "cue": "empty",
+      "group": "Weapon handling",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "One empty flamethrower igniter click and weak gas sputter, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "flamethrower"
+      ]
+    },
+    {
+      "id": "handling-heavy-reload",
+      "name": "The Debt Collector · Reload start",
+      "cue": "reload",
+      "group": "Weapon handling",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "Heavy machine-gun ammunition box opening with rattling belt links, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "minigun"
+      ]
+    },
+    {
+      "id": "handling-heavy-reloadEnd",
+      "name": "The Debt Collector · Reload finish",
+      "cue": "reloadEnd",
+      "group": "Weapon handling",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "Heavy ammunition feed cover locking with a solid metallic slam, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "minigun"
+      ]
+    },
+    {
+      "id": "handling-heavy-switch",
+      "name": "The Debt Collector · Equip",
+      "cue": "switch",
+      "group": "Weapon handling",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "Heavy rotary gun raised with a heavy metal handling clunk, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "minigun"
+      ]
+    },
+    {
+      "id": "handling-heavy-empty",
+      "name": "The Debt Collector · Empty",
+      "cue": "empty",
+      "group": "Weapon handling",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "One empty rotary gun mechanical click, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "minigun"
+      ]
+    },
+    {
+      "id": "handling-energy-reload",
+      "name": "Energy weapons · Reload start",
+      "cue": "reload",
+      "group": "Weapon handling",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "Energy weapon power cell unlocking with a mechanical click and brief electrical hiss, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "railgun",
+        "tesla"
+      ]
+    },
+    {
+      "id": "handling-energy-reloadEnd",
+      "name": "Energy weapons · Reload finish",
+      "cue": "reloadEnd",
+      "group": "Weapon handling",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "Energy weapon power cell seating with a snap and brief charging hum, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "railgun",
+        "tesla"
+      ]
+    },
+    {
+      "id": "handling-energy-switch",
+      "name": "Energy weapons · Equip",
+      "cue": "switch",
+      "group": "Weapon handling",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "Energy weapon raised with a short electronic chirp and mechanical clack, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "railgun",
+        "tesla"
+      ]
+    },
+    {
+      "id": "handling-energy-empty",
+      "name": "Energy weapons · Empty",
+      "cue": "empty",
+      "group": "Weapon handling",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "One depleted energy weapon trigger buzz, close dry isolated sound with no background.",
+      "loop": false,
+      "appliesTo": [
+        "railgun",
+        "tesla"
+      ]
+    },
+    {
+      "id": "sword-switch",
+      "name": "Velvet Saber · Equip",
+      "cue": "switch",
+      "group": "Weapon handling",
+      "duration": 0.65,
+      "interval": 1.05,
+      "batch": 3,
+      "prompt": "One sword drawn from a sheath, clean metallic scrape ending in a short ring, dry isolated sound.",
+      "loop": false,
+      "appliesTo": [
+        "sword"
+      ]
+    },
+    {
+      "id": "goose-enemy",
+      "name": "Jackpot Goose · Idle vocal",
+      "cue": "enemy",
+      "group": "Zombie vocals",
+      "duration": 2,
+      "interval": 2.4,
+      "batch": 3,
+      "prompt": "One idle vocal from a mutated goose, harsh nasal honk with a rough throaty hiss, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "goose",
+      "appliesTo": [
+        "goose"
+      ]
+    },
+    {
+      "id": "goose-enemyAttack",
+      "name": "Jackpot Goose · Attack",
+      "cue": "enemyAttack",
+      "group": "Zombie vocals",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "One short aggressive attack vocal from a mutated goose, harsh nasal honk with a rough throaty hiss, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "goose",
+      "appliesTo": [
+        "goose"
+      ]
+    },
+    {
+      "id": "goose-enemyHurt",
+      "name": "Jackpot Goose · Hurt",
+      "cue": "enemyHurt",
+      "group": "Zombie vocals",
+      "duration": 0.7,
+      "interval": 1.1,
+      "batch": 3,
+      "prompt": "One brief pained recoil vocal from a mutated goose, harsh nasal honk with a rough throaty hiss, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "goose",
+      "appliesTo": [
+        "goose"
+      ]
+    },
+    {
+      "id": "goose-death",
+      "name": "Jackpot Goose · Death",
+      "cue": "death",
+      "group": "Zombie vocals",
+      "duration": 1.5,
+      "interval": 1.9,
+      "batch": 3,
+      "prompt": "One dying vocal fading into a final breath from a mutated goose, harsh nasal honk with a rough throaty hiss, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "goose",
+      "appliesTo": [
+        "goose"
+      ]
+    },
+    {
+      "id": "dealer-enemy",
+      "name": "Dead Dealer · Idle vocal",
+      "cue": "enemy",
+      "group": "Zombie vocals",
+      "duration": 2,
+      "interval": 2.4,
+      "batch": 3,
+      "prompt": "One idle vocal from a gaunt undead dealer, dry wheezy midrange throat rasp and rattling breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "dealer",
+      "appliesTo": [
+        "dealer"
+      ]
+    },
+    {
+      "id": "dealer-enemyAttack",
+      "name": "Dead Dealer · Attack",
+      "cue": "enemyAttack",
+      "group": "Zombie vocals",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "One short aggressive attack vocal from a gaunt undead dealer, dry wheezy midrange throat rasp and rattling breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "dealer",
+      "appliesTo": [
+        "dealer"
+      ]
+    },
+    {
+      "id": "dealer-enemyHurt",
+      "name": "Dead Dealer · Hurt",
+      "cue": "enemyHurt",
+      "group": "Zombie vocals",
+      "duration": 0.7,
+      "interval": 1.1,
+      "batch": 3,
+      "prompt": "One brief pained recoil vocal from a gaunt undead dealer, dry wheezy midrange throat rasp and rattling breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "dealer",
+      "appliesTo": [
+        "dealer"
+      ]
+    },
+    {
+      "id": "dealer-death",
+      "name": "Dead Dealer · Death",
+      "cue": "death",
+      "group": "Zombie vocals",
+      "duration": 1.5,
+      "interval": 1.9,
+      "batch": 3,
+      "prompt": "One dying vocal fading into a final breath from a gaunt undead dealer, dry wheezy midrange throat rasp and rattling breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "dealer",
+      "appliesTo": [
+        "dealer"
+      ]
+    },
+    {
+      "id": "security-enemy",
+      "name": "Casino Security · Idle vocal",
+      "cue": "enemy",
+      "group": "Zombie vocals",
+      "duration": 2,
+      "interval": 2.4,
+      "batch": 3,
+      "prompt": "One idle vocal from a heavy undead security guard, low chesty human growl and labored breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "security",
+      "appliesTo": [
+        "security"
+      ]
+    },
+    {
+      "id": "security-enemyAttack",
+      "name": "Casino Security · Attack",
+      "cue": "enemyAttack",
+      "group": "Zombie vocals",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "One short aggressive attack vocal from a heavy undead security guard, low chesty human growl and labored breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "security",
+      "appliesTo": [
+        "security"
+      ]
+    },
+    {
+      "id": "security-enemyHurt",
+      "name": "Casino Security · Hurt",
+      "cue": "enemyHurt",
+      "group": "Zombie vocals",
+      "duration": 0.7,
+      "interval": 1.1,
+      "batch": 3,
+      "prompt": "One brief pained recoil vocal from a heavy undead security guard, low chesty human growl and labored breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "security",
+      "appliesTo": [
+        "security"
+      ]
+    },
+    {
+      "id": "security-death",
+      "name": "Casino Security · Death",
+      "cue": "death",
+      "group": "Zombie vocals",
+      "duration": 1.5,
+      "interval": 1.9,
+      "batch": 3,
+      "prompt": "One dying vocal fading into a final breath from a heavy undead security guard, low chesty human growl and labored breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "security",
+      "appliesTo": [
+        "security"
+      ]
+    },
+    {
+      "id": "wheelchair-enemy",
+      "name": "Last Call Regular · Idle vocal",
+      "cue": "enemy",
+      "group": "Zombie vocals",
+      "duration": 2,
+      "interval": 2.4,
+      "batch": 3,
+      "prompt": "One idle vocal from a undead last-call regular, frail gravelly croak with breathy throat rattle, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "wheelchair",
+      "appliesTo": [
+        "wheelchair"
+      ]
+    },
+    {
+      "id": "wheelchair-enemyAttack",
+      "name": "Last Call Regular · Attack",
+      "cue": "enemyAttack",
+      "group": "Zombie vocals",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "One short aggressive attack vocal from a undead last-call regular, frail gravelly croak with breathy throat rattle, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "wheelchair",
+      "appliesTo": [
+        "wheelchair"
+      ]
+    },
+    {
+      "id": "wheelchair-enemyHurt",
+      "name": "Last Call Regular · Hurt",
+      "cue": "enemyHurt",
+      "group": "Zombie vocals",
+      "duration": 0.7,
+      "interval": 1.1,
+      "batch": 3,
+      "prompt": "One brief pained recoil vocal from a undead last-call regular, frail gravelly croak with breathy throat rattle, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "wheelchair",
+      "appliesTo": [
+        "wheelchair"
+      ]
+    },
+    {
+      "id": "wheelchair-death",
+      "name": "Last Call Regular · Death",
+      "cue": "death",
+      "group": "Zombie vocals",
+      "duration": 1.5,
+      "interval": 1.9,
+      "batch": 3,
+      "prompt": "One dying vocal fading into a final breath from a undead last-call regular, frail gravelly croak with breathy throat rattle, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "wheelchair",
+      "appliesTo": [
+        "wheelchair"
+      ]
+    },
+    {
+      "id": "crawler-enemy",
+      "name": "Drunken Crawler · Idle vocal",
+      "cue": "enemy",
+      "group": "Zombie vocals",
+      "duration": 2,
+      "interval": 2.4,
+      "batch": 3,
+      "prompt": "One idle vocal from a crawling zombie, low wet guttural rasp and strained breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "crawler",
+      "appliesTo": [
+        "crawler"
+      ]
+    },
+    {
+      "id": "crawler-enemyAttack",
+      "name": "Drunken Crawler · Attack",
+      "cue": "enemyAttack",
+      "group": "Zombie vocals",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "One short aggressive attack vocal from a crawling zombie, low wet guttural rasp and strained breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "crawler",
+      "appliesTo": [
+        "crawler"
+      ]
+    },
+    {
+      "id": "crawler-enemyHurt",
+      "name": "Drunken Crawler · Hurt",
+      "cue": "enemyHurt",
+      "group": "Zombie vocals",
+      "duration": 0.7,
+      "interval": 1.1,
+      "batch": 3,
+      "prompt": "One brief pained recoil vocal from a crawling zombie, low wet guttural rasp and strained breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "crawler",
+      "appliesTo": [
+        "crawler"
+      ]
+    },
+    {
+      "id": "crawler-death",
+      "name": "Drunken Crawler · Death",
+      "cue": "death",
+      "group": "Zombie vocals",
+      "duration": 1.5,
+      "interval": 1.9,
+      "batch": 3,
+      "prompt": "One dying vocal fading into a final breath from a crawling zombie, low wet guttural rasp and strained breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "crawler",
+      "appliesTo": [
+        "crawler"
+      ]
+    },
+    {
+      "id": "walker-enemyAttack",
+      "name": "Drifter · Attack",
+      "cue": "enemyAttack",
+      "group": "Zombie vocals",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "One short aggressive attack vocal from a feral human-sized zombie, low ragged throaty rasp and strained breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "walker",
+      "appliesTo": [
+        "walker"
+      ]
+    },
+    {
+      "id": "walker-enemyHurt",
+      "name": "Drifter · Hurt",
+      "cue": "enemyHurt",
+      "group": "Zombie vocals",
+      "duration": 0.7,
+      "interval": 1.1,
+      "batch": 3,
+      "prompt": "One brief pained recoil vocal from a feral human-sized zombie, low ragged throaty rasp and strained breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "walker",
+      "appliesTo": [
+        "walker"
+      ]
+    },
+    {
+      "id": "walker-death",
+      "name": "Drifter · Death",
+      "cue": "death",
+      "group": "Zombie vocals",
+      "duration": 1.5,
+      "interval": 1.9,
+      "batch": 3,
+      "prompt": "One dying vocal fading into a final breath from a feral human-sized zombie, low ragged throaty rasp and strained breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "walker",
+      "appliesTo": [
+        "walker"
+      ]
+    },
+    {
+      "id": "runner-enemyAttack",
+      "name": "Runner · Attack",
+      "cue": "enemyAttack",
+      "group": "Zombie vocals",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "One short aggressive attack vocal from a fast feral zombie, higher ragged throat rasp and quick strained breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "runner",
+      "appliesTo": [
+        "runner"
+      ]
+    },
+    {
+      "id": "runner-enemyHurt",
+      "name": "Runner · Hurt",
+      "cue": "enemyHurt",
+      "group": "Zombie vocals",
+      "duration": 0.7,
+      "interval": 1.1,
+      "batch": 3,
+      "prompt": "One brief pained recoil vocal from a fast feral zombie, higher ragged throat rasp and quick strained breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "runner",
+      "appliesTo": [
+        "runner"
+      ]
+    },
+    {
+      "id": "runner-death",
+      "name": "Runner · Death",
+      "cue": "death",
+      "group": "Zombie vocals",
+      "duration": 1.5,
+      "interval": 1.9,
+      "batch": 3,
+      "prompt": "One dying vocal fading into a final breath from a fast feral zombie, higher ragged throat rasp and quick strained breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "runner",
+      "appliesTo": [
+        "runner"
+      ]
+    },
+    {
+      "id": "brute-enemyAttack",
+      "name": "Pit Boss · Attack",
+      "cue": "enemyAttack",
+      "group": "Zombie vocals",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "One short aggressive attack vocal from a hulking zombie, deep coarse chest rumble and ragged throaty rasp, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "brute",
+      "appliesTo": [
+        "brute"
+      ]
+    },
+    {
+      "id": "brute-enemyHurt",
+      "name": "Pit Boss · Hurt",
+      "cue": "enemyHurt",
+      "group": "Zombie vocals",
+      "duration": 0.7,
+      "interval": 1.1,
+      "batch": 3,
+      "prompt": "One brief pained recoil vocal from a hulking zombie, deep coarse chest rumble and ragged throaty rasp, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "brute",
+      "appliesTo": [
+        "brute"
+      ]
+    },
+    {
+      "id": "brute-death",
+      "name": "Pit Boss · Death",
+      "cue": "death",
+      "group": "Zombie vocals",
+      "duration": 1.5,
+      "interval": 1.9,
+      "batch": 3,
+      "prompt": "One dying vocal fading into a final breath from a hulking zombie, deep coarse chest rumble and ragged throaty rasp, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "brute",
+      "appliesTo": [
+        "brute"
+      ]
+    },
+    {
+      "id": "spitter-enemy",
+      "name": "Spitter · Idle vocal",
+      "cue": "enemy",
+      "group": "Zombie vocals",
+      "duration": 2,
+      "interval": 2.4,
+      "batch": 3,
+      "prompt": "One idle vocal from a acid-spitting zombie, wet gurgling throat rasp with a hissing breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "spitter",
+      "appliesTo": [
+        "spitter"
+      ]
+    },
+    {
+      "id": "spitter-enemyAttack",
+      "name": "Spitter · Attack",
+      "cue": "enemyAttack",
+      "group": "Zombie vocals",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "One short aggressive attack vocal from a acid-spitting zombie, wet gurgling throat rasp with a hissing breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "spitter",
+      "appliesTo": [
+        "spitter"
+      ]
+    },
+    {
+      "id": "spitter-enemyHurt",
+      "name": "Spitter · Hurt",
+      "cue": "enemyHurt",
+      "group": "Zombie vocals",
+      "duration": 0.7,
+      "interval": 1.1,
+      "batch": 3,
+      "prompt": "One brief pained recoil vocal from a acid-spitting zombie, wet gurgling throat rasp with a hissing breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "spitter",
+      "appliesTo": [
+        "spitter"
+      ]
+    },
+    {
+      "id": "spitter-death",
+      "name": "Spitter · Death",
+      "cue": "death",
+      "group": "Zombie vocals",
+      "duration": 1.5,
+      "interval": 1.9,
+      "batch": 3,
+      "prompt": "One dying vocal fading into a final breath from a acid-spitting zombie, wet gurgling throat rasp with a hissing breath, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "spitter",
+      "appliesTo": [
+        "spitter"
+      ]
+    },
+    {
+      "id": "boss-enemy",
+      "name": "THE HIGH ROLLER · Idle vocal",
+      "cue": "enemy",
+      "group": "Zombie vocals",
+      "duration": 2,
+      "interval": 2.4,
+      "batch": 3,
+      "prompt": "One idle vocal from a enormous undead high roller, very deep resonant chest growl with coarse human throat rasp, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "boss",
+      "appliesTo": [
+        "boss"
+      ]
+    },
+    {
+      "id": "boss-enemyAttack",
+      "name": "THE HIGH ROLLER · Attack",
+      "cue": "enemyAttack",
+      "group": "Zombie vocals",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "One short aggressive attack vocal from a enormous undead high roller, very deep resonant chest growl with coarse human throat rasp, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "boss",
+      "appliesTo": [
+        "boss"
+      ]
+    },
+    {
+      "id": "boss-enemyHurt",
+      "name": "THE HIGH ROLLER · Hurt",
+      "cue": "enemyHurt",
+      "group": "Zombie vocals",
+      "duration": 0.7,
+      "interval": 1.1,
+      "batch": 3,
+      "prompt": "One brief pained recoil vocal from a enormous undead high roller, very deep resonant chest growl with coarse human throat rasp, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "boss",
+      "appliesTo": [
+        "boss"
+      ]
+    },
+    {
+      "id": "boss-death",
+      "name": "THE HIGH ROLLER · Death",
+      "cue": "death",
+      "group": "Zombie vocals",
+      "duration": 1.5,
+      "interval": 1.9,
+      "batch": 3,
+      "prompt": "One dying vocal fading into a final breath from a enormous undead high roller, very deep resonant chest growl with coarse human throat rasp, close dry isolated recording without words or background.",
+      "loop": false,
+      "kind": "boss",
+      "appliesTo": [
+        "boss"
+      ]
+    },
+    {
+      "id": "flame-loop",
+      "name": "Dragon’s Breath · Sustained flame",
+      "cue": "weaponLoop",
+      "group": "Special abilities",
+      "duration": 3,
+      "interval": 3.4,
+      "batch": 3,
+      "prompt": "Steady pressurized flamethrower roar, close dry rushing flame with gritty crackle, seamless continuous loop without ignition or shutdown.",
+      "loop": true,
+      "weapon": "flamethrower",
+      "appliesTo": [
+        "flamethrower"
+      ]
+    },
+    {
+      "id": "flame-stop",
+      "name": "Dragon’s Breath · Release",
+      "cue": "weaponStop",
+      "group": "Special abilities",
+      "duration": 0.6,
+      "interval": 1,
+      "batch": 3,
+      "prompt": "One flamethrower shutting off, brief dwindling flame whoosh and gas-valve click, dry isolated sound.",
+      "loop": false,
+      "weapon": "flamethrower",
+      "appliesTo": [
+        "flamethrower"
+      ]
+    },
+    {
+      "id": "minigun-start",
+      "name": "The Debt Collector · Spin-up",
+      "cue": "weaponStart",
+      "group": "Special abilities",
+      "duration": 1,
+      "interval": 1.4,
+      "batch": 3,
+      "prompt": "Rotary machine-gun barrels spinning up, rising mechanical motor whir, no firing, dry isolated sound.",
+      "loop": false,
+      "weapon": "minigun",
+      "appliesTo": [
+        "minigun"
+      ]
+    },
+    {
+      "id": "minigun-loop",
+      "name": "The Debt Collector · Sustained fire",
+      "cue": "weaponLoop",
+      "group": "Special abilities",
+      "duration": 3,
+      "interval": 3.4,
+      "batch": 3,
+      "prompt": "Steady rotary machine-gun firing at eighteen shots per second, tight rapid mechanical gunfire, seamless loop without startup or shutdown, dry close sound.",
+      "loop": true,
+      "weapon": "minigun",
+      "appliesTo": [
+        "minigun"
+      ]
+    },
+    {
+      "id": "minigun-stop",
+      "name": "The Debt Collector · Spin-down",
+      "cue": "weaponStop",
+      "group": "Special abilities",
+      "duration": 1,
+      "interval": 1.4,
+      "batch": 3,
+      "prompt": "Rotary machine-gun motor winding down, descending mechanical whir and final light clack, no firing, dry isolated sound.",
+      "loop": false,
+      "weapon": "minigun",
+      "appliesTo": [
+        "minigun"
+      ]
+    },
+    {
+      "id": "rocket-flight",
+      "name": "Housebreaker RPG · Rocket flight",
+      "cue": "projectileLoop",
+      "group": "Special abilities",
+      "duration": 2,
+      "interval": 2.4,
+      "batch": 3,
+      "prompt": "Steady fast rocket exhaust hiss and low rushing air, close dry seamless continuous loop.",
+      "loop": true,
+      "weapon": "rpg",
+      "appliesTo": [
+        "rpg"
+      ]
+    },
+    {
+      "id": "crossbow-impact",
+      "name": "Pit Boss Crossbow · Bolt impact",
+      "cue": "weaponImpact",
+      "group": "Special abilities",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "One crossbow bolt striking wood, sharp dry thunk with a short vibrating shaft rattle, isolated sound.",
+      "loop": false,
+      "weapon": "crossbow",
+      "appliesTo": [
+        "crossbow"
+      ]
+    },
+    {
+      "id": "railgun-impact",
+      "name": "Royal Flush Railgun · Piercing impact",
+      "cue": "weaponImpact",
+      "group": "Special abilities",
+      "duration": 0.6,
+      "interval": 1,
+      "batch": 3,
+      "prompt": "One high-velocity rail projectile piercing metal, sharp bright impact crack and short ringing tail, dry isolated sound.",
+      "loop": false,
+      "weapon": "railgun",
+      "appliesTo": [
+        "railgun"
+      ]
+    },
+    {
+      "id": "tesla-impact",
+      "name": "Static Jackpot · Chain arc",
+      "cue": "weaponImpact",
+      "group": "Special abilities",
+      "duration": 0.6,
+      "interval": 1,
+      "batch": 3,
+      "prompt": "One electrical arc jumping between targets, sharp sizzling snap and brief buzzing decay, dry isolated sound.",
+      "loop": false,
+      "weapon": "tesla",
+      "appliesTo": [
+        "tesla"
+      ]
+    },
+    {
+      "id": "brute-warnSlam",
+      "name": "Pit Boss · Slam warning",
+      "cue": "warnSlam",
+      "group": "Special abilities",
+      "duration": 0.75,
+      "interval": 1.15,
+      "batch": 3,
+      "prompt": "One hulking zombie preparing a heavy slam, rising deep strained growl, dry isolated sound without words.",
+      "loop": false,
+      "kind": "brute",
+      "appliesTo": [
+        "brute"
+      ]
+    },
+    {
+      "id": "brute-slam",
+      "name": "Pit Boss · Slam impact",
+      "cue": "slam",
+      "group": "Special abilities",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "One huge body slam striking a stone floor, deep heavy thud with a short gritty debris rattle, dry isolated sound.",
+      "loop": false,
+      "kind": "brute",
+      "appliesTo": [
+        "brute"
+      ]
+    },
+    {
+      "id": "boss-entrance",
+      "name": "THE HIGH ROLLER · Entrance roar",
+      "cue": "boss",
+      "group": "Special abilities",
+      "duration": 2.5,
+      "interval": 2.9,
+      "batch": 3,
+      "prompt": "One enormous undead creature entrance roar, very deep coarse resonant human throat bellow, dry isolated sound without words.",
+      "loop": false,
+      "kind": "boss",
+      "appliesTo": [
+        "boss"
+      ]
+    },
+    {
+      "id": "boss-warnSlam",
+      "name": "THE HIGH ROLLER · Slam warning",
+      "cue": "warnSlam",
+      "group": "Special abilities",
+      "duration": 0.9,
+      "interval": 1.3,
+      "batch": 3,
+      "prompt": "One enormous undead creature winding up a slam, rising bassy strained bellow with a rough throat rasp, dry isolated sound.",
+      "loop": false,
+      "kind": "boss",
+      "appliesTo": [
+        "boss"
+      ]
+    },
+    {
+      "id": "boss-slam",
+      "name": "THE HIGH ROLLER · Slam impact",
+      "cue": "slam",
+      "group": "Special abilities",
+      "duration": 1,
+      "interval": 1.4,
+      "batch": 3,
+      "prompt": "One enormous ground slam, massive deep stone impact with a short crumbling rubble tail, dry isolated sound.",
+      "loop": false,
+      "kind": "boss",
+      "appliesTo": [
+        "boss"
+      ]
+    },
+    {
+      "id": "spitter-warnAcid",
+      "name": "Spitter · Acid warning",
+      "cue": "warnAcid",
+      "group": "Special abilities",
+      "duration": 0.6,
+      "interval": 1,
+      "batch": 3,
+      "prompt": "One acid zombie gathering spit, rising wet throat gurgle and pressurized hiss, dry isolated sound without words.",
+      "loop": false,
+      "kind": "spitter",
+      "appliesTo": [
+        "spitter"
+      ]
+    },
+    {
+      "id": "spitter-spit",
+      "name": "Spitter · Spit attack",
+      "cue": "spit",
+      "group": "Special abilities",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "One forceful acid spit, wet guttural expulsion with a short liquid spray, dry isolated sound.",
+      "loop": false,
+      "kind": "spitter",
+      "appliesTo": [
+        "spitter"
+      ]
+    },
+    {
+      "id": "spitter-acid",
+      "name": "Spitter · Acid splash",
+      "cue": "acid",
+      "group": "Special abilities",
+      "duration": 1.2,
+      "interval": 1.6,
+      "batch": 3,
+      "prompt": "One corrosive acid splash onto stone, wet splatter and short bubbling sizzle, dry isolated sound.",
+      "loop": false,
+      "kind": "spitter",
+      "appliesTo": [
+        "spitter"
+      ]
+    },
+    {
+      "id": "wheelchair-move",
+      "name": "Last Call Regular · Wheel movement",
+      "cue": "enemyMove",
+      "group": "Special abilities",
+      "duration": 2,
+      "interval": 2.4,
+      "batch": 3,
+      "prompt": "Old wheelchair rolling steadily on hard flooring, light wheel squeak and loose metal rattle, dry seamless loop.",
+      "loop": true,
+      "kind": "wheelchair",
+      "appliesTo": [
+        "wheelchair"
+      ]
+    },
+    {
+      "id": "crawler-move",
+      "name": "Drunken Crawler · Scraping movement",
+      "cue": "enemyMove",
+      "group": "Special abilities",
+      "duration": 1.5,
+      "interval": 1.9,
+      "batch": 3,
+      "prompt": "One zombie dragging its body over rough flooring, gritty cloth scrape and short heavy hand scuff, dry isolated sound.",
+      "loop": false,
+      "kind": "crawler",
+      "appliesTo": [
+        "crawler"
+      ]
+    },
+    {
+      "id": "goose-flap",
+      "name": "Jackpot Goose · Wing flaps",
+      "cue": "enemyMove",
+      "group": "Special abilities",
+      "duration": 0.8,
+      "interval": 1.2000000000000002,
+      "batch": 3,
+      "prompt": "One pair of frantic goose wing flaps, close sharp feather buffets, dry isolated sound.",
+      "loop": false,
+      "kind": "goose",
+      "appliesTo": [
+        "goose"
+      ]
+    },
+    {
+      "id": "shared-flesh",
+      "name": "Shared · Flesh impact",
+      "cue": "hit",
+      "group": "Impacts",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "One blunt projectile hit into soft flesh, short wet meaty thud, dry isolated sound.",
+      "loop": false,
+      "appliesTo": [
+        "sword",
+        "crossbow",
+        "rpg",
+        "flamethrower",
+        "minigun",
+        "railgun",
+        "tesla",
+        "pitViper",
+        "courtesy",
+        "velvet",
+        "switch",
+        "house",
+        "dividend",
+        "sovereign"
+      ]
+    },
+    {
+      "id": "shared-surface",
+      "name": "Shared · Surface impact",
+      "cue": "impact",
+      "group": "Impacts",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "One bullet hitting hard concrete, sharp dry tick and tiny gritty debris rattle, isolated sound.",
+      "loop": false,
+      "appliesTo": [
+        "sword",
+        "crossbow",
+        "rpg",
+        "flamethrower",
+        "minigun",
+        "railgun",
+        "tesla",
+        "pitViper",
+        "courtesy",
+        "velvet",
+        "switch",
+        "house",
+        "dividend",
+        "sovereign"
+      ]
+    },
+    {
+      "id": "shared-headshot",
+      "name": "Shared · Headshot",
+      "cue": "headshot",
+      "group": "Impacts",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "One sharp headshot impact, short crunchy wet crack, dry isolated sound.",
+      "loop": false,
+      "appliesTo": [
+        "sword",
+        "crossbow",
+        "rpg",
+        "flamethrower",
+        "minigun",
+        "railgun",
+        "tesla",
+        "pitViper",
+        "courtesy",
+        "velvet",
+        "switch",
+        "house",
+        "dividend",
+        "sovereign"
+      ]
+    },
+    {
+      "id": "shared-explosion",
+      "name": "Shared · Rocket and grenade explosion",
+      "cue": "explosion",
+      "group": "Impacts",
+      "duration": 1.5,
+      "interval": 1.9,
+      "batch": 3,
+      "prompt": "One heavy explosion, sharp forceful blast and deep thump with a short gritty debris decay, dry isolated sound.",
+      "loop": false,
+      "appliesTo": [
+        "sword",
+        "crossbow",
+        "rpg",
+        "flamethrower",
+        "minigun",
+        "railgun",
+        "tesla",
+        "pitViper",
+        "courtesy",
+        "velvet",
+        "switch",
+        "house",
+        "dividend",
+        "sovereign"
+      ]
+    },
+    {
+      "id": "sword-flesh",
+      "name": "Velvet Saber · Flesh impact",
+      "cue": "weaponFlesh",
+      "group": "Impacts",
+      "duration": 0.5,
+      "interval": 0.9,
+      "batch": 3,
+      "prompt": "One sword cutting into flesh, short sharp wet slice and meaty impact, dry isolated sound.",
+      "loop": false,
+      "appliesTo": [
+        "sword"
+      ]
+    },
+    {
+      "id": "sword-surface",
+      "name": "Velvet Saber · Surface impact",
+      "cue": "weaponImpact",
+      "group": "Impacts",
+      "duration": 0.6,
+      "interval": 1,
+      "batch": 3,
+      "prompt": "One sword striking hard stone, sharp metallic clang and brief gritty scrape, dry isolated sound.",
+      "loop": false,
+      "appliesTo": [
+        "sword"
+      ]
+    }
+  ]
+}

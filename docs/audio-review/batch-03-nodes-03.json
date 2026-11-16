@@ -1,0 +1,402 @@
+[
+  {
+    "id": "goose-death",
+    "name": "Jackpot Goose · Death",
+    "cue": "death",
+    "group": "Zombie vocals",
+    "duration": 1.5,
+    "interval": 1.9,
+    "batch": 3,
+    "prompt": "One dying vocal fading into a final breath from a mutated goose, harsh nasal honk with a rough throaty hiss, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "goose",
+    "appliesTo": [
+      "goose"
+    ],
+    "node_id": "665Eeiv9vXvS97z2vqfW"
+  },
+  {
+    "id": "dealer-enemy",
+    "name": "Dead Dealer · Idle vocal",
+    "cue": "enemy",
+    "group": "Zombie vocals",
+    "duration": 2,
+    "interval": 2.4,
+    "batch": 3,
+    "prompt": "One idle vocal from a gaunt undead dealer, dry wheezy midrange throat rasp and rattling breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "dealer",
+    "appliesTo": [
+      "dealer"
+    ],
+    "node_id": "P4jkakp6w6HnLk9I0rKq"
+  },
+  {
+    "id": "dealer-enemyAttack",
+    "name": "Dead Dealer · Attack",
+    "cue": "enemyAttack",
+    "group": "Zombie vocals",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "One short aggressive attack vocal from a gaunt undead dealer, dry wheezy midrange throat rasp and rattling breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "dealer",
+    "appliesTo": [
+      "dealer"
+    ],
+    "node_id": "bvTl5tb69ugGMfXMS4B8"
+  },
+  {
+    "id": "dealer-enemyHurt",
+    "name": "Dead Dealer · Hurt",
+    "cue": "enemyHurt",
+    "group": "Zombie vocals",
+    "duration": 0.7,
+    "interval": 1.1,
+    "batch": 3,
+    "prompt": "One brief pained recoil vocal from a gaunt undead dealer, dry wheezy midrange throat rasp and rattling breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "dealer",
+    "appliesTo": [
+      "dealer"
+    ],
+    "node_id": "24lwyXWh1eCHkwU7g3z7"
+  },
+  {
+    "id": "dealer-death",
+    "name": "Dead Dealer · Death",
+    "cue": "death",
+    "group": "Zombie vocals",
+    "duration": 1.5,
+    "interval": 1.9,
+    "batch": 3,
+    "prompt": "One dying vocal fading into a final breath from a gaunt undead dealer, dry wheezy midrange throat rasp and rattling breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "dealer",
+    "appliesTo": [
+      "dealer"
+    ],
+    "node_id": "ibDDnl8C47S7uHzSk99P"
+  },
+  {
+    "id": "security-enemy",
+    "name": "Casino Security · Idle vocal",
+    "cue": "enemy",
+    "group": "Zombie vocals",
+    "duration": 2,
+    "interval": 2.4,
+    "batch": 3,
+    "prompt": "One idle vocal from a heavy undead security guard, low chesty human growl and labored breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "security",
+    "appliesTo": [
+      "security"
+    ],
+    "node_id": "p85V6XzdygdZ65moX96w"
+  },
+  {
+    "id": "security-enemyAttack",
+    "name": "Casino Security · Attack",
+    "cue": "enemyAttack",
+    "group": "Zombie vocals",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "One short aggressive attack vocal from a heavy undead security guard, low chesty human growl and labored breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "security",
+    "appliesTo": [
+      "security"
+    ],
+    "node_id": "kQ5vNJCesiLvSt3Zb64J"
+  },
+  {
+    "id": "security-enemyHurt",
+    "name": "Casino Security · Hurt",
+    "cue": "enemyHurt",
+    "group": "Zombie vocals",
+    "duration": 0.7,
+    "interval": 1.1,
+    "batch": 3,
+    "prompt": "One brief pained recoil vocal from a heavy undead security guard, low chesty human growl and labored breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "security",
+    "appliesTo": [
+      "security"
+    ],
+    "node_id": "dKOgTB4XWIMvIuuEDcU0"
+  },
+  {
+    "id": "security-death",
+    "name": "Casino Security · Death",
+    "cue": "death",
+    "group": "Zombie vocals",
+    "duration": 1.5,
+    "interval": 1.9,
+    "batch": 3,
+    "prompt": "One dying vocal fading into a final breath from a heavy undead security guard, low chesty human growl and labored breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "security",
+    "appliesTo": [
+      "security"
+    ],
+    "node_id": "JdBCA7lKRmDv8PDxNeYs"
+  },
+  {
+    "id": "wheelchair-enemy",
+    "name": "Last Call Regular · Idle vocal",
+    "cue": "enemy",
+    "group": "Zombie vocals",
+    "duration": 2,
+    "interval": 2.4,
+    "batch": 3,
+    "prompt": "One idle vocal from a undead last-call regular, frail gravelly croak with breathy throat rattle, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "wheelchair",
+    "appliesTo": [
+      "wheelchair"
+    ],
+    "node_id": "NpV0OWhYk6Xu1mIFwRIy"
+  },
+  {
+    "id": "wheelchair-enemyAttack",
+    "name": "Last Call Regular · Attack",
+    "cue": "enemyAttack",
+    "group": "Zombie vocals",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "One short aggressive attack vocal from a undead last-call regular, frail gravelly croak with breathy throat rattle, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "wheelchair",
+    "appliesTo": [
+      "wheelchair"
+    ],
+    "node_id": "uh2bYidN3yMqkJhSkbjH"
+  },
+  {
+    "id": "wheelchair-enemyHurt",
+    "name": "Last Call Regular · Hurt",
+    "cue": "enemyHurt",
+    "group": "Zombie vocals",
+    "duration": 0.7,
+    "interval": 1.1,
+    "batch": 3,
+    "prompt": "One brief pained recoil vocal from a undead last-call regular, frail gravelly croak with breathy throat rattle, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "wheelchair",
+    "appliesTo": [
+      "wheelchair"
+    ],
+    "node_id": "HG3mS7wQ53JAt0C5dfKz"
+  },
+  {
+    "id": "wheelchair-death",
+    "name": "Last Call Regular · Death",
+    "cue": "death",
+    "group": "Zombie vocals",
+    "duration": 1.5,
+    "interval": 1.9,
+    "batch": 3,
+    "prompt": "One dying vocal fading into a final breath from a undead last-call regular, frail gravelly croak with breathy throat rattle, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "wheelchair",
+    "appliesTo": [
+      "wheelchair"
+    ],
+    "node_id": "nMKrBXCgfPlA1ijU90TE"
+  },
+  {
+    "id": "crawler-enemy",
+    "name": "Drunken Crawler · Idle vocal",
+    "cue": "enemy",
+    "group": "Zombie vocals",
+    "duration": 2,
+    "interval": 2.4,
+    "batch": 3,
+    "prompt": "One idle vocal from a crawling zombie, low wet guttural rasp and strained breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "crawler",
+    "appliesTo": [
+      "crawler"
+    ],
+    "node_id": "AkWN2tC7bwfzVVq4MOXV"
+  },
+  {
+    "id": "crawler-enemyAttack",
+    "name": "Drunken Crawler · Attack",
+    "cue": "enemyAttack",
+    "group": "Zombie vocals",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "One short aggressive attack vocal from a crawling zombie, low wet guttural rasp and strained breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "crawler",
+    "appliesTo": [
+      "crawler"
+    ],
+    "node_id": "mSg4KnZlxftZTkXo0Quj"
+  },
+  {
+    "id": "crawler-enemyHurt",
+    "name": "Drunken Crawler · Hurt",
+    "cue": "enemyHurt",
+    "group": "Zombie vocals",
+    "duration": 0.7,
+    "interval": 1.1,
+    "batch": 3,
+    "prompt": "One brief pained recoil vocal from a crawling zombie, low wet guttural rasp and strained breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "crawler",
+    "appliesTo": [
+      "crawler"
+    ],
+    "node_id": "23leuM4bVjgBK9wR9LUZ"
+  },
+  {
+    "id": "crawler-death",
+    "name": "Drunken Crawler · Death",
+    "cue": "death",
+    "group": "Zombie vocals",
+    "duration": 1.5,
+    "interval": 1.9,
+    "batch": 3,
+    "prompt": "One dying vocal fading into a final breath from a crawling zombie, low wet guttural rasp and strained breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "crawler",
+    "appliesTo": [
+      "crawler"
+    ],
+    "node_id": "zmmLomHlwdxSzwOG9qHT"
+  },
+  {
+    "id": "walker-enemyAttack",
+    "name": "Drifter · Attack",
+    "cue": "enemyAttack",
+    "group": "Zombie vocals",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "One short aggressive attack vocal from a feral human-sized zombie, low ragged throaty rasp and strained breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "walker",
+    "appliesTo": [
+      "walker"
+    ],
+    "node_id": "lao97Dst4RSpVi3kO5mq"
+  },
+  {
+    "id": "walker-enemyHurt",
+    "name": "Drifter · Hurt",
+    "cue": "enemyHurt",
+    "group": "Zombie vocals",
+    "duration": 0.7,
+    "interval": 1.1,
+    "batch": 3,
+    "prompt": "One brief pained recoil vocal from a feral human-sized zombie, low ragged throaty rasp and strained breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "walker",
+    "appliesTo": [
+      "walker"
+    ],
+    "node_id": "USMJnuE1NhKBj2N5OGx3"
+  },
+  {
+    "id": "walker-death",
+    "name": "Drifter · Death",
+    "cue": "death",
+    "group": "Zombie vocals",
+    "duration": 1.5,
+    "interval": 1.9,
+    "batch": 3,
+    "prompt": "One dying vocal fading into a final breath from a feral human-sized zombie, low ragged throaty rasp and strained breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "walker",
+    "appliesTo": [
+      "walker"
+    ],
+    "node_id": "vDDIrvpGW1WH6XP9yGRo"
+  },
+  {
+    "id": "runner-enemyAttack",
+    "name": "Runner · Attack",
+    "cue": "enemyAttack",
+    "group": "Zombie vocals",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "One short aggressive attack vocal from a fast feral zombie, higher ragged throat rasp and quick strained breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "runner",
+    "appliesTo": [
+      "runner"
+    ],
+    "node_id": "ojKoof68BY7iXfDV5SVq"
+  },
+  {
+    "id": "runner-enemyHurt",
+    "name": "Runner · Hurt",
+    "cue": "enemyHurt",
+    "group": "Zombie vocals",
+    "duration": 0.7,
+    "interval": 1.1,
+    "batch": 3,
+    "prompt": "One brief pained recoil vocal from a fast feral zombie, higher ragged throat rasp and quick strained breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "runner",
+    "appliesTo": [
+      "runner"
+    ],
+    "node_id": "swTNkHvFpRZg3cSdNImo"
+  },
+  {
+    "id": "runner-death",
+    "name": "Runner · Death",
+    "cue": "death",
+    "group": "Zombie vocals",
+    "duration": 1.5,
+    "interval": 1.9,
+    "batch": 3,
+    "prompt": "One dying vocal fading into a final breath from a fast feral zombie, higher ragged throat rasp and quick strained breath, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "runner",
+    "appliesTo": [
+      "runner"
+    ],
+    "node_id": "jrxFyOM71QkpmLfNMlL1"
+  },
+  {
+    "id": "brute-enemyAttack",
+    "name": "Pit Boss · Attack",
+    "cue": "enemyAttack",
+    "group": "Zombie vocals",
+    "duration": 0.8,
+    "interval": 1.2000000000000002,
+    "batch": 3,
+    "prompt": "One short aggressive attack vocal from a hulking zombie, deep coarse chest rumble and ragged throaty rasp, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "brute",
+    "appliesTo": [
+      "brute"
+    ],
+    "node_id": "mtTxlHXshQ7S4nCrdjnr"
+  },
+  {
+    "id": "brute-enemyHurt",
+    "name": "Pit Boss · Hurt",
+    "cue": "enemyHurt",
+    "group": "Zombie vocals",
+    "duration": 0.7,
+    "interval": 1.1,
+    "batch": 3,
+    "prompt": "One brief pained recoil vocal from a hulking zombie, deep coarse chest rumble and ragged throaty rasp, close dry isolated recording without words or background.",
+    "loop": false,
+    "kind": "brute",
+    "appliesTo": [
+      "brute"
+    ],
+    "node_id": "hE9Jav1bxnKnvdfGUcF0"
+  }
+]

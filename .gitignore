@@ -14,3 +14,4 @@ playwright-report/
 Thumbs.db
 *.pem
 *.key
+/backups/

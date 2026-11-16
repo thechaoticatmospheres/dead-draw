@@ -52,6 +52,8 @@
     import { Audio } from "../src/audio.js";
     import { CUE_NAMES } from "../src/audio-cues.js";
     import { WEAPONS } from "../shared/data.js";
+    import { APPROVED_SAMPLES } from "../src/audio-samples.js";
+    import { ENEMIES } from "../shared/expansion.js";
     document.getElementById("run").onclick = async () => {
       const result = document.getElementById("result"),
         rows = document.getElementById("results");
@@ -63,13 +65,22 @@
         const profiles = [
           ...CUE_NAMES.map((name) => ({ name })),
           ...Object.keys(WEAPONS).map((weapon) => ({ name: "shot", weapon })),
+          ...Object.keys(WEAPONS).flatMap((weapon) =>
+            ["reload", "reloadEnd", "switch", "empty"].map((name) => ({
+              name,
+              weapon,
+            })),
+          ),
+          ...Object.keys(ENEMIES).map((kind) => ({ name: "enemy", kind })),
           { name: "jackpot", muted: true },
+          { name: "shot", weapon: "courtesy", muted: true },
           { name: "explosion", stress: true },
         ];
         for (const options of profiles) {
           const label =
             options.name +
             (options.weapon ? " / " + options.weapon : "") +
+            (options.kind ? " / " + options.kind : "") +
             (options.muted ? " / MUTED" : "") +
             (options.stress ? " / FOUR PLAYER MAX VOLUME" : "");
           result.textContent = "Rendering " + label;
@@ -88,12 +99,17 @@
             storage: { getItem: () => null, setItem: () => {} },
           });
           a.start();
+          await a.loadSamples();
+          if (a.sampleBuffers.size !== Object.keys(APPROVED_SAMPLES).length)
+            throw new Error("The approved sample files did not all load");
           if (options.stress) {
             for (const key of ["master", "effects", "casino", "ambience"])
               a.set(key, 1);
             for (let i = 0; i < 4; i++) a.play("shot", { weapon: "pitViper" });
             a.play("boss");
             a.play("heartbeat");
+            a.play("warnSlam");
+            a.play("warnAcid");
           }
           if (options.muted) a.muted = true;
           a.play(options.name, options);

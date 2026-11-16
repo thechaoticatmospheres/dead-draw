@@ -1,0 +1,244 @@
+[
+  {
+    "index": 0,
+    "soundIds": [
+      "sword-shot",
+      "crossbow-shot",
+      "rpg-shot",
+      "flamethrower-shot",
+      "minigun-shot",
+      "railgun-shot",
+      "tesla-shot",
+      "switch-shot",
+      "dividend-shot",
+      "sovereign-shot"
+    ],
+    "estimate": {
+      "credits": 248,
+      "price_cents": 4.959999999999999,
+      "generations_count": 4,
+      "currency": "usd",
+      "estimated_runtime_seconds": 5
+    }
+  },
+  {
+    "index": 1,
+    "soundIds": [
+      "handling-pistol-reload",
+      "handling-pistol-reloadEnd",
+      "handling-pistol-switch",
+      "handling-pistol-empty",
+      "handling-automatic-reload",
+      "handling-automatic-reloadEnd",
+      "handling-automatic-switch",
+      "handling-automatic-empty",
+      "handling-rifle-reload",
+      "handling-rifle-reloadEnd"
+    ],
+    "estimate": {
+      "credits": 272,
+      "price_cents": 5.4399999999999995,
+      "generations_count": 4,
+      "currency": "usd",
+      "estimated_runtime_seconds": 5
+    }
+  },
+  {
+    "index": 2,
+    "soundIds": [
+      "handling-rifle-switch",
+      "handling-rifle-empty",
+      "handling-shotgun-reload",
+      "handling-shotgun-reloadEnd",
+      "handling-shotgun-switch",
+      "handling-shotgun-empty",
+      "handling-crossbow-reload",
+      "handling-crossbow-reloadEnd",
+      "handling-crossbow-switch",
+      "handling-crossbow-empty"
+    ],
+    "estimate": {
+      "credits": 248,
+      "price_cents": 4.960000000000001,
+      "generations_count": 4,
+      "currency": "usd",
+      "estimated_runtime_seconds": 5
+    }
+  },
+  {
+    "index": 3,
+    "soundIds": [
+      "handling-rocket-reload",
+      "handling-rocket-reloadEnd",
+      "handling-rocket-switch",
+      "handling-rocket-empty",
+      "handling-fuel-reload",
+      "handling-fuel-reloadEnd",
+      "handling-fuel-switch",
+      "handling-fuel-empty",
+      "handling-heavy-reload",
+      "handling-heavy-reloadEnd"
+    ],
+    "estimate": {
+      "credits": 272,
+      "price_cents": 5.44,
+      "generations_count": 4,
+      "currency": "usd",
+      "estimated_runtime_seconds": 5
+    }
+  },
+  {
+    "index": 4,
+    "soundIds": [
+      "handling-heavy-switch",
+      "handling-heavy-empty",
+      "handling-energy-reload",
+      "handling-energy-reloadEnd",
+      "handling-energy-switch",
+      "handling-energy-empty",
+      "sword-switch",
+      "goose-enemy",
+      "goose-enemyAttack",
+      "goose-enemyHurt"
+    ],
+    "estimate": {
+      "credits": 310,
+      "price_cents": 6.200000000000001,
+      "generations_count": 4,
+      "currency": "usd",
+      "estimated_runtime_seconds": 5
+    }
+  },
+  {
+    "index": 5,
+    "soundIds": [
+      "goose-death",
+      "dealer-enemy",
+      "dealer-enemyAttack",
+      "dealer-enemyHurt",
+      "dealer-death",
+      "security-enemy",
+      "security-enemyAttack",
+      "security-enemyHurt",
+      "security-death",
+      "wheelchair-enemy"
+    ],
+    "estimate": {
+      "credits": 540,
+      "price_cents": 10.8,
+      "generations_count": 4,
+      "currency": "usd",
+      "estimated_runtime_seconds": 5
+    }
+  },
+  {
+    "index": 6,
+    "soundIds": [
+      "wheelchair-enemyAttack",
+      "wheelchair-enemyHurt",
+      "wheelchair-death",
+      "crawler-enemy",
+      "crawler-enemyAttack",
+      "crawler-enemyHurt",
+      "crawler-death",
+      "walker-enemyAttack",
+      "walker-enemyHurt",
+      "walker-death"
+    ],
+    "estimate": {
+      "credits": 440,
+      "price_cents": 8.8,
+      "generations_count": 4,
+      "currency": "usd",
+      "estimated_runtime_seconds": 5
+    }
+  },
+  {
+    "index": 7,
+    "soundIds": [
+      "runner-enemyAttack",
+      "runner-enemyHurt",
+      "runner-death",
+      "brute-enemyAttack",
+      "brute-enemyHurt",
+      "brute-death",
+      "spitter-enemy",
+      "spitter-enemyAttack",
+      "spitter-enemyHurt",
+      "spitter-death"
+    ],
+    "estimate": {
+      "credits": 440,
+      "price_cents": 8.8,
+      "generations_count": 4,
+      "currency": "usd",
+      "estimated_runtime_seconds": 5
+    }
+  },
+  {
+    "index": 8,
+    "soundIds": [
+      "boss-enemy",
+      "boss-enemyAttack",
+      "boss-enemyHurt",
+      "boss-death",
+      "flame-loop",
+      "flame-stop",
+      "minigun-start",
+      "minigun-loop",
+      "minigun-stop",
+      "rocket-flight"
+    ],
+    "estimate": {
+      "credits": 624,
+      "price_cents": 12.48,
+      "generations_count": 4,
+      "currency": "usd",
+      "estimated_runtime_seconds": 5
+    }
+  },
+  {
+    "index": 9,
+    "soundIds": [
+      "crossbow-impact",
+      "railgun-impact",
+      "tesla-impact",
+      "brute-warnSlam",
+      "brute-slam",
+      "boss-entrance",
+      "boss-warnSlam",
+      "boss-slam",
+      "spitter-warnAcid",
+      "spitter-spit"
+    ],
+    "estimate": {
+      "credits": 350,
+      "price_cents": 7,
+      "generations_count": 4,
+      "currency": "usd",
+      "estimated_runtime_seconds": 5
+    }
+  },
+  {
+    "index": 10,
+    "soundIds": [
+      "spitter-acid",
+      "wheelchair-move",
+      "crawler-move",
+      "goose-flap",
+      "shared-flesh",
+      "shared-surface",
+      "shared-headshot",
+      "shared-explosion",
+      "sword-flesh",
+      "sword-surface"
+    ],
+    "estimate": {
+      "credits": 384,
+      "price_cents": 7.6800000000000015,
+      "generations_count": 4,
+      "currency": "usd",
+      "estimated_runtime_seconds": 5
+    }
+  }
+]

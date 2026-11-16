@@ -1,0 +1,268 @@
+{
+  "flow_id": "2C75vSuIQQnCbmeVpgmu",
+  "flow_created": false,
+  "url": "https://elevenlabs.io/app/flows/2C75vSuIQQnCbmeVpgmu?vs=viewstate_01m28zq0g7f23vt3c76hy9tgx0",
+  "flow_url": "https://elevenlabs.io/app/flows/2C75vSuIQQnCbmeVpgmu",
+  "results": [
+    {
+      "success": true,
+      "node_id": "L4KcQiXNSCedNC8AGiKn",
+      "session_id": "iD7o09Qk1Vm2X76ycjuK"
+    },
+    {
+      "success": true,
+      "node_id": "L4KcQiXNSCedNC8AGiKn",
+      "session_id": "pJa3S06LakjPiM46jZLm"
+    },
+    {
+      "success": true,
+      "node_id": "L4KcQiXNSCedNC8AGiKn",
+      "session_id": "gNgiFy4Ka9QqoodZiFQb"
+    },
+    {
+      "success": true,
+      "node_id": "L4KcQiXNSCedNC8AGiKn",
+      "session_id": "yjvDOSU3Wg3BW8FgMlwh"
+    },
+    {
+      "success": true,
+      "node_id": "1hkHPA3kP6rErVcdibqW",
+      "session_id": "3IiXeKVqJkq7xRGDrXiu"
+    },
+    {
+      "success": true,
+      "node_id": "1hkHPA3kP6rErVcdibqW",
+      "session_id": "zKkBDQBcWUYM90mETaBZ"
+    },
+    {
+      "success": true,
+      "node_id": "1hkHPA3kP6rErVcdibqW",
+      "session_id": "qclgwWTyHXtGjXfz1b2n"
+    },
+    {
+      "success": true,
+      "node_id": "1hkHPA3kP6rErVcdibqW",
+      "session_id": "mV8O9C585R4CbLD7Pz2Q"
+    },
+    {
+      "success": true,
+      "node_id": "2BXjPbGXOu7h45zzknJB",
+      "session_id": "JsByLrYWgXSMCKwER2Jh"
+    },
+    {
+      "success": true,
+      "node_id": "2BXjPbGXOu7h45zzknJB",
+      "session_id": "VwnT8RvodjZ1vr61zvZ2"
+    },
+    {
+      "success": true,
+      "node_id": "2BXjPbGXOu7h45zzknJB",
+      "session_id": "83vesSE8wYoTUVCMZWIM"
+    },
+    {
+      "success": true,
+      "node_id": "2BXjPbGXOu7h45zzknJB",
+      "session_id": "8BZseXNyU4RUD5KyAulY"
+    },
+    {
+      "success": true,
+      "node_id": "Uf9ICWhuwgTMUvvyFC0N",
+      "session_id": "fQv1Btw6uEGjQ5bzAu1O"
+    },
+    {
+      "success": true,
+      "node_id": "Uf9ICWhuwgTMUvvyFC0N",
+      "session_id": "icibyk8VmN9BkSeZcR5v"
+    },
+    {
+      "success": true,
+      "node_id": "Uf9ICWhuwgTMUvvyFC0N",
+      "session_id": "baECYEWD9lxexZrtl8Kl"
+    },
+    {
+      "success": true,
+      "node_id": "Uf9ICWhuwgTMUvvyFC0N",
+      "session_id": "ockh8NSXWY5TSKJ2lkY1"
+    },
+    {
+      "success": true,
+      "node_id": "dubLCXrIWSH5cnENljIo",
+      "session_id": "rP8MJ9xUCPKegcvWxxYE"
+    },
+    {
+      "success": true,
+      "node_id": "dubLCXrIWSH5cnENljIo",
+      "session_id": "izGbT1gpP2QkxGzze21J"
+    },
+    {
+      "success": true,
+      "node_id": "dubLCXrIWSH5cnENljIo",
+      "session_id": "TY1ZzAKrdZjdttQUVBBu"
+    },
+    {
+      "success": true,
+      "node_id": "dubLCXrIWSH5cnENljIo",
+      "session_id": "b1aiOXAI0KJreLH1zvTa"
+    },
+    {
+      "success": true,
+      "node_id": "djhvZenWXbKzjIzpC9q9",
+      "session_id": "oczw0a0UYhOHVVt0jZYy"
+    },
+    {
+      "success": true,
+      "node_id": "djhvZenWXbKzjIzpC9q9",
+      "session_id": "akXuh8nhODBDog4NQdn5"
+    },
+    {
+      "success": true,
+      "node_id": "djhvZenWXbKzjIzpC9q9",
+      "session_id": "YC4cbQrfXgTUuFm6JmRw"
+    },
+    {
+      "success": true,
+      "node_id": "djhvZenWXbKzjIzpC9q9",
+      "session_id": "TTri7HL4vctBnrpq0WLG"
+    }
+  ],
+  "summary": {
+    "nodes_run": 6,
+    "generations_started": 24,
+    "failed": 0,
+    "generations_by_node": {
+      "L4KcQiXNSCedNC8AGiKn": 4,
+      "1hkHPA3kP6rErVcdibqW": 4,
+      "2BXjPbGXOu7h45zzknJB": 4,
+      "Uf9ICWhuwgTMUvvyFC0N": 4,
+      "dubLCXrIWSH5cnENljIo": 4,
+      "djhvZenWXbKzjIzpC9q9": 4
+    }
+  },
+  "session_ids": [
+    "iD7o09Qk1Vm2X76ycjuK",
+    "pJa3S06LakjPiM46jZLm",
+    "gNgiFy4Ka9QqoodZiFQb",
+    "yjvDOSU3Wg3BW8FgMlwh",
+    "3IiXeKVqJkq7xRGDrXiu",
+    "zKkBDQBcWUYM90mETaBZ",
+    "qclgwWTyHXtGjXfz1b2n",
+    "mV8O9C585R4CbLD7Pz2Q",
+    "JsByLrYWgXSMCKwER2Jh",
+    "VwnT8RvodjZ1vr61zvZ2",
+    "83vesSE8wYoTUVCMZWIM",
+    "8BZseXNyU4RUD5KyAulY",
+    "fQv1Btw6uEGjQ5bzAu1O",
+    "icibyk8VmN9BkSeZcR5v",
+    "baECYEWD9lxexZrtl8Kl",
+    "ockh8NSXWY5TSKJ2lkY1",
+    "rP8MJ9xUCPKegcvWxxYE",
+    "izGbT1gpP2QkxGzze21J",
+    "TY1ZzAKrdZjdttQUVBBu",
+    "b1aiOXAI0KJreLH1zvTa",
+    "oczw0a0UYhOHVVt0jZYy",
+    "akXuh8nhODBDog4NQdn5",
+    "YC4cbQrfXgTUuFm6JmRw",
+    "TTri7HL4vctBnrpq0WLG"
+  ],
+  "pending": [
+    {
+      "generation_id": "5YxSlQa2BUBnE9yRXA1M",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "eDgdDR8HWFEVq7S54zvJ",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "aJ6MiVsocGl5F4CH5oda",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "no5FSLaQDEWcNd5ZnErE",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "ar7DqmWpV2dSqeDv5Cvf",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "VjP5Rcfrxp1BPRsUGcaD",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "nLOxPiWq9alMBxKCA7aK",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "kas9B0NOkLYbhCjSc1Gc",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "uUSsGlJfUgSfHiMCfO76",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "3yn9ebuDNADslER1bnNG",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "Zuw3bpzMl8NN4USBXsyZ",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "iYCRIlH76UQiCsvEkcHL",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "8Q9Z8yKuWKT0UlzUvWAs",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "VwCmPUOuAuXDe64KxiwJ",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "8bWwpSiCHNd5h97O62AQ",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "qEv2CmZ2n0hlDtodsCeA",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "Dt8UWxX7X6esMwRde9mF",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "N4lWN45A6SXNkm1QYSpr",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "0wB2L6vhy1lBUkcCLGI5",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "E9aau2Yk8SESgrrtVUVX",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "fy0issAU0Q2bUrMKplhQ",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "7LkDpHY9iZqB2p7XtUtK",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "psQLywqAxWTTBGo1VoC6",
+      "kind": "audio"
+    },
+    {
+      "generation_id": "m4ut9XgO4cMMC2pKFsmD",
+      "kind": "audio"
+    }
+  ],
+  "poll_after_seconds": 3,
+  "notes": "Not finished yet. If a generation view is shown it tracks progress and polls by itself, so there is nothing to do here. Only call creative_get_flow_run_status yourself if no view appeared: wait poll_after_seconds, then call it with this flow_id and session_ids, repeating until all_completed or has_failures is true.",
+  "view_state_id": "viewstate_01m28zq0g7f23vt3c76hy9tgx0"
+}

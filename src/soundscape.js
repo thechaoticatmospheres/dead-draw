@@ -147,13 +147,14 @@ export class Soundscape {
       !p.reload &&
       ["combat", "break"].includes(state.phase)
     )
-      a.play("empty");
+      a.play("empty", { weapon: p.guns[p.selected].id });
     if (newSnapshot) {
       const currentPlayers = new Map();
       for (const player of state.players) {
         const old = this.players.get(player.id),
           own = player.id === myId,
-          source = own ? null : player;
+          source = own ? null : player,
+          weapon = player.guns[player.selected].id;
         if (old) {
           const d = distance(old, player),
             step = (this.steps.get(player.id) || 0) + (d < 1.5 ? d : 0);
@@ -170,16 +171,20 @@ export class Soundscape {
             this.steps.set(player.id, 0);
           } else this.steps.set(player.id, step);
           if (!old.reload && player.reload)
-            this.spatial("reload", source, state);
+            this.spatial("reload", source, state, { weapon });
           if (
             old.reload &&
             !player.reload &&
             !player.down &&
+            weapon === old.guns[old.selected].id &&
             player.guns[player.selected].ammo > old.guns[old.selected].ammo
           )
-            this.spatial("reloadEnd", source, state);
-          if (old.selected !== player.selected)
-            this.spatial("switch", source, state);
+            this.spatial("reloadEnd", source, state, { weapon });
+          if (
+            old.selected !== player.selected ||
+            weapon !== old.guns[old.selected].id
+          )
+            this.spatial("switch", source, state, { weapon });
           if (!old.down && player.down)
             this.spatial("down", source, state, { gain: own ? 1 : 0.7 });
           if (

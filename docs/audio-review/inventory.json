@@ -1,0 +1,541 @@
+{
+  "weapons": [
+    {
+      "id": "sword",
+      "name": "Velvet Saber",
+      "category": "melee",
+      "interval": 0.62,
+      "reloadSeconds": 0,
+      "cues": [
+        "swing",
+        "flesh impact",
+        "surface impact",
+        "equip"
+      ],
+      "special": "",
+      "status": "1/4 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "sword-shot",
+        "sword-switch",
+        "sword-flesh",
+        "sword-surface"
+      ]
+    },
+    {
+      "id": "crossbow",
+      "name": "Pit Boss Crossbow",
+      "category": "bolts",
+      "interval": 0.8,
+      "reloadSeconds": 1.35,
+      "cues": [
+        "fire",
+        "reload start",
+        "reload finish",
+        "equip",
+        "empty"
+      ],
+      "special": "Bow release, bolt impact and cocking.",
+      "status": "5/6 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "crossbow-shot",
+        "handling-crossbow-reload",
+        "handling-crossbow-reloadEnd",
+        "handling-crossbow-switch",
+        "handling-crossbow-empty",
+        "crossbow-impact"
+      ]
+    },
+    {
+      "id": "rpg",
+      "name": "Housebreaker RPG",
+      "category": "rockets",
+      "interval": 1.1,
+      "reloadSeconds": 2.8,
+      "cues": [
+        "fire",
+        "reload start",
+        "reload finish",
+        "equip",
+        "empty"
+      ],
+      "special": "Rocket launch, flight, explosion.",
+      "status": "5/7 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "rpg-shot",
+        "handling-rocket-reload",
+        "handling-rocket-reloadEnd",
+        "handling-rocket-switch",
+        "handling-rocket-empty",
+        "rocket-flight",
+        "shared-explosion"
+      ]
+    },
+    {
+      "id": "flamethrower",
+      "name": "Dragon’s Breath",
+      "category": "fuel",
+      "interval": 0.09,
+      "reloadSeconds": 2.7,
+      "cues": [
+        "fire",
+        "reload start",
+        "reload finish",
+        "equip",
+        "empty"
+      ],
+      "special": "Ignition, sustained flame loop, release; loop hook required.",
+      "status": "5/7 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "flamethrower-shot",
+        "handling-fuel-reload",
+        "handling-fuel-reloadEnd",
+        "handling-fuel-switch",
+        "handling-fuel-empty",
+        "flame-loop",
+        "flame-stop"
+      ]
+    },
+    {
+      "id": "minigun",
+      "name": "The Debt Collector",
+      "category": "heavy",
+      "interval": 0.055,
+      "reloadSeconds": 3.8,
+      "cues": [
+        "fire",
+        "reload start",
+        "reload finish",
+        "equip",
+        "empty"
+      ],
+      "special": "Spin-up, sustained fire, spin-down; loop hooks required.",
+      "status": "5/8 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "minigun-shot",
+        "handling-heavy-reload",
+        "handling-heavy-reloadEnd",
+        "handling-heavy-switch",
+        "handling-heavy-empty",
+        "minigun-start",
+        "minigun-loop",
+        "minigun-stop"
+      ]
+    },
+    {
+      "id": "railgun",
+      "name": "Royal Flush Railgun",
+      "category": "energy",
+      "interval": 1.1,
+      "reloadSeconds": 2.4,
+      "cues": [
+        "fire",
+        "reload start",
+        "reload finish",
+        "equip",
+        "empty"
+      ],
+      "special": "Discharge and piercing impact.",
+      "status": "1/6 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "railgun-shot",
+        "handling-energy-reload",
+        "handling-energy-reloadEnd",
+        "handling-energy-switch",
+        "handling-energy-empty",
+        "railgun-impact"
+      ]
+    },
+    {
+      "id": "tesla",
+      "name": "Static Jackpot",
+      "category": "energy",
+      "interval": 0.5,
+      "reloadSeconds": 2.2,
+      "cues": [
+        "fire",
+        "reload start",
+        "reload finish",
+        "equip",
+        "empty"
+      ],
+      "special": "Electrical discharge and chain impact.",
+      "status": "1/6 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "tesla-shot",
+        "handling-energy-reload",
+        "handling-energy-reloadEnd",
+        "handling-energy-switch",
+        "handling-energy-empty",
+        "tesla-impact"
+      ]
+    },
+    {
+      "id": "pitViper",
+      "name": "Pit Viper",
+      "category": "shells",
+      "interval": 0.75,
+      "reloadSeconds": 2.1,
+      "cues": [
+        "fire",
+        "reload start",
+        "reload finish",
+        "equip",
+        "empty"
+      ],
+      "special": "",
+      "status": "5/5 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "pitViper-shot",
+        "handling-shotgun-reload",
+        "handling-shotgun-reloadEnd",
+        "handling-shotgun-switch",
+        "handling-shotgun-empty"
+      ]
+    },
+    {
+      "id": "courtesy",
+      "name": "Courtesy .38",
+      "category": "sidearm",
+      "interval": 0.29,
+      "reloadSeconds": 1.25,
+      "cues": [
+        "fire",
+        "reload start",
+        "reload finish",
+        "equip",
+        "empty"
+      ],
+      "special": "",
+      "status": "5/5 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "courtesy-shot",
+        "handling-pistol-reload",
+        "handling-pistol-reloadEnd",
+        "handling-pistol-switch",
+        "handling-pistol-empty"
+      ]
+    },
+    {
+      "id": "velvet",
+      "name": "Velvet Hand",
+      "category": "sidearm",
+      "interval": 0.42,
+      "reloadSeconds": 1.5,
+      "cues": [
+        "fire",
+        "reload start",
+        "reload finish",
+        "equip",
+        "empty"
+      ],
+      "special": "",
+      "status": "5/5 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "velvet-shot",
+        "handling-pistol-reload",
+        "handling-pistol-reloadEnd",
+        "handling-pistol-switch",
+        "handling-pistol-empty"
+      ]
+    },
+    {
+      "id": "switch",
+      "name": "Switch",
+      "category": "sidearm",
+      "interval": 0.095,
+      "reloadSeconds": 1.4,
+      "cues": [
+        "fire",
+        "reload start",
+        "reload finish",
+        "equip",
+        "empty"
+      ],
+      "special": "",
+      "status": "5/5 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "switch-shot",
+        "handling-automatic-reload",
+        "handling-automatic-reloadEnd",
+        "handling-automatic-switch",
+        "handling-automatic-empty"
+      ]
+    },
+    {
+      "id": "house",
+      "name": "House Special",
+      "category": "automatic",
+      "interval": 0.085,
+      "reloadSeconds": 1.6,
+      "cues": [
+        "fire",
+        "reload start",
+        "reload finish",
+        "equip",
+        "empty"
+      ],
+      "special": "",
+      "status": "5/5 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "house-shot",
+        "handling-automatic-reload",
+        "handling-automatic-reloadEnd",
+        "handling-automatic-switch",
+        "handling-automatic-empty"
+      ]
+    },
+    {
+      "id": "dividend",
+      "name": "Dividend",
+      "category": "rifle",
+      "interval": 0.13,
+      "reloadSeconds": 1.8,
+      "cues": [
+        "fire",
+        "reload start",
+        "reload finish",
+        "equip",
+        "empty"
+      ],
+      "special": "",
+      "status": "5/5 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "dividend-shot",
+        "handling-rifle-reload",
+        "handling-rifle-reloadEnd",
+        "handling-rifle-switch",
+        "handling-rifle-empty"
+      ]
+    },
+    {
+      "id": "sovereign",
+      "name": "Sovereign",
+      "category": "rifle",
+      "interval": 0.16,
+      "reloadSeconds": 2,
+      "cues": [
+        "fire",
+        "reload start",
+        "reload finish",
+        "equip",
+        "empty"
+      ],
+      "special": "",
+      "status": "5/5 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "sovereign-shot",
+        "handling-rifle-reload",
+        "handling-rifle-reloadEnd",
+        "handling-rifle-switch",
+        "handling-rifle-empty"
+      ]
+    }
+  ],
+  "enemies": [
+    {
+      "id": "goose",
+      "name": "Jackpot Goose",
+      "cues": [
+        "idle / alert vocal",
+        "attack vocal",
+        "hurt vocal",
+        "death"
+      ],
+      "special": "Honks and wing flaps; distinct from human zombies.",
+      "status": "0/5 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "goose-enemy",
+        "goose-enemyAttack",
+        "goose-enemyHurt",
+        "goose-death",
+        "goose-flap"
+      ]
+    },
+    {
+      "id": "dealer",
+      "name": "Dead Dealer",
+      "cues": [
+        "idle / alert vocal",
+        "attack vocal",
+        "hurt vocal",
+        "death"
+      ],
+      "special": "",
+      "status": "0/4 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "dealer-enemy",
+        "dealer-enemyAttack",
+        "dealer-enemyHurt",
+        "dealer-death"
+      ]
+    },
+    {
+      "id": "security",
+      "name": "Casino Security",
+      "cues": [
+        "idle / alert vocal",
+        "attack vocal",
+        "hurt vocal",
+        "death"
+      ],
+      "special": "",
+      "status": "0/4 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "security-enemy",
+        "security-enemyAttack",
+        "security-enemyHurt",
+        "security-death"
+      ]
+    },
+    {
+      "id": "wheelchair",
+      "name": "Last Call Regular",
+      "cues": [
+        "idle / alert vocal",
+        "attack vocal",
+        "hurt vocal",
+        "death"
+      ],
+      "special": "Wheel rattle / rolling movement.",
+      "status": "0/5 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "wheelchair-enemy",
+        "wheelchair-enemyAttack",
+        "wheelchair-enemyHurt",
+        "wheelchair-death",
+        "wheelchair-move"
+      ]
+    },
+    {
+      "id": "crawler",
+      "name": "Drunken Crawler",
+      "cues": [
+        "idle / alert vocal",
+        "attack vocal",
+        "hurt vocal",
+        "death"
+      ],
+      "special": "Scraping movement.",
+      "status": "0/5 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "crawler-enemy",
+        "crawler-enemyAttack",
+        "crawler-enemyHurt",
+        "crawler-death",
+        "crawler-move"
+      ]
+    },
+    {
+      "id": "walker",
+      "name": "Drifter",
+      "cues": [
+        "idle / alert vocal",
+        "attack vocal",
+        "hurt vocal",
+        "death"
+      ],
+      "special": "",
+      "status": "1/4 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "walker-enemy",
+        "walker-enemyAttack",
+        "walker-enemyHurt",
+        "walker-death"
+      ]
+    },
+    {
+      "id": "runner",
+      "name": "Runner",
+      "cues": [
+        "idle / alert vocal",
+        "attack vocal",
+        "hurt vocal",
+        "death"
+      ],
+      "special": "",
+      "status": "1/4 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "runner-enemy",
+        "runner-enemyAttack",
+        "runner-enemyHurt",
+        "runner-death"
+      ]
+    },
+    {
+      "id": "brute",
+      "name": "Pit Boss",
+      "cues": [
+        "idle / alert vocal",
+        "attack vocal",
+        "hurt vocal",
+        "death"
+      ],
+      "special": "Slam warning and impact.",
+      "status": "1/6 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "brute-enemy",
+        "brute-enemyAttack",
+        "brute-enemyHurt",
+        "brute-death",
+        "brute-warnSlam",
+        "brute-slam"
+      ]
+    },
+    {
+      "id": "spitter",
+      "name": "Spitter",
+      "cues": [
+        "idle / alert vocal",
+        "attack vocal",
+        "hurt vocal",
+        "death"
+      ],
+      "special": "Acid warning, spit and splash.",
+      "status": "0/7 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "spitter-enemy",
+        "spitter-enemyAttack",
+        "spitter-enemyHurt",
+        "spitter-death",
+        "spitter-warnAcid",
+        "spitter-spit",
+        "spitter-acid"
+      ]
+    },
+    {
+      "id": "boss",
+      "name": "THE HIGH ROLLER",
+      "cues": [
+        "idle / alert vocal",
+        "attack vocal",
+        "hurt vocal",
+        "death"
+      ],
+      "special": "Entrance roar, slam warning and impact.",
+      "status": "0/7 selected sounds integrated; other sounds keep existing behavior (candidates available)",
+      "reviewSounds": [
+        "boss-enemy",
+        "boss-enemyAttack",
+        "boss-enemyHurt",
+        "boss-death",
+        "boss-warnSlam",
+        "boss-slam",
+        "boss-entrance"
+      ]
+    }
+  ],
+  "shared": [
+    "flesh impact",
+    "surface impact",
+    "headshot",
+    "explosion",
+    "weapon handling families"
+  ],
+  "integration": [
+    "Fire dispatch already passes weapon ID; enemy and death cues pass kind.",
+    "Reload, reloadEnd, switch and empty need weapon context for unique handling.",
+    "Enemy hurt, attack and movement require distinct hooks; existing hurt cue refers to the player.",
+    "Special warning cues currently identify hazard type, not enemy kind.",
+    "Gilded rewards reuse base weapon identity; optional accents can follow base approvals."
+  ]
+}
